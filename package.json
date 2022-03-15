@@ -6,7 +6,7 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "build:base-image": "docker build . -t zoom-manager-base-image:nx-base"
+    "build:image": "docker build . -t zoom-manager-base-image:nx-base"
   },
   "private": true,
   "dependencies": {
