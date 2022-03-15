@@ -15,4 +15,4 @@ WORKDIR /app
 COPY --from=builder /app/builder ./
 ENV NODE_ENV=$NODE_ENV
 
-CMD ["node", "./dist/apps/api-server/main.js"]
+CMD ["node", "./dist/apps/api/main.js"]
