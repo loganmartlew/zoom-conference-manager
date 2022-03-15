@@ -6,7 +6,7 @@ ARG BUILD_FLAG
 
 WORKDIR /app/builder
 COPY . .
-RUN npx nx build api-server ${BUILD_FLAG}
+RUN npx nx build api ${BUILD_FLAG}
 
 
 FROM zoom-manager-base-image:nx-base
