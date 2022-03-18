@@ -1,27 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Message } from '@zoom-conference-manager/api-interfaces';
+import { FC } from 'react';
 
-export const App = () => {
-  const [m, setMessage] = useState<Message>({ message: '' });
-
-  useEffect(() => {
-    fetch('http://127.0.0.1:4939/api')
-      .then((r) => r.json())
-      .then(setMessage);
-  }, []);
-
+const App: FC = () => {
   return (
-    <>
-      <div style={{ textAlign: 'center' }}>
-        <h1>Welcome to client!</h1>
-        <img
-          width="450"
-          src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-          alt="Nx - Smart, Fast and Extensible Build System"
-        />
-      </div>
-      <div>{m.message}</div>
-    </>
+    <div>
+      <h1>Zoom Conference Manager</h1>
+    </div>
   );
 };
 
