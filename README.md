@@ -4,7 +4,7 @@
 
 ## Documentation
 
-- [💻 Development Environment]()
+- [💻 Development Environment](docs/development-environment.md)
 - [🧱 Tech Stack]()
 - [⚙️ NPM Scripts]()
 - [💅 Style Guide]()
