@@ -1,4 +1,7 @@
 {
+  "parserOptions": {
+    "project": "./tsconfig.base.json"
+  },
   "root": true,
   "ignorePatterns": ["**/*"],
   "plugins": ["@nrwl/nx"],
