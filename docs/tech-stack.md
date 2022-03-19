@@ -33,3 +33,26 @@ React hook form is a very popular and robust library for managing form state in 
 - UI Library
 - Styling Solution
 - Date/Time Library
+
+## Backend
+
+### Node.JS
+
+We are using Node.JS as our backend runtime. This allows us to share business logic and Typescript interfaces across both back and front end of our application.
+
+### Express
+
+Express is our Node framework of choice for creating our REST API that will interact with our application's client. It includes a comprehensive routing system for generating API endpoints, and middleware functionality that will allow us to insert business logic into the application.
+
+### Axios
+
+Axios is used on the backend as well to interact with the Zoom API. It provides the same benefits as it does on the frontend.
+
+### Zoom API
+
+The Zoom API allows our application to manage Zoom accounts, and create and schedule meetings.
+
+#### Technologies TBD
+
+- ORM
+- Dependency Injection (optional)
