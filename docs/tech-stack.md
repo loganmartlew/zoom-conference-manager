@@ -42,6 +42,10 @@ React hook form is a very popular and robust library for managing form state in 
 
 We are using Node.JS as our backend runtime. This allows us to share business logic and Typescript interfaces across both back and front end of our application.
 
+### Typescript
+
+We are using Typescript on our backend for the same reasons we are usnig it on the frontend. This means we are able to share interfaces and logic for our main data structures across our application with ease.
+
 ### Express
 
 Express is our Node framework of choice for creating our REST API that will interact with our application's client. It includes a comprehensive routing system for generating API endpoints, and middleware functionality that will allow us to insert business logic into the application.
