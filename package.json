@@ -4,9 +4,24 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "build": "nx build",
+    "start:client": "nx serve client",
+    "start:api": "nx serve api",
+    "start:app": "nx run-many --target=serve --projects=client,api",
+    "lint": "nx lint",
+    "lint:client": "nx lint client",
+    "lint:api": "nx lint api",
+    "lint:all": "nx run-many --target=lint --all",
+    "lint:affected": "nx affected:lint",
     "test": "nx test",
-    "build:image": "docker build . -t zoom-manager-base-image:nx-base"
+    "test:client": "nx test client",
+    "test:api": "nx test api",
+    "test:all": "nx run-many --target=test --all",
+    "test:affected": "nx affected:test",
+    "build": "nx build",
+    "build:client": "nx build client",
+    "build:api": "nx build api",
+    "build:app": "nx run-many --target=build --projects=client,api",
+    "build:image": "docker build . -t zoom-manager-base-image:nx-base && docker compose build"
   },
   "private": true,
   "dependencies": {
