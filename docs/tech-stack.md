@@ -28,11 +28,9 @@ React Query is our solution for managing server state on the client. It includes
 
 React hook form is a very popular and robust library for managing form state in React. It uses React hooks to provide components with the necessary functions and data to manage a form. It takes care of managing input values, form submission, and form validation and error handling.
 
-#### Technologies TBD
+### MUI (Material UI)
 
-- UI Library
-- Styling Solution
-- Date/Time Library
+MUI is the component library we will be using for our UI. It will provide us with a wide range of pre-built and pre-styled components that we can drop into our app, drastically speeding up development. It will also help us maintain a consistent design across the UI.
 
 ---
 
@@ -44,11 +42,15 @@ We are using Node.JS as our backend runtime. This allows us to share business lo
 
 ### Typescript
 
-We are using Typescript on our backend for the same reasons we are usnig it on the frontend. This means we are able to share interfaces and logic for our main data structures across our application with ease.
+We are using Typescript on our backend for the same reasons we are using it on the frontend. This means we are able to share interfaces and logic for our main data structures across our application with ease.
 
 ### Express
 
 Express is our Node framework of choice for creating our REST API that will interact with our application's client. It includes a comprehensive routing system for generating API endpoints, and middleware functionality that will allow us to insert business logic into the application.
+
+### TypeORM
+
+Our Object Relational Mapper of choice for this project is TypeORM. It utilises features and additions of Typescript to the fullest, and allows us to easily define the schema of our database.
 
 ### Axios
 
@@ -57,8 +59,3 @@ Axios is used on the backend as well to interact with the Zoom API. It provides 
 ### Zoom API
 
 The Zoom API allows our application to manage Zoom accounts, and create and schedule meetings.
-
-#### Technologies TBD
-
-- ORM
-- Dependency Injection (optional)
