@@ -21,13 +21,13 @@ jobs:
         run: npm run build:production
 
       - name: Copy Procfile into /dist/api
-        run: cp apps/api/Procfile dist/apps/api/Procfile
+        run: cp Procfile dist/apps/api/Procfile
 
       - name: Copy package.json into /dist/api
-        run: cp apps/api/package.json dist/apps/api/package.json
+        run: cp package.json dist/apps/api/package.json
 
       - name: Commit Procfile
-        run: git add -A && git commit -m "Added Procfile"
+        run: git add -A && git commit -m "Added Procfile and package.json"
 
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
