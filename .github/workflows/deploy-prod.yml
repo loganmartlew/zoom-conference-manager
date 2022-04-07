@@ -29,9 +29,21 @@ jobs:
       - name: Commit Procfile
         run: git add -A && git commit -m "Added Procfile and package.json"
 
-      - uses: akhileshns/heroku-deploy@v3.12.12
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: zoom-conference-manager
           heroku_email: logan.martlew@gmail.com
           appdir: dist/apps/api
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: './dist/apps/client'
+          deploy-message: 'Deploy from GitHub Actions'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PRODUCTION_SITE_ID }}
+        timeout-minutes: 1
