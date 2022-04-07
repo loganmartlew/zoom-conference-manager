@@ -1,0 +1,37 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git config --global user.email "logan.martlew@gmail.com"
+      - run: git config --global user.name "Logan Martlew"
+      - run: printf '\n!/dist' >> .gitignore
+
+      - name: Install required dependencies
+        run: npm ci
+
+      - name: Build Apps for Staging
+        run: npm run build:staging
+
+      - name: Copy Procfile into /dist/api
+        run: cp Procfile dist/apps/api/Procfile
+
+      - name: Copy package.json into /dist/api
+        run: cp package.json dist/apps/api/package.json
+
+      - name: Commit Procfile
+        run: git add -A && git commit -m "Added Procfile and package.json"
+
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: zoom-conference-manager-staged
+          heroku_email: logan.martlew@gmail.com
+          appdir: dist/apps/api

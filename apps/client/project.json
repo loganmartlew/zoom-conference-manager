@@ -21,6 +21,21 @@
         "webpackConfig": "@nrwl/react/plugins/webpack"
       },
       "configurations": {
+        "dev": {},
+        "staging": {
+          "fileReplacements": [
+            {
+              "replace": "apps/client/src/environments/environment.ts",
+              "with": "apps/client/src/environments/environment.staging.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": true,
+          "namedChunks": true,
+          "extractLicenses": false,
+          "vendorChunk": false
+        },
         "production": {
           "fileReplacements": [
             {
@@ -45,6 +60,10 @@
         "proxyConfig": "apps/client/proxy.conf.json"
       },
       "configurations": {
+        "dev": {
+          "buildTarget": "client:build:dev",
+          "hmr": true
+        },
         "production": {
           "buildTarget": "client:build:production",
           "hmr": false
