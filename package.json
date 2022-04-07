@@ -12,6 +12,7 @@
     "lint:api": "nx lint api",
     "lint:all": "nx run-many --target=lint --all",
     "lint:affected": "nx affected:lint",
+    "format:all": "prettier --write \".\"",
     "test": "nx test",
     "test:client": "nx test client",
     "test:api": "nx test api",
