@@ -1,1 +1,1 @@
-web: node main.js
+web: nx serve api --prod
