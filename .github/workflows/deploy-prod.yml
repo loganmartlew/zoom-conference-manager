@@ -19,6 +19,7 @@ jobs:
 
       - name: Copy Procfile into /dist/api
         run: cp Procfile dist/apps/api/Procfile
+        run: git add -A && git commit -m "Added Procfile"
 
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
