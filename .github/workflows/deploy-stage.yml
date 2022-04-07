@@ -35,3 +35,14 @@ jobs:
           heroku_app_name: zoom-conference-manager-staged
           heroku_email: logan.martlew@gmail.com
           appdir: dist/apps/api
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: './dist/apps/client'
+          deploy-message: 'Deploy from GitHub Actions'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
+        timeout-minutes: 1
