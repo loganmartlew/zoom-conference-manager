@@ -25,5 +25,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: zoom-conference-manager
           heroku_email: logan.martlew@gmail.com
-          appdir: dist/api
+          appdir: dist/apps/api
           procfile: 'web: node main.js'
