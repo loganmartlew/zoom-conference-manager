@@ -23,4 +23,4 @@ jobs:
           heroku_app_name: zoom-conference-manager
           heroku_email: logan.martlew@gmail.com
           appdir: dist/api
-          procfile: web: node main.js
+          procfile: 'web: node main.js'
