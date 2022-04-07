@@ -1,1 +1,0 @@
-web: nx serve api --prod

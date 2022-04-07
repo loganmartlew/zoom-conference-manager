@@ -1,0 +1,7 @@
+{
+  "name": "zoom-conference-manager-api",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node main.js"
+  }
+}
