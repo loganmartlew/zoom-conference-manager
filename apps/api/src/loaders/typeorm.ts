@@ -10,6 +10,7 @@ export const AppDataSource = new DataSource({
   username: db.username,
   password: db.password,
   database: db.database,
+  synchronize: true,
   entities,
 });
 
