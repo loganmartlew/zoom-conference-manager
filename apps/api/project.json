@@ -45,6 +45,14 @@
       "executor": "@nrwl/node:node",
       "options": {
         "buildTarget": "api:build"
+      },
+      "configurations": {
+        "dev": {
+          "buildTarget": "api:build:dev"
+        },
+        "production": {
+          "buildTarget": "api:build:production"
+        }
       }
     },
     "lint": {
