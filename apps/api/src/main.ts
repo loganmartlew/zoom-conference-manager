@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import { Message } from '@zoom-conference-manager/api-interfaces';
 import { environment } from './environments/environment';
+import router from './routes';
 
 const app = express();
 
@@ -16,6 +17,11 @@ app.get('/api', (req, res) => {
 app.get('/api/mode', (req, res) => {
   res.send(environment.mode);
 });
+
+
+/// Assign routes
+app.use('/api', router);
+
 
 const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {
