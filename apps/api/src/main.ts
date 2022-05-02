@@ -2,6 +2,8 @@
 import getApp from './app';
 import { environment } from './environments/environment';
 
+import 'reflect-metadata';
+
 async function main() {
   const app = await getApp();
   const port = process.env.PORT || 3333;
