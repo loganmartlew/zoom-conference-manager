@@ -16,3 +16,5 @@ async function main() {
   });
   server.on('error', console.error);
 }
+
+main();
