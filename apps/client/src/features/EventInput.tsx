@@ -1,36 +1,43 @@
 import { FC, useState, ChangeEvent, MouseEvent } from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button, Typography } from '@mui/material';
 
+// refactor this to be in separate file maybe?
 const flexSpacing = {
   margin: '1rem auto',
   alignSelf: 'center',
 };
 
+const flexSpacingDate = {
+  alignSelf: 'center',
+  marginBottom: '1rem',
+};
+
 const dateStyle = {
   display: 'flex',
   justifyContent: 'center',
-  height: '20%',
+  columnGap: '1rem',
+  margin: '1rem auto',
 };
 
-const EventInput: FC = () => {
-  function getCurrentDate(): string {
-    const date = new Date();
+function getCurrentDate(): string {
+  const date = new Date();
 
-    // append missing 0
-    let month = date.getMonth().toString();
-    if (month.length === 1) {
-      month = `0${month}`;
-    }
-
-    let day = date.getDay().toString();
-    if (day.length === 1) {
-      day = `0${day}`;
-    }
-
-    const year = date.getFullYear().toString();
-    return `${year}-${month}-${day}`;
+  // append missing 0
+  let month = (Number(date.getMonth()) + 1).toString(); // get month returns the a month between 0 - 11;
+  if (month.length === 1) {
+    month = `0${month}`;
   }
 
+  let day = (Number(date.getDay()) + 1).toString(); // get day returns a day between 0 - 6
+  if (day.length === 1) {
+    day = `0${day}`;
+  }
+
+  const year = date.getFullYear().toString();
+  return `${year}-${month}-${day}`;
+}
+
+const EventInput: FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     desc: '',
@@ -41,7 +48,6 @@ const EventInput: FC = () => {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
-    console.log(`value: ${value}`);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -49,13 +55,18 @@ const EventInput: FC = () => {
   }
 
   function submitEvent(event: MouseEvent<HTMLElement>) {
-    event.preventDefault();
-    // call axios to push of the request
+    // call axios to push of the request need api route
     // navigate to some other route
+
+    event.preventDefault();
+    console.log(formData);
   }
 
+  // refactor any inline styling
   return (
     <Box
+      component='form'
+      autoComplete='off'
       display='flex'
       alignItems='center'
       justifyContent='center'
@@ -67,9 +78,8 @@ const EventInput: FC = () => {
         style={flexSpacing}
         required
         name='name'
-        id='outlined-required'
+        id='outlined-name'
         label='Name'
-        defaultValue='name'
         value={formData.name}
         // eslint-disable-next-line react/jsx-no-bind
         onChange={handleChange}
@@ -77,9 +87,8 @@ const EventInput: FC = () => {
       <TextField
         style={flexSpacing}
         name='desc'
-        id='outlined'
+        id='outlined-desc'
         label='Description'
-        defaultValue='description'
         value={formData.desc}
         // eslint-disable-next-line react/jsx-no-bind
         onChange={handleChange}
@@ -90,13 +99,14 @@ const EventInput: FC = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            rowGap: '1px',
             margin: 'auto',
           }}
         >
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label htmlFor='start'>Start Date</label>
+          <Typography variant='caption'>Start Date</Typography>
           <input
-            style={flexSpacing}
+            required
+            style={flexSpacingDate}
             name='start'
             value={formData.start}
             onChange={handleChange}
@@ -104,7 +114,6 @@ const EventInput: FC = () => {
             id='start'
           />
         </div>
-        <div style={{ width: '1rem' }} />
         <div
           style={{
             display: 'flex',
@@ -113,10 +122,10 @@ const EventInput: FC = () => {
             margin: 'auto',
           }}
         >
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label htmlFor='end'>End Date</label>
+          <Typography variant='caption'>End Date</Typography>
           <input
-            style={flexSpacing}
+            required
+            style={flexSpacingDate}
             name='end'
             value={formData.end}
             onChange={handleChange}
