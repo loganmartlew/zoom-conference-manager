@@ -13,6 +13,21 @@
         "assets": ["apps/api/src/assets"]
       },
       "configurations": {
+        "dev": {},
+        "staging": {
+          "fileReplacements": [
+            {
+              "replace": "apps/api/src/environments/environment.ts",
+              "with": "apps/api/src/environments/environment.staging.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": true,
+          "namedChunks": true,
+          "extractLicenses": false,
+          "vendorChunk": false
+        },
         "production": {
           "optimization": true,
           "extractLicenses": true,
