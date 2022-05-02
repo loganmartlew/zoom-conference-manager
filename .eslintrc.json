@@ -5,7 +5,7 @@
   },
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "plugins": ["@nrwl/nx", "@typescript-eslint/eslint-plugin"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -39,7 +39,8 @@
           {
             "namedComponents": "arrow-function"
           }
-        ]
+        ],
+        "arrow-body-style": "off"
       }
     },
     {

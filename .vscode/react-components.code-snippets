@@ -21,9 +21,7 @@
     "body": [
       "import { FC } from 'react'",
       "",
-      "interface Props {};",
-      "",
-      "const ${1:${TM_FILENAME_BASE}}: FC<Props> = () => {",
+      "const ${1:${TM_FILENAME_BASE}}: FC = () => {",
       "\treturn (",
       "\t\t<div>",
       "\t\t\t$0",

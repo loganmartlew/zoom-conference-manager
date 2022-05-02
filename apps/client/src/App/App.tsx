@@ -1,12 +1,6 @@
 import { FC } from 'react';
-import { environment } from '../environments/environment';
+import AppRoutes from './AppRoutes';
 
-const App: FC = () => (
-  <div>
-    <h1>Zoom Conference Manager!</h1>
-    <p>Platform for managing large scale Zoom events.</p>
-    <p>Environment: {environment.mode}</p>
-  </div>
-);
+const App: FC = () => <AppRoutes />;
 
 export default App;
