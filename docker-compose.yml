@@ -1,46 +1,29 @@
 version: '3.8'
 
-networks:
-  corp:
-    driver: bridge
-
 services:
-  api:
-    container_name: api
-    build:
-      context: ./
-      cache_from:
-        - zoom-manager-base-image:nx-base
-      dockerfile: ./apps/api/Dockerfile
-      args:
-        NODE_ENV: 'development'
-        BUILD_FLAG: ''
-    image: zoom-manager-api:nx-dev
-    ports:
-      - 4939:4939
+  db:
+    container_name: database
+    image: postgres:14.2-alpine
+    restart: always
     environment:
-      NODE_ENV: 'development'
-      PORT: 4939
-    networks:
-      - corp
-    restart: on-failure
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=development
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
 
-  client:
-    container_name: client
-    build:
-      context: ./
-      cache_from:
-        - nginx:1.19.2
-      dockerfile: ./apps/client/Dockerfile
-      args:
-        NODE_ENV: 'development'
-        BUILD_FLAG: ''
-    image: zoom-manager-client:nx-dev
-    ports:
-      - 4900:80
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
     environment:
-      NODE_ENV: 'development'
-      PORT: 4900
-    networks:
-      - corp
-    restart: on-failure
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - '5050:80'
+
+volumes:
+  db:
+    driver: local
