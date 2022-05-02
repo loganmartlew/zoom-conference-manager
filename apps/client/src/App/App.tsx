@@ -6,7 +6,7 @@ import './imports.css';
 const App: FC = () => (
   <>
     <CssBaseline />
-    <AppRoutes />;
+    <AppRoutes />
   </>
 );
 
