@@ -12,6 +12,7 @@
     "module": "esnext",
     "lib": ["es2017", "dom"],
     "strict": true,
+    "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
