@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import { apiTest } from '../controllers';
 
 const router = express.Router();
