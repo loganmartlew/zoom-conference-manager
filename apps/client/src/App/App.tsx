@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { CssBaseline } from '@mui/material';
 import AppRoutes from './AppRoutes';
-import EventInput from '../features/Events/EventInput';
+import EventInput from '../features/Events/EventForm';
 import './imports.css';
 
 const App: FC = () => (
