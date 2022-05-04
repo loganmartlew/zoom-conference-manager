@@ -26,5 +26,16 @@ export const updateEvent = async (req: Request, res: Response) => {
 };
 
 export const deleteEvent = async (req: Request, res: Response) => {
-  return res.json({ message: 'Delete Event' });
+  const { id } = req.params;
+
+  if (!id) {
+    return res.json({ message: 'ID Must be provided' });
+  }
+
+  const deleted = await EventService.delete(id);
+
+  if (!deleted) {
+    return res.json({ message: 'Failed to delete Event' });
+  }
+  return res.json({ message: 'Event deleted' });
 };

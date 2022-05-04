@@ -17,13 +17,13 @@ export default class EventService {
   }
 
   static async create(eventData: EventDTO) {
-    const newEvent = await Event.create({ ...eventData });
+    const eventStub = await Event.create({ ...eventData });
 
-    if (!newEvent) throw new Error('Unable to create event');
+    if (!eventStub) throw new Error('Unable to create event');
 
     try {
-      newEvent.save();
-      return newEvent;
+      const event = await eventStub.save();
+      return event;
     } catch (error) {
       throw new Error('Unable to save event');
     }
