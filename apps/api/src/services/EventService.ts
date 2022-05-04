@@ -1,4 +1,8 @@
-import { Service } from 'typedi';
+import Event from '../entities/Event';
 
-@Service()
-export default class EventService {}
+export default class EventService {
+  static async getAll() {
+    const events = await Event.find();
+    return events;
+  }
+}

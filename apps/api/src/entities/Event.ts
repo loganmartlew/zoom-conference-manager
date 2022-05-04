@@ -1,9 +1,15 @@
 /* eslint-disable import/no-cycle */
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+} from 'typeorm';
 import Meeting from './Meeting';
 
 @Entity()
-export default class Event {
+export default class Event extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
