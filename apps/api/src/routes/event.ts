@@ -11,8 +11,8 @@ import {
 const router = express.Router();
 
 router.get('/', getAllEvents);
-router.get('/:id', getEvent);
 router.post('/', createEvent);
+router.get('/:id', getEvent);
 router.patch('/:id', updateEvent);
 router.delete('/:id', deleteEvent);
 
