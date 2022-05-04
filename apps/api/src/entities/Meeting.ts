@@ -1,9 +1,9 @@
 /* eslint-disable import/no-cycle */
-import { Entity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, BaseEntity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
 import Event from './Event';
 
 @Entity()
-export default class Meeting {
+export default class Meeting extends BaseEntity {
   @PrimaryColumn()
   ubid: string;
 

@@ -3,17 +3,6 @@ import { DataSource } from 'typeorm';
 import { db } from '../config';
 import entities from '../entities';
 
-// export const AppDataSource1 = new DataSource({
-//   type: 'postgres',
-//   host: db.host,
-//   port: db.port,
-//   username: db.username,
-//   password: db.password,
-//   database: db.database,
-//   synchronize: true,
-//   entities,
-// });
-
 class AppDataSource {
   private static instance: AppDataSource;
 
