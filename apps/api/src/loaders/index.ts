@@ -4,13 +4,13 @@ import dotenvLoader from './dotenv';
 import expressLoader from './express';
 import typeormLoader from './typeorm';
 
-export default (app: Express) => {
-  dotenvLoader();
+export default async (app: Express) => {
+  await dotenvLoader();
   console.info('Environment variables loaded');
 
-  expressLoader(app);
+  await expressLoader(app);
   console.info('Express app loaded and configured');
 
-  typeormLoader();
+  await typeormLoader();
   console.info('Typeorm loaded and configured');
 };
