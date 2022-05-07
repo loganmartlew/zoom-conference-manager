@@ -2,12 +2,10 @@ import { FC } from 'react';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { TextField, Button, styled } from '@mui/material';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import locale from 'dayjs/locale/en-nz';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
+import DatePicker from '../../components/forms/DatePicker';
 import { environment } from '../../environments/environment';
 
 const Form = styled('form')({});
@@ -74,45 +72,18 @@ const EventInput: FC = () => {
         rules={{ required: true }}
         minRows={3}
       />
-      <LocalizationProvider dateAdapter={AdapterDayjs} locale={locale}>
-        <Controller
-          name='startDate'
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <DatePicker
-              {...field}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label='Start Date'
-                  required
-                  helperText={locale.formats.L?.toLowerCase()}
-                />
-              )}
-            />
-          )}
-        />
-        <Controller
-          name='endDate'
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <DatePicker
-              {...field}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label='End Date'
-                  required
-                  helperText={locale.formats.L?.toLowerCase()}
-                />
-              )}
-            />
-          )}
-        />
-      </LocalizationProvider>
-
+      <DatePicker
+        name='startDate'
+        label='Start Date'
+        control={control}
+        rules={{ required: true }}
+      />
+      <DatePicker
+        name='endDate'
+        label='End Date'
+        control={control}
+        rules={{ required: true }}
+      />
       <Button type='submit' variant='contained'>
         Create Event
       </Button>
