@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { TextField, Button, styled } from '@mui/material';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Button, styled } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
