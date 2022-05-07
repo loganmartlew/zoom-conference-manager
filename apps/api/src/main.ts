@@ -1,6 +1,6 @@
 import getApp from './app';
 import { environment } from './environments/environment';
-import logger from './loaders/logger';
+import { Logger } from './loaders/logger';
 
 import 'reflect-metadata';
 
@@ -9,12 +9,12 @@ async function main() {
   const port = process.env.PORT || 3333;
 
   const server = app.listen(port, () => {
-    logger.info('--------------------------------------------------');
-    logger.info(`           Server running on port: ${port}           `);
+    Logger.info('--------------------------------------------------');
+    Logger.info(`           Server running on port: ${port}           `);
     if (environment.mode === 'development') {
-      logger.info(`Base endpoint of the api is: http://localhost:${port}`);
+      Logger.info(`Base endpoint of the api is: http://localhost:${port}`);
     }
-    logger.info('--------------------------------------------------');
+    Logger.info('--------------------------------------------------');
   });
   server.on('error', logger.error);
 }

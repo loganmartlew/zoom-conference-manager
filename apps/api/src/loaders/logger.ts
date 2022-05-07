@@ -15,7 +15,7 @@ if (environment.mode !== 'development') {
   );
 }
 
-const LoggerInstance = winston.createLogger({
+export const Logger = winston.createLogger({
   levels: winston.config.npm.levels,
   format: winston.format.combine(
     winston.format.timestamp({
@@ -27,5 +27,3 @@ const LoggerInstance = winston.createLogger({
   ),
   transports,
 });
-
-export default LoggerInstance;

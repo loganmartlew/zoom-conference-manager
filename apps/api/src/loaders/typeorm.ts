@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { db } from '../config';
-import logger from './logger';
+import { Logger } from './logger';
 import entities from '../entities';
 
 // export const AppDataSource1 = new DataSource({
@@ -54,9 +54,9 @@ export function getDataSource() {
 export default async () => {
   try {
     await getDataSource().initialize();
-    logger.info('Connected to database');
+    Logger.info('Connected to database');
   } catch (error) {
-    logger.crit(error);
+    Logger.crit(error);
     throw new Error('Unable to connect to database');
   }
 };
