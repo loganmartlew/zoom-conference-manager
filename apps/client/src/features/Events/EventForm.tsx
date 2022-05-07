@@ -1,4 +1,5 @@
 import { FC, useState, ChangeEvent, FormEvent } from 'react';
+import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { Box, TextField, Button, Typography, styled } from '@mui/material';
 
 const Form = styled('form')({});
@@ -19,11 +20,11 @@ function getCurrentDate(): string {
 }
 
 const EventInput: FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<EventDTO>({
     name: '',
-    desc: '',
-    start: getCurrentDate(),
-    end: getCurrentDate(),
+    description: '',
+    startDate: getCurrentDate(),
+    endDate: getCurrentDate(),
   });
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -70,7 +71,7 @@ const EventInput: FC = () => {
         name='desc'
         id='outlined-desc'
         label='Description'
-        value={formData.desc}
+        value={formData.description}
         onChange={handleChange}
       />
       <Box
@@ -84,7 +85,7 @@ const EventInput: FC = () => {
           <input
             required
             name='start'
-            value={formData.start}
+            value={formData.startDate}
             onChange={handleChange}
             type='date'
             id='start'
@@ -95,7 +96,7 @@ const EventInput: FC = () => {
           <input
             required
             name='end'
-            value={formData.end}
+            value={formData.endDate}
             onChange={handleChange}
             type='date'
             id='end'
