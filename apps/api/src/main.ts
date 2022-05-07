@@ -16,7 +16,7 @@ async function main() {
     }
     Logger.info('--------------------------------------------------');
   });
-  server.on('error', logger.error);
+  server.on('error', Logger.error);
 }
 
 main();

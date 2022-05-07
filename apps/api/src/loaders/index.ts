@@ -1,10 +1,13 @@
 import { Express } from 'express';
 import dotenvLoader from './dotenv';
 import expressLoader from './express';
-import { Logger } from './logger';
+import loggerLoader, { Logger } from './logger';
 import typeormLoader from './typeorm';
 
 export default (app: Express) => {
+  loggerLoader(app);
+  Logger.info('HTTP logger loaded');
+
   dotenvLoader();
   Logger.info('Environment variables loaded');
 
