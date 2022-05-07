@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import locale from 'dayjs/locale/en-nz';
 import TextInput from '../../components/forms/TextInput';
+import TextArea from '../../components/forms/TextArea';
 import { environment } from '../../environments/environment';
 
 const Form = styled('form')({});
@@ -60,31 +61,18 @@ const EventInput: FC = () => {
         height: '100vh',
       }}
     >
-      {/* <Controller
-        name='name'
-        control={control}
-        rules={{ required: true }}
-        render={({ field }) => <TextField {...field} label='Name' required />}
-      /> */}
       <TextInput
         name='name'
         label='Name'
         control={control}
         rules={{ required: true }}
       />
-      <Controller
+      <TextArea
         name='description'
+        label='Description'
         control={control}
         rules={{ required: true }}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label='Description'
-            required
-            multiline
-            minRows={3}
-          />
-        )}
+        minRows={3}
       />
       <LocalizationProvider dateAdapter={AdapterDayjs} locale={locale}>
         <Controller
