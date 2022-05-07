@@ -6,5 +6,5 @@ import IEnvironment from './IEnvironment';
 export const environment: IEnvironment = {
   production: false,
   mode: 'development',
-  apiUrl: 'http://localhost:3000',
+  apiUrl: 'http://localhost:3333',
 };
