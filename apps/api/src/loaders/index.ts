@@ -1,16 +1,19 @@
-/* eslint-disable no-console */
 import { Express } from 'express';
 import dotenvLoader from './dotenv';
 import expressLoader from './express';
+import loggerLoader, { Logger } from './logger';
 import typeormLoader from './typeorm';
 
 export default (app: Express) => {
+  loggerLoader(app);
+  Logger.info('HTTP logger loaded');
+
   dotenvLoader();
-  console.info('Environment variables loaded');
+  Logger.info('Environment variables loaded');
 
   expressLoader(app);
-  console.info('Express app loaded and configured');
+  Logger.info('Express app loaded and configured');
 
   typeormLoader();
-  console.info('Typeorm loaded and configured');
+  Logger.info('Typeorm loaded and configured');
 };
