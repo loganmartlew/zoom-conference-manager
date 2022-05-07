@@ -6,6 +6,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import locale from 'dayjs/locale/en-nz';
+import { environment } from '../../environments/environment';
 
 const Form = styled('form')({});
 
@@ -27,7 +28,19 @@ const EventInput: FC = () => {
   });
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+    const eventData: EventDTO = {
+      ...data,
+      startDate: (data.startDate as Dayjs).format('YYYY-MM-DD'),
+      endDate: (data.endDate as Dayjs).format('YYYY-MM-DD'),
+    };
+
+    fetch(`${environment.apiUrl}/event`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ eventData }),
+    });
   };
 
   return (
