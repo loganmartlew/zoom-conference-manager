@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 import getApp from './app';
 import { environment } from './environments/environment';
+import logger from './loaders/logger';
 
 import 'reflect-metadata';
 
@@ -9,14 +9,14 @@ async function main() {
   const port = process.env.PORT || 3333;
 
   const server = app.listen(port, () => {
-    console.log('--------------------------------------------------');
-    console.log(`           Server running on port: ${port}           `);
+    logger.info('--------------------------------------------------');
+    logger.info(`           Server running on port: ${port}           `);
     if (environment.mode === 'development') {
-      console.log(`Base endpoint of the api is: http://localhost:${port}`);
+      logger.info(`Base endpoint of the api is: http://localhost:${port}`);
     }
-    console.log('--------------------------------------------------');
+    logger.info('--------------------------------------------------');
   });
-  server.on('error', console.error);
+  server.on('error', logger.error);
 }
 
 main();

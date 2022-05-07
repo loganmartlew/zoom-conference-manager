@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 import { DataSource } from 'typeorm';
 import { db } from '../config';
+import logger from './logger';
 import entities from '../entities';
 
 // export const AppDataSource1 = new DataSource({
@@ -54,9 +54,9 @@ export function getDataSource() {
 export default async () => {
   try {
     await getDataSource().initialize();
-    console.info('Connected to database');
+    logger.info('Connected to database');
   } catch (error) {
-    console.error(error);
+    logger.crit(error);
     throw new Error('Unable to connect to database');
   }
 };
