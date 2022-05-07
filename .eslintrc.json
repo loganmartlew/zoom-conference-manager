@@ -42,7 +42,8 @@
         ],
         "arrow-body-style": "off",
         "react/jsx-no-bind": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "react/jsx-props-no-spreading": "off"
       }
     },
     {

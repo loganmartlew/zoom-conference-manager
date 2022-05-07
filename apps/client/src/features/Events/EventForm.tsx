@@ -1,54 +1,39 @@
-import { FC, useState, ChangeEvent, FormEvent } from 'react';
+import { FC } from 'react';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
-import { Box, TextField, Button, Typography, styled } from '@mui/material';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { TextField, Button, styled } from '@mui/material';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import locale from 'dayjs/locale/en-nz';
 
 const Form = styled('form')({});
 
-const DateContainer = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-function getCurrentDate(): string {
-  const dateString = new Date().toLocaleDateString();
-  const values = dateString.split('/');
-
-  const paddedValues = values.map((value) => String(value).padStart(2, '0'));
-  const [month, day, year] = paddedValues;
-
-  return `${year}-${month}-${day}`;
+interface IFormInput {
+  name: string;
+  description: string;
+  startDate: Dayjs;
+  endDate: Dayjs;
 }
 
 const EventInput: FC = () => {
-  const [formData, setFormData] = useState<EventDTO>({
-    name: '',
-    description: '',
-    startDate: getCurrentDate(),
-    endDate: getCurrentDate(),
+  const { control, handleSubmit } = useForm<IFormInput>({
+    defaultValues: {
+      name: '',
+      description: '',
+      startDate: dayjs(),
+      endDate: dayjs(),
+    },
   });
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    console.log(data);
+  };
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  }
-
-  function submitEvent(event: FormEvent) {
-    // call axios to push of the request need api route
-    // navigate to some other route
-
-    event.preventDefault();
-    console.log(formData);
-  }
-
-  // refactor any inline styling
   return (
     <Form
       autoComplete='off'
-      onSubmit={submitEvent}
+      onSubmit={handleSubmit(onSubmit)}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -59,50 +44,64 @@ const EventInput: FC = () => {
         height: '100vh',
       }}
     >
-      <TextField
-        required
+      <Controller
         name='name'
-        id='outlined-name'
-        label='Name'
-        value={formData.name}
-        onChange={handleChange}
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => <TextField {...field} label='Name' required />}
       />
-      <TextField
-        name='desc'
-        id='outlined-desc'
-        label='Description'
-        value={formData.description}
-        onChange={handleChange}
+      <Controller
+        name='description'
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label='Description'
+            required
+            multiline
+            minRows={3}
+          />
+        )}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          gap: '1em',
-        }}
-      >
-        <DateContainer>
-          <Typography variant='caption'>Start Date</Typography>
-          <input
-            required
-            name='start'
-            value={formData.startDate}
-            onChange={handleChange}
-            type='date'
-            id='start'
-          />
-        </DateContainer>
-        <DateContainer>
-          <Typography variant='caption'>End Date</Typography>
-          <input
-            required
-            name='end'
-            value={formData.endDate}
-            onChange={handleChange}
-            type='date'
-            id='end'
-          />
-        </DateContainer>
-      </Box>
+      <LocalizationProvider dateAdapter={AdapterDayjs} locale={locale}>
+        <Controller
+          name='startDate'
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <DatePicker
+              {...field}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label='Start Date'
+                  required
+                  helperText={locale.formats.L?.toLowerCase()}
+                />
+              )}
+            />
+          )}
+        />
+        <Controller
+          name='endDate'
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <DatePicker
+              {...field}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label='End Date'
+                  required
+                  helperText={locale.formats.L?.toLowerCase()}
+                />
+              )}
+            />
+          )}
+        />
+      </LocalizationProvider>
 
       <Button type='submit' variant='contained'>
         Create Event
