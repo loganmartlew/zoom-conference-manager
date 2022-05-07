@@ -6,6 +6,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import locale from 'dayjs/locale/en-nz';
+import TextInput from '../../components/forms/TextInput';
 import { environment } from '../../environments/environment';
 
 const Form = styled('form')({});
@@ -34,13 +35,15 @@ const EventInput: FC = () => {
       endDate: (data.endDate as Dayjs).format('YYYY-MM-DD'),
     };
 
-    fetch(`${environment.apiUrl}/event`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ eventData }),
-    });
+    // fetch(`${environment.apiUrl}/event`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ eventData }),
+    // });
+
+    console.log(eventData);
   };
 
   return (
@@ -57,11 +60,17 @@ const EventInput: FC = () => {
         height: '100vh',
       }}
     >
-      <Controller
+      {/* <Controller
         name='name'
         control={control}
         rules={{ required: true }}
         render={({ field }) => <TextField {...field} label='Name' required />}
+      /> */}
+      <TextInput
+        name='name'
+        label='Name'
+        control={control}
+        rules={{ required: true }}
       />
       <Controller
         name='description'
