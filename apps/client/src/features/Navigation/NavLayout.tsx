@@ -1,13 +1,17 @@
 import { useState, FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { Mail } from '@mui/icons-material';
+import { Home, Dashboard, Event } from '@mui/icons-material';
 import TopBar from './TopBar';
 import SideNavigation, { DrawerHeader } from './SideNavigation';
 import { NavItem } from './NavItem';
 import NavList from './NavList';
 
-const items: NavItem[] = [{ text: 'Inbox', path: '/', icon: <Mail /> }];
+const items: NavItem[] = [
+  { text: 'Home', path: '/', icon: <Home /> },
+  { text: 'Dashboard', path: '/dashboard', icon: <Dashboard /> },
+  { text: 'Events', path: '/events', icon: <Event /> },
+];
 
 interface Props {
   // eslint-disable-next-line react/require-default-props
