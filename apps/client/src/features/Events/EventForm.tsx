@@ -8,7 +8,7 @@ import eventDtoSchema from './eventDtoSchema';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import DatePicker from '../../components/forms/DatePicker';
-import { environment } from '../../environments/environment';
+import axios from '../../config/axios';
 
 const Form = styled('form')({});
 
@@ -45,13 +45,7 @@ const EventInput: FC = () => {
       endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
     };
 
-    // fetch(`${environment.apiUrl}/event`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ eventData }),
-    // });
+    axios.post('/event', { eventData });
 
     console.log(eventData);
   };
