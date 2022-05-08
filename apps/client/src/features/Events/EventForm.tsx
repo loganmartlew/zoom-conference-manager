@@ -1,8 +1,10 @@
 import { FC, useEffect } from 'react';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Stack, styled } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import eventDtoSchema from './eventDtoSchema';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import DatePicker from '../../components/forms/DatePicker';
@@ -13,8 +15,8 @@ const Form = styled('form')({});
 interface IFormInput {
   name: string;
   description: string;
-  startDate: Dayjs;
-  endDate: Dayjs;
+  startDate: Date;
+  endDate: Date;
 }
 
 const EventInput: FC = () => {
@@ -26,9 +28,10 @@ const EventInput: FC = () => {
     defaultValues: {
       name: '',
       description: '',
-      startDate: dayjs(),
-      endDate: dayjs(),
+      startDate: dayjs().toDate(),
+      endDate: dayjs().toDate(),
     },
+    resolver: yupResolver(eventDtoSchema),
   });
 
   useEffect(() => {
@@ -38,8 +41,8 @@ const EventInput: FC = () => {
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const eventData: EventDTO = {
       ...data,
-      startDate: (data.startDate as Dayjs).format('YYYY-MM-DD'),
-      endDate: (data.endDate as Dayjs).format('YYYY-MM-DD'),
+      startDate: dayjs(data.startDate).format('YYYY-MM-DD'),
+      endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
     };
 
     // fetch(`${environment.apiUrl}/event`, {
@@ -70,16 +73,12 @@ const EventInput: FC = () => {
           label='Name'
           control={control}
           error={errors.name}
-          rules={{ required: { value: true, message: 'Name is required' } }}
         />
         <TextArea
           name='description'
           label='Description'
           control={control}
           error={errors.description}
-          rules={{
-            required: { value: true, message: 'Description is required' },
-          }}
           minRows={3}
         />
         <DatePicker
@@ -87,16 +86,12 @@ const EventInput: FC = () => {
           label='Start Date'
           control={control}
           error={errors.startDate as FieldError | void}
-          rules={{
-            required: { value: true, message: 'Start Date is required' },
-          }}
         />
         <DatePicker<IFormInput>
           name='endDate'
           label='End Date'
           control={control}
           error={errors.endDate as FieldError | void}
-          rules={{ required: { value: true, message: 'End Date is required' } }}
         />
         <Button type='submit' variant='contained'>
           Create Event
