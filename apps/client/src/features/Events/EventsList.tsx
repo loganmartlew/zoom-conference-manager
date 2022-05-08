@@ -1,5 +1,6 @@
 import { useState, useEffect, FC } from 'react';
 import { IEvent } from '@zoom-conference-manager/types';
+import axios from '../../config/axios';
 import { environment } from '../../environments/environment';
 
 const EventsList: FC = () => {
@@ -10,10 +11,10 @@ const EventsList: FC = () => {
   useEffect(() => {
     setLoading(true);
 
-    fetch(`${environment.apiUrl}/event`)
-      .then((res) => res.json())
-      .then((data) => {
-        setEvents(data);
+    axios
+      .get('/event')
+      .then((res) => {
+        setEvents(res.data);
         setLoading(false);
       })
       .catch(() => setError(true));
