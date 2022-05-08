@@ -1,6 +1,6 @@
 import { useState, useEffect, FC } from 'react';
 import { IEvent } from '@zoom-conference-manager/types';
-import axios from '../../config/axios';
+import { axios } from '../../config/axios';
 
 const EventsList: FC = () => {
   const [events, setEvents] = useState<IEvent[]>([]);

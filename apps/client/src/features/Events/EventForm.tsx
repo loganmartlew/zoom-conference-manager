@@ -8,7 +8,7 @@ import eventDtoSchema from './eventDtoSchema';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import DatePicker from '../../components/forms/DatePicker';
-import axios from '../../config/axios';
+import { axios } from '../../config/axios';
 
 const Form = styled('form')({});
 

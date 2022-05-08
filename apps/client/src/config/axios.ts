@@ -1,8 +1,22 @@
-import axios from 'axios';
+import Axios from 'axios';
 import { environment } from '../environments/environment';
 
-const instance = axios.create({
+export const axios = Axios.create({
   baseURL: environment.apiUrl,
 });
 
-export default instance;
+axios.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    // const message = error.response?.data?.message || error.message;
+    // useNotificationStore.getState().addNotification({
+    //   type: 'error',
+    //   title: 'Error',
+    //   message,
+    // });
+
+    return Promise.reject(error);
+  }
+);
