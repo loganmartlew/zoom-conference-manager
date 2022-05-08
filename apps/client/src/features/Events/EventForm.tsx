@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
-import { Button, styled } from '@mui/material';
+import { Button, Stack, styled } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
@@ -58,51 +58,50 @@ const EventInput: FC = () => {
       autoComplete='off'
       onSubmit={handleSubmit(onSubmit)}
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: '1em',
-        width: '100%',
-        height: '100vh',
+        width: {
+          xs: '100%',
+          sm: 400,
+        },
       }}
     >
-      <TextInput
-        name='name'
-        label='Name'
-        control={control}
-        error={errors.name}
-        rules={{ required: { value: true, message: 'Name is required' } }}
-      />
-      <TextArea
-        name='description'
-        label='Description'
-        control={control}
-        error={errors.description}
-        rules={{
-          required: { value: true, message: 'Description is required' },
-        }}
-        minRows={3}
-      />
-      <DatePicker
-        name='startDate'
-        label='Start Date'
-        control={control}
-        error={errors.startDate as FieldError | void}
-        rules={{
-          required: { value: true, message: 'Start Date is required' },
-        }}
-      />
-      <DatePicker<IFormInput>
-        name='endDate'
-        label='End Date'
-        control={control}
-        error={errors.endDate as FieldError | void}
-        rules={{ required: { value: true, message: 'End Date is required' } }}
-      />
-      <Button type='submit' variant='contained'>
-        Create Event
-      </Button>
+      <Stack spacing={2}>
+        <TextInput
+          name='name'
+          label='Name'
+          control={control}
+          error={errors.name}
+          rules={{ required: { value: true, message: 'Name is required' } }}
+        />
+        <TextArea
+          name='description'
+          label='Description'
+          control={control}
+          error={errors.description}
+          rules={{
+            required: { value: true, message: 'Description is required' },
+          }}
+          minRows={3}
+        />
+        <DatePicker
+          name='startDate'
+          label='Start Date'
+          control={control}
+          error={errors.startDate as FieldError | void}
+          rules={{
+            required: { value: true, message: 'Start Date is required' },
+          }}
+        />
+        <DatePicker<IFormInput>
+          name='endDate'
+          label='End Date'
+          control={control}
+          error={errors.endDate as FieldError | void}
+          rules={{ required: { value: true, message: 'End Date is required' } }}
+        />
+        <Button type='submit' variant='contained'>
+          Create Event
+        </Button>
+      </Stack>
     </Form>
   );
 };
