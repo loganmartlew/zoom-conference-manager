@@ -1,14 +1,6 @@
 import { FC } from 'react';
-import {
-  Drawer as MuiDrawer,
-  Divider,
-  List,
-  ListItemButton,
-  ListItemText,
-  ListItemIcon,
-  IconButton,
-} from '@mui/material';
-import { ChevronLeft, ChevronRight, Inbox, Mail } from '@mui/icons-material';
+import { Drawer as MuiDrawer, Divider, IconButton } from '@mui/material';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import { drawerWidth } from './drawerWidth';
 
@@ -70,6 +62,7 @@ const SideNavigation: FC<Props> = ({
   collapsable,
   open,
   handleDrawerClose,
+  children,
 }) => {
   const theme = useTheme();
 
@@ -83,32 +76,7 @@ const SideNavigation: FC<Props> = ({
         )}
       </DrawerHeader>
       <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItemButton
-            key={text}
-            sx={{
-              minHeight: 48,
-              justifyContent: open || !collapsable ? 'initial' : 'center',
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open || !collapsable ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              {index % 2 === 0 ? <Inbox /> : <Mail />}
-            </ListItemIcon>
-            <ListItemText
-              primary={text}
-              sx={{ opacity: open || !collapsable ? 1 : 0 }}
-            />
-          </ListItemButton>
-        ))}
-      </List>
+      {children}
     </Drawer>
   );
 };
