@@ -1,42 +1,23 @@
-import { useState, useEffect, FC } from 'react';
-import { IEvent } from '@zoom-conference-manager/types';
-import { axios } from '../../config/axios';
+import { FC } from 'react';
+import { useAllEvents } from './api/getEvents';
 
 const EventsList: FC = () => {
-  const [events, setEvents] = useState<IEvent[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
+  const { data: events, isLoading, isError } = useAllEvents();
 
-  useEffect(() => {
-    setLoading(true);
-
-    axios
-      .get('/event')
-      .then((res) => {
-        setEvents(res.data);
-        setLoading(false);
-      })
-      .catch(() => setError(true));
-  }, []);
-
-  if (error) {
+  if (isError) {
     return <p>An error occurred</p>;
   }
 
-  if (loading) {
+  if (isLoading) {
     return <p>Loading...</p>;
   }
 
-  if (!loading && events.length < 1) {
+  if (events && events?.length < 1) {
     return <p>No Events</p>;
   }
 
   return (
-    <>
-      {events.map((event) => (
-        <p key={event.id}>{event.name}</p>
-      ))}
-    </>
+    <>{events && events.map((event) => <p key={event.id}>{event.name}</p>)}</>
   );
 };
 
