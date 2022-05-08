@@ -40,7 +40,13 @@
             "namedComponents": "arrow-function"
           }
         ],
-        "arrow-body-style": "off"
+        "arrow-body-style": "off",
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true
+          }
+        ]
       }
     },
     {
