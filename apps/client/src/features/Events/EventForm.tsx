@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import { Button, styled } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
@@ -18,7 +18,11 @@ interface IFormInput {
 }
 
 const EventInput: FC = () => {
-  const { control, handleSubmit } = useForm<IFormInput>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>({
     defaultValues: {
       name: '',
       description: '',
@@ -26,6 +30,10 @@ const EventInput: FC = () => {
       endDate: dayjs(),
     },
   });
+
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const eventData: EventDTO = {
@@ -63,26 +71,34 @@ const EventInput: FC = () => {
         name='name'
         label='Name'
         control={control}
-        rules={{ required: true }}
+        error={errors.name}
+        rules={{ required: { value: true, message: 'Name is required' } }}
       />
       <TextArea
         name='description'
         label='Description'
         control={control}
-        rules={{ required: true }}
+        error={errors.description}
+        rules={{
+          required: { value: true, message: 'Description is required' },
+        }}
         minRows={3}
       />
       <DatePicker
         name='startDate'
         label='Start Date'
         control={control}
-        rules={{ required: true }}
+        error={errors.startDate as FieldError | void}
+        rules={{
+          required: { value: true, message: 'Start Date is required' },
+        }}
       />
-      <DatePicker
+      <DatePicker<IFormInput>
         name='endDate'
         label='End Date'
         control={control}
-        rules={{ required: true }}
+        error={errors.endDate as FieldError | void}
+        rules={{ required: { value: true, message: 'End Date is required' } }}
       />
       <Button type='submit' variant='contained'>
         Create Event

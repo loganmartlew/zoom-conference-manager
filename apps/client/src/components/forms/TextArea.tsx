@@ -1,10 +1,17 @@
-import { Controller, Control, RegisterOptions, Path } from 'react-hook-form';
+import {
+  Controller,
+  Control,
+  RegisterOptions,
+  Path,
+  FieldError,
+} from 'react-hook-form';
 import { TextField } from '@mui/material';
 
 interface Props<T> {
   name: Path<T>;
   label: string;
   control: Control<T>;
+  error: FieldError | void;
   rules?: RegisterOptions;
   rows?: number;
   minRows?: number;
@@ -16,6 +23,7 @@ function TextInput<T>({
   name,
   label,
   control,
+  error,
   rules,
   rows,
   minRows,
@@ -31,6 +39,8 @@ function TextInput<T>({
           {...field}
           label={label}
           required={!!rules?.required}
+          error={!!error}
+          helperText={error?.message}
           multiline
           rows={rows}
           minRows={minRows}
