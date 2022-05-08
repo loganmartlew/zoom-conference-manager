@@ -1,11 +1,16 @@
 import { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import NavLayout from '../features/Navigation/NavLayout';
 
 const AppRoutes: FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<h1>Router Working</h1>} />
+        <Route element={<NavLayout />}>
+          <Route path='/' element={<h1>Index</h1>} />
+          <Route path='/dashboard' element={<h1>Dashboard</h1>} />
+          <Route path='/events' element={<h1>Events</h1>} />
+        </Route>
       </Routes>
     </Router>
   );

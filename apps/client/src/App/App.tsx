@@ -1,15 +1,15 @@
 import { FC } from 'react';
 import { CssBaseline } from '@mui/material';
+import globalStyles from './globalStyles';
 import AppRoutes from './AppRoutes';
-import EventInput from '../features/EventInput';
 import './imports.css';
 
 const App: FC = () => (
-  // <>
-  //   <CssBaseline />
-  //   <AppRoutes />
-  // </>
-  <EventInput />
+  <>
+    <CssBaseline />
+    {globalStyles}
+    <AppRoutes />
+  </>
 );
 
 export default App;
