@@ -4,16 +4,16 @@ import expressLoader from './express';
 import loggerLoader, { Logger } from './logger';
 import typeormLoader from './typeorm';
 
-export default (app: Express) => {
-  loggerLoader(app);
+export default async (app: Express) => {
+  await loggerLoader(app);
   Logger.info('HTTP logger loaded');
 
-  dotenvLoader();
+  await dotenvLoader();
   Logger.info('Environment variables loaded');
 
-  expressLoader(app);
+  await expressLoader(app);
   Logger.info('Express app loaded and configured');
 
-  typeormLoader();
+  await typeormLoader();
   Logger.info('Typeorm loaded and configured');
 };

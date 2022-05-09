@@ -19,7 +19,8 @@
     "paths": {
       "@zoom-conference-manager/api-interfaces": [
         "libs/api-interfaces/src/index.ts"
-      ]
+      ],
+      "@zoom-conference-manager/types": ["libs/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
