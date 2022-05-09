@@ -4,7 +4,7 @@ import loaders from '../loaders';
 const getApp = async () => {
   const app = express();
 
-  loaders(app);
+  await loaders(app);
 
   return app;
 };
