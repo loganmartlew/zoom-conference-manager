@@ -54,6 +54,7 @@ const TopBar: FC<Props> = ({ collapsable, open, handleDrawerOpen }) => {
             aria-label='open drawer'
             onClick={handleDrawerOpen}
             edge='start'
+            role='button'
             sx={{
               marginRight: 5,
               ...(open && { display: 'none' }),
