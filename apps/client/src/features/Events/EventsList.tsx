@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useAllEvents } from './api/getEvents';
+import EventCard from './EventCard';
 
 const EventsList: FC = () => {
   const { data: events, isLoading, isError } = useAllEvents();
@@ -17,8 +18,17 @@ const EventsList: FC = () => {
   }
 
   return (
-    <>{events && events.map((event) => <p key={event.id}>{event.name}</p>)}</>
+    <>
+      <EventCard
+        name='Epic event'
+        desc='hi mom!'
+        start='12/05/23'
+        end='12/05/33'
+      />
+    </>
   );
 };
+
+// {events && events.map((event) => <p key={event.id}>{event.name}</p>)}
 
 export default EventsList;
