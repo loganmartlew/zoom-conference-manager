@@ -19,12 +19,16 @@ const EventsList: FC = () => {
 
   return (
     <>
-      <EventCard
-        name='Epic event'
-        desc='hi mom!'
-        start='12/05/23'
-        end='12/05/33'
-      />
+      {events?.map((event) => {
+        return (
+          <EventCard
+            name={event.name}
+            desc={event.description}
+            start={event.startDate}
+            end={event.endDate}
+          />
+        );
+      })}
     </>
   );
 };
