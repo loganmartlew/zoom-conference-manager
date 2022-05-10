@@ -22,6 +22,7 @@ const EventsList: FC = () => {
       {events?.map((event) => {
         return (
           <EventCard
+            key={event.id}
             name={event.name}
             desc={event.description}
             start={event.startDate}
@@ -32,7 +33,5 @@ const EventsList: FC = () => {
     </>
   );
 };
-
-// {events && events.map((event) => <p key={event.id}>{event.name}</p>)}
 
 export default EventsList;

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Button, Paper, Stack, Typography, styled } from '@mui/material';
+import { Paper, Stack, Typography, styled } from '@mui/material';
 
 interface EventCardProps {
   name: string;
@@ -9,12 +9,20 @@ interface EventCardProps {
 }
 
 const EventContainer = styled(Paper)(() => ({
-  width: '70%',
-  padding: '0.5rem',
+  width: '85%',
+  padding: '0.8rem',
+  marginTop: '1rem',
 }));
 
 const InfoStack = styled(Stack)(() => ({
   gap: '1rem',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+}));
+
+const GenericTypography = styled(Typography)(() => ({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 }));
 
 const EventCard: FC<EventCardProps> = (props) => {
@@ -22,13 +30,19 @@ const EventCard: FC<EventCardProps> = (props) => {
   return (
     <EventContainer elevation={3}>
       <Stack direction='row' justifyContent='space-between'>
-        <InfoStack sx={{ alignItems: 'center' }}>
-          <Typography variant='h5'>{name}</Typography>
-          <Typography variant='body2'>{desc}</Typography>
+        <InfoStack width='90%' direction='column' justifyContent='space-evenly'>
+          <GenericTypography variant='h5'>{name}</GenericTypography>
+          <GenericTypography variant='body2' width='50%'>
+            {desc}
+          </GenericTypography>
         </InfoStack>
-        <InfoStack>
-          <Typography>{start}</Typography>
-          <Typography>{end}</Typography>
+        <InfoStack width='10%' direction='column' justifyContent='space-evenly'>
+          <GenericTypography alignSelf='end' variant='body2'>
+            {start}
+          </GenericTypography>
+          <GenericTypography alignSelf='end' variant='body2'>
+            {end}
+          </GenericTypography>
         </InfoStack>
       </Stack>
     </EventContainer>
