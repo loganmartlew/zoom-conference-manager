@@ -18,6 +18,19 @@ describe('Test TopBar component', () => {
     );
   });
 
+  test('has button when closed', () => {
+    const component = render(<TopBar {...props} open={false} />);
+
+    const menuButton = component.getByRole('button');
+    expect(menuButton).toBeDefined();
+  });
+
+  test('has no button when open', () => {
+    const component = render(<TopBar {...props} open />);
+
+    expect(() => component.getByRole('button')).toThrow();
+  });
+
   test('toggles drawer state', () => {
     let state = false;
 
@@ -34,5 +47,17 @@ describe('Test TopBar component', () => {
     expect(state).toBe(false);
     menuButton.click();
     expect(state).toBe(true);
+  });
+
+  test('non collapsable has no button in any state', () => {
+    const openComponent = render(
+      <TopBar {...props} collapsable={false} open />
+    );
+    const closedComponent = render(
+      <TopBar {...props} collapsable={false} open={false} />
+    );
+
+    expect(() => openComponent.getByRole('button')).toThrow();
+    expect(() => closedComponent.getByRole('button')).toThrow();
   });
 });
