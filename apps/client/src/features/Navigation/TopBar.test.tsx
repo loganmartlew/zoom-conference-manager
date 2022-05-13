@@ -13,9 +13,9 @@ describe('Test TopBar component', () => {
   const component = render(<TopBar {...props} />);
 
   test('has ZCM heading', () => {
-    expect(component.getByRole('heading').textContent).toBe(
-      'Zoom Conference Manager'
-    );
+    const heading = component.getByRole('heading');
+
+    expect(heading.textContent).toBe('Zoom Conference Manager');
   });
 
   test('has button when closed', () => {
