@@ -31,7 +31,7 @@ describe('Test TopBar component', () => {
     expect(() => component.getByRole('button')).toThrow();
   });
 
-  test('toggles drawer state', () => {
+  test('opens drawer on click', () => {
     let state = false;
 
     const handleDrawerOpen = () => {
