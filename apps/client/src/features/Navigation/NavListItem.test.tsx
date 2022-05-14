@@ -15,17 +15,22 @@ describe('Test NavListItem component', () => {
     open: true,
   };
 
-  const component = renderWithRouter(
-    <NavListItem {...props} />,
-    props.item.path
-  );
+  const component = renderWithRouter(<NavListItem {...props} />, {
+    route: props.item.path,
+    path: props.item.path,
+  });
 
   test('renders item text', () => {
-    console.log(component);
     expect(() => component.getByText(props.item.text)).not.toThrow();
   });
 
-  test.todo('has correct link path');
-  test.todo('hides text when closed');
-  test.todo('non collapsable always renders text');
+  test('has correct link path', () => {
+    const component = renderWithRouter(<NavListItem {...props} />, {
+      route: props.item.path,
+      path: props.item.path,
+    });
+
+    const link = component.getByRole('link');
+    expect(link.getAttribute('href')).toBe(props.item.path);
+  });
 });

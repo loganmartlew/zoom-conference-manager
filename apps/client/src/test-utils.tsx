@@ -13,14 +13,26 @@ const customRender = (
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const renderWithRouter = ({ children }: any, path: string) =>
-  customRender(
-    <MemoryRouter initialEntries={[path]}>
-      <Routes>
-        <Route path={path} element={children} />
-      </Routes>
-    </MemoryRouter>
-  );
+// const renderWithRouter = ({ children }: any, path: string) =>
+//   customRender(
+//     <MemoryRouter>
+//       <Routes>
+//         <Route path={path} element={children} />
+//       </Routes>
+//     </MemoryRouter>
+//   );
+
+const renderWithRouter = (ui: ReactElement, { path = '/', route = '/' }) => {
+  return {
+    ...customRender(
+      <MemoryRouter initialEntries={[route]}>
+        <Routes>
+          <Route path={path} element={ui} />
+        </Routes>
+      </MemoryRouter>
+    ),
+  };
+};
 
 export * from '@testing-library/react';
 export { customRender as render, renderWithRouter };
