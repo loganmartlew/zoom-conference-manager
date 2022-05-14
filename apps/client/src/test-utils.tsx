@@ -12,16 +12,6 @@ const customRender = (
   options?: Omit<RenderOptions, 'wrapper'>
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const renderWithRouter = ({ children }: any, path: string) =>
-//   customRender(
-//     <MemoryRouter>
-//       <Routes>
-//         <Route path={path} element={children} />
-//       </Routes>
-//     </MemoryRouter>
-//   );
-
 const renderWithRouter = (ui: ReactElement, { path = '/', route = '/' }) => {
   return {
     ...customRender(
