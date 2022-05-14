@@ -11,19 +11,19 @@ describe('Test NavList component', () => {
       open: true,
     };
 
-    const item = {
-      text: 'Link text 1',
-      path: '/linkpath1',
+    const item = (num: number) => ({
+      text: `Link text ${num}`,
+      path: `/linkpath${num}`,
       icon: <Home />,
-    };
+    });
 
-    const props1 = { ...baseProps, items: [item, item, item] };
+    const props1 = { ...baseProps, items: [item(1), item(2), item(3)] };
     const component1 = renderWithRouter(<NavList {...props1} />, {});
     const links1 = component1.getAllByRole('link');
     expect(links1.length).toBe(props1.items.length);
     cleanup();
 
-    const props2 = { ...baseProps, items: [item] };
+    const props2 = { ...baseProps, items: [item(1)] };
     const component2 = renderWithRouter(<NavList {...props2} />, {});
     const links2 = component2.getAllByRole('link');
     expect(links2.length).toBe(props2.items.length);
@@ -31,7 +31,7 @@ describe('Test NavList component', () => {
 
     const props3 = {
       ...baseProps,
-      items: [item, item, item, item, item, item],
+      items: [item(1), item(2), item(3), item(4), item(5), item(6)],
     };
     const component3 = renderWithRouter(<NavList {...props3} />, {});
     const links3 = component3.getAllByRole('link');
