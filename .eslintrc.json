@@ -46,7 +46,12 @@
           {
             "devDependencies": true
           }
-        ]
+        ],
+        "react/jsx-no-bind": "off",
+        "no-console": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/require-default-props": "off",
+        "react/jsx-no-useless-fragment": "off"
       }
     },
     {
