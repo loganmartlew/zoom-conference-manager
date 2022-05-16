@@ -39,3 +39,19 @@ export const deleteEvent = async (req: Request, res: Response) => {
   }
   return res.json({ message: 'Event deleted' });
 };
+
+export const addMeetingToEvent = async (req: Request, res: Response) => {
+  const { id: eventID } = req.params;
+  const { ubid: meetingID } = req.body;
+
+  if (!eventID || !meetingID) {
+    return res.status(400).json({ message: 'EventID and MeetingID Must be provided' });
+  }
+
+  try {
+    const updatedEvent = EventService.addMeeting(eventID, meetingID);
+    return res.status(200).json({ message: 'Added Meeting to Event completed', event: updatedEvent })
+  } catch (error) {
+    return res.status(500).json({ message: `Fail to add Meeting ID: ${meetingID} to Event ID: ${eventID}` });
+  }
+}

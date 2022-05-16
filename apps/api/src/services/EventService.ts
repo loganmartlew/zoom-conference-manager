@@ -1,5 +1,6 @@
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
+import MeetingService from './MeetingService';
 
 export default class EventService {
   static async getAll() {
@@ -33,5 +34,15 @@ export default class EventService {
     const result = await Event.delete(id);
     if (!result.affected) return false;
     return result.affected > 0;
+  }
+
+  static async addMeeting(eventID: string, meetingID: string) {
+    const event = await this.getOne(eventID);
+    const meeting = await MeetingService.getOne(meetingID);
+
+    event.meetings.push(meeting);
+    event.save();
+
+    return event;
   }
 }
