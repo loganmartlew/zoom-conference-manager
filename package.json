@@ -98,6 +98,6 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "npm run lint:all",
-    "*.{js,jsx,ts,tsx,css,md}": "prettier --write"
+    "*.{js,jsx,ts,tsx,css,md}": "npm run format:all"
   }
 }
