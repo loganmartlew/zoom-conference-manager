@@ -12,6 +12,7 @@ const items: NavItem[] = [
   { text: 'Dashboard', path: '/dashboard', icon: <Dashboard /> },
   { text: 'Events', path: '/events', icon: <Event /> },
   { text: 'New Event', path: '/new-event', icon: <AddBox /> },
+  { text: 'New Meeting', path: '/new-meeting', icon: <AddBox /> }
 ];
 
 interface Props {
