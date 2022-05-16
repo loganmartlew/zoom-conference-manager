@@ -41,8 +41,8 @@ export default class EventService {
     const meeting = await MeetingService.getOne(meetingID);
 
     event.meetings.push(meeting);
-    event.save();
+    const addedEvent = await event.save();
 
-    return event;
+    return addedEvent;
   }
 }
