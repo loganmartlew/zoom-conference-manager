@@ -40,8 +40,19 @@ export default class EventService {
     const event = await this.getOne(eventID);
     const meeting = await MeetingService.getOne(meetingID);
 
-    event.meetings.push(meeting);
+    // If current event.meeting is null (empty), create new Array
+    if (!event.meetings) {
+      event.meetings = [ meeting ];
+    }
+    // Else, push meeting to current existed Array
+    else {
+      event.meetings.push(meeting);
+    }
+
     const addedEvent = await event.save();
+
+    /// Try saving with Repository
+    // const addedEvent = await Event.getRepository().save(event);
 
     return addedEvent;
   }
