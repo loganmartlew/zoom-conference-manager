@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import React from 'react';
+import meetingSchema from './meetingSchema'
+import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 
 /**
  * Form needs following fields:
@@ -14,9 +16,7 @@ import React from 'react';
  * - Description
  * - Meeting day + Meeting start time
  * - Meeting duration
- * - Breakout rooms?
- *      -> name, participants of rooms
- */
+ * */
 
 const Form = styled('form')({});
 
@@ -24,10 +24,7 @@ interface IFormInput {
     name: string;
     description: string;
     meetingDate: Date,
-    meetingDuration: string,
-    breakoutRooms: boolean,
-    breakoutNames: string
-    breakoutParticipants: string
+    meetingDuration: number,
 }
  const MeetingInput: FC = () => {
     const {
@@ -39,13 +36,14 @@ interface IFormInput {
             name: '',
             description: '',
             meetingDate: dayjs().toDate(),
-            meetingDuration: '',
-            breakoutRooms: false,
-            breakoutNames: '',
-            breakoutParticipants: ''
+            meetingDuration: 0
         },
-        //resolver: yupResolver(null),
+        resolver: yupResolver(meetingSchema),
     });
+
+    useEffect(() => {
+        console.log(errors);
+      }, [errors]);
 
     const [value, setValue] = React.useState<Date | null>(
         new Date(dayjs().toDate()),
@@ -54,10 +52,20 @@ interface IFormInput {
     const handleChange = (newValue: Date | null) => {
         setValue(newValue);
     };
+
+    const onSubmit: SubmitHandler<IFormInput> = (data) => {
+        const meetingData: MeetingDTO = {
+            ...data,
+            meetingDate: dayjs(data.meetingDate).format('YYYY-MM-DDHH:mm:ss'),
+        };
+
+        console.log(meetingData);
+    }
     
     return (
         <Form
             autoComplete='off'
+            onSubmit={handleSubmit(onSubmit)}
             sx={{
                 width: {
                     xs: '100%',
@@ -91,10 +99,9 @@ interface IFormInput {
                 control={control}
                 error={errors.meetingDuration}
             />
-            <FormControlLabel control = {
-                <Switch />
-            } label="Breakout Rooms"
-            />
+            <Button type='submit' variant='contained'>
+                Submit Meeting
+            </Button>
         </Stack>
         </Form>
     );

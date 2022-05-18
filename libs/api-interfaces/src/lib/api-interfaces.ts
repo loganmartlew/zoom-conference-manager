@@ -8,3 +8,10 @@ export interface EventDTO {
   startDate: string;
   endDate: string;
 }
+
+export interface MeetingDTO {
+  name: string;
+  description: string;
+  meetingDate: string;
+  meetingDuration: number;
+}
