@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import AddAccount from '../features/Add Account/AddAccount';
+import { Typography } from '@mui/material';
+import AddAccount from '../features/AddAccount/AddAccount';
 
 const Add: FC = () => {
   return (
