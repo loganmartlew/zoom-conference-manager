@@ -36,6 +36,28 @@ export default class EventService {
     return result.affected > 0;
   }
 
+  static async update(id: string, eventData: EventDTO) {
+    try {
+
+      /// Return UpdateResult obj
+      // const updatedEvent = await Event.update(id, eventData);
+
+      const event = await this.getOne(id);
+
+      event.name = eventData.name;
+      event.description = eventData.description;
+      event.startDate = eventData.startDate;
+      event.endDate = eventData.endDate;
+
+      const updatedEvent = await event.save();
+      
+      return updatedEvent;
+      
+    } catch (error) {
+      throw new Error('Unable to update Event');
+    }
+  }
+
   static async addMeeting(eventID: string, meetingID: string) {
     const event = await this.getOne(eventID);
     const meeting = await MeetingService.getOne(meetingID);

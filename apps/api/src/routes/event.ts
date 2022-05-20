@@ -17,6 +17,6 @@ router.get('/:id', getEvent);
 router.patch('/:id', updateEvent);
 router.delete('/:id', deleteEvent);
 
-router.post('/:id/meeting', addMeetingToEvent);
+router.patch('/:id/meeting', addMeetingToEvent);
 
 export default router;
