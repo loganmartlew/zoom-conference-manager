@@ -14,4 +14,5 @@ export interface MeetingDTO {
   name: string;
   startDateTime: Date;
   duration: number;
+  eventId: string;
 }

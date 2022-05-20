@@ -13,7 +13,10 @@ export const createEvent = async (req: Request, res: Response) => {
 };
 
 export const getEvent = async (req: Request, res: Response) => {
-  return res.json({ message: 'Get Event' });
+  const { id } = req.params;
+  const event = await EventService.getOne(id);
+
+  return res.json({ message: 'Found Event', event });
 };
 
 export const getAllEvents = async (req: Request, res: Response) => {
@@ -23,12 +26,14 @@ export const getAllEvents = async (req: Request, res: Response) => {
 
 export const updateEvent = async (req: Request, res: Response) => {
   const { eventData } = req.body;
-  const {id} = req.params;
+  const { id } = req.params;
   try {
     const updatedEvent = await EventService.update(id, eventData);
-    return res.status(200).json({ message: 'Updated Event', event: updatedEvent})
+    return res
+      .status(200)
+      .json({ message: 'Updated Event', event: updatedEvent });
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to update Event ', error})
+    return res.status(500).json({ message: 'Failed to update Event ', error });
   }
 };
 
@@ -46,21 +51,3 @@ export const deleteEvent = async (req: Request, res: Response) => {
   }
   return res.json({ message: 'Event deleted' });
 };
-
-export const addMeetingToEvent = async (req: Request, res: Response) => {
-  const { id: eventID } = req.params;
-  const { ubid: meetingID } = req.body;
-
-  if (!eventID || !meetingID) {
-    return res.status(400).json({ message: 'EventID and MeetingID (UBID) Must be provided' });
-  }
-
-  try {
-    const updatedEvent = await EventService.addMeeting(eventID, meetingID);
-    console.log("Event Controller: ", updatedEvent);
-    
-    return res.status(200).json({ message: 'Added Meeting to Event completed', event: updatedEvent })
-  } catch (error) {
-    return res.status(500).json({ message: `Fail to add Meeting ID: ${meetingID} to Event ID: ${eventID}` });
-  }
-}

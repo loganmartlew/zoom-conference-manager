@@ -6,7 +6,6 @@ import {
   getAllEvents,
   updateEvent,
   deleteEvent,
-  addMeetingToEvent,
 } from '../controllers/event';
 
 const router = express.Router();
@@ -16,7 +15,5 @@ router.post('/', createEvent);
 router.get('/:id', getEvent);
 router.patch('/:id', updateEvent);
 router.delete('/:id', deleteEvent);
-
-router.patch('/:id/meeting', addMeetingToEvent);
 
 export default router;

@@ -1,15 +1,17 @@
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
-import MeetingService from './MeetingService';
 
 export default class EventService {
-  static async getAll() {
-    const events = await Event.find();
+  static async getAll(): Promise<Event[]> {
+    const events = await Event.find({ relations: ['meetings'] });
     return events;
   }
 
-  static async getOne(id: string) {
-    const event = await Event.findOneBy({ id });
+  static async getOne(id: string): Promise<Event> {
+    const event = await Event.findOne({
+      where: { id },
+      relations: ['meetings'],
+    });
     if (!event) {
       throw new Error('Event not found');
     }
@@ -17,10 +19,15 @@ export default class EventService {
     return event;
   }
 
-  static async create(eventData: EventDTO) {
-    const eventStub = await Event.create({ ...eventData });
+  static async create(eventData: EventDTO): Promise<Event> {
+    const eventStub = await Event.create();
 
     if (!eventStub) throw new Error('Unable to create event');
+
+    eventStub.name = eventData.name;
+    eventStub.description = eventData.description;
+    eventStub.startDate = eventData.startDate;
+    eventStub.endDate = eventData.endDate;
 
     try {
       const event = await eventStub.save();
@@ -30,15 +37,14 @@ export default class EventService {
     }
   }
 
-  static async delete(id: string) {
+  static async delete(id: string): Promise<boolean> {
     const result = await Event.delete(id);
     if (!result.affected) return false;
     return result.affected > 0;
   }
 
-  static async update(id: string, eventData: EventDTO) {
+  static async update(id: string, eventData: EventDTO): Promise<Event> {
     try {
-
       /// Return UpdateResult obj
       // const updatedEvent = await Event.update(id, eventData);
 
@@ -50,32 +56,10 @@ export default class EventService {
       event.endDate = eventData.endDate;
 
       const updatedEvent = await event.save();
-      
+
       return updatedEvent;
-      
     } catch (error) {
       throw new Error('Unable to update Event');
     }
-  }
-
-  static async addMeeting(eventID: string, meetingID: string) {
-    const event = await this.getOne(eventID);
-    const meeting = await MeetingService.getOne(meetingID);
-
-    /// If current event.meeting is null (empty), create new Array
-    if (!event.meetings) {
-      event.meetings = [ meeting ];
-    }
-    /// Else, push meeting to current existed Array
-    else {
-      event.meetings.push(meeting);
-    }
-
-    const addedEvent = await event.save();
-
-    /// 2nd option: Saving with Repository
-    // const addedEvent = await Event.getRepository().save(event);
-
-    return addedEvent;
   }
 }
