@@ -1,16 +1,26 @@
-import { FC } from 'react';
-import { CircularProgress, Alert, AlertTitle } from '@mui/material';
+import { FC, useState } from 'react';
+import { CircularProgress, Collapse, Alert, AlertTitle } from '@mui/material';
 import { useAllEvents } from './api/getEvents';
 import EventCard from './EventCard';
 
 const EventsList: FC = () => {
   const { data: events, isLoading, isError } = useAllEvents();
+  const [showError, setShowError] = useState(true);
+  const [showNoEvents, setShowNoEvents] = useState(true);
 
   if (isError) {
     return (
-      <Alert onClose={() => {}} severity='error' variant='outlined'>
-        <AlertTitle>Error</AlertTitle>An error occurred
-      </Alert>
+      <Collapse in={showError}>
+        <Alert
+          onClose={() => {
+            setShowError(false);
+          }}
+          severity='error'
+          variant='outlined'
+        >
+          <AlertTitle>Error</AlertTitle>An error occurred
+        </Alert>
+      </Collapse>
     );
   }
 
@@ -20,10 +30,18 @@ const EventsList: FC = () => {
 
   if (events && events?.length < 1) {
     return (
-      <Alert onClose={() => {}} severity='success' variant='outlined'>
-        <AlertTitle>No Events</AlertTitle>
-        No events found...
-      </Alert>
+      <Collapse in={showNoEvents}>
+        <Alert
+          onClose={() => {
+            setShowNoEvents(false);
+          }}
+          severity='success'
+          variant='outlined'
+        >
+          <AlertTitle>No Events</AlertTitle>
+          No events found...
+        </Alert>
+      </Collapse>
     );
   }
 

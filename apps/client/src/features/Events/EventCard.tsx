@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Paper, Stack, Typography, styled } from '@mui/material';
+import { Paper, Button, Stack, Typography, styled } from '@mui/material';
 
 interface EventCardProps {
   name: string;
@@ -7,12 +7,6 @@ interface EventCardProps {
   start: string;
   end: string;
 }
-
-const EventContainer = styled(Paper)(() => ({
-  width: '85%',
-  padding: '0.8rem',
-  marginTop: '1rem',
-}));
 
 const InfoStack = styled(Stack)(() => ({
   gap: '1rem',
@@ -28,7 +22,17 @@ const GenericTypography = styled(Typography)(() => ({
 const EventCard: FC<EventCardProps> = (props) => {
   const { name, desc, start, end } = props;
   return (
-    <EventContainer elevation={3}>
+    <Paper
+      sx={{
+        width: '85%',
+        padding: '0.8rem',
+        marginTop: '1rem',
+        display: 'block',
+        textAlign: 'unset',
+      }}
+      component={Button}
+      elevation={3}
+    >
       <Stack direction='row' justifyContent='space-between'>
         <InfoStack width='90%' direction='column' justifyContent='space-evenly'>
           <GenericTypography variant='h5'>{name}</GenericTypography>
@@ -45,7 +49,7 @@ const EventCard: FC<EventCardProps> = (props) => {
           </GenericTypography>
         </InfoStack>
       </Stack>
-    </EventContainer>
+    </Paper>
   );
 };
 
