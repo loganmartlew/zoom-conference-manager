@@ -1,19 +1,19 @@
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClientProvider, QueryClient } from 'react-query';
+// import { BrowserRouter } from 'react-router-dom';
+// import { QueryClientProvider, QueryClient } from 'react-query';
 import { render, screen } from '@testing-library/react';
-import EventList from './EventsList';
+// import EventList from './EventsList';
 import EventCard from './EventCard';
 
-const MockEventList = () => {
-  const queryClient = new QueryClient();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <EventList />
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
-};
+// const MockEventList = () => {
+//   const queryClient = new QueryClient();
+//   return (
+//     <QueryClientProvider client={queryClient}>
+//       <BrowserRouter>
+//         <EventList />
+//       </BrowserRouter>
+//     </QueryClientProvider>
+//   );
+// };
 
 describe('Test EventList', () => {
   // general test on cards in list
