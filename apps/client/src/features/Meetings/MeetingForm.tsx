@@ -8,7 +8,6 @@ import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import meetingSchema from './meetingSchema';
 import DatetimePicker from '../../components/forms/DatetimePicker';
-import React from 'react';
 
 const Form = styled('form')({});
 
