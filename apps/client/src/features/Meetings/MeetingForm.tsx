@@ -2,7 +2,14 @@ import { FC, useState } from 'react';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Stack, Select, MenuItem, styled, SelectChangeEvent } from '@mui/material';
+import {
+  Button,
+  Stack,
+  Select,
+  MenuItem,
+  styled,
+  SelectChangeEvent,
+} from '@mui/material';
 import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
@@ -26,7 +33,7 @@ const MeetingInput: FC = () => {
     formState: { errors },
   } = useForm<IFormInput>({
     defaultValues: {
-      event:'',
+      event: '',
       name: '',
       description: '',
       meetingDate: dayjs().toDate(),
@@ -45,10 +52,10 @@ const MeetingInput: FC = () => {
   };
 
   const [event, setEvents] = useState('');
-  
-  const handleChange = (event: SelectChangeEvent) => {
-      setEvents(event.target.value as string);
-    };
+
+  const handleChange = (e: SelectChangeEvent) => {
+    setEvents(e.target.value as string);
+  };
 
   return (
     <Form
@@ -63,14 +70,16 @@ const MeetingInput: FC = () => {
     >
       <Stack spacing={2}>
         <Select
-            name='event-select'
-            displayEmpty
-            value={event}
-            onChange={handleChange}
+          name='event-select'
+          displayEmpty
+          value={event}
+          onChange={handleChange}
         >
-            <MenuItem value="">Please select an event...</MenuItem>
-            <MenuItem value={'Event 1'}>Event 1</MenuItem>
-            <MenuItem value={'Event 2'}>Event 2</MenuItem>
+          <MenuItem value='' disabled>
+            Select an event...
+          </MenuItem>
+          <MenuItem value='Event 1'>Event 1</MenuItem>
+          <MenuItem value='Event 2'>Event 2</MenuItem>
         </Select>
         <TextInput
           name='name'

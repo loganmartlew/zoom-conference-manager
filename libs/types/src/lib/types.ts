@@ -7,6 +7,11 @@ export interface IEvent {
   meetings: IMeeting[];
 }
 
+export interface IEventName {
+  id: string;
+  name: string;
+}
+
 export interface IMeeting {
   ubid: string;
   name: string;

@@ -21,6 +21,11 @@ export const getAllEvents = async (req: Request, res: Response) => {
   return res.status(200).json(events);
 };
 
+export const getEventNames = async (req: Request, res: Response) => {
+  const eventNames = await EventService.getNames();
+  return res.status(200).json(eventNames);
+};
+
 export const updateEvent = async (req: Request, res: Response) => {
   return res.json({ message: 'Update Event' });
 };
