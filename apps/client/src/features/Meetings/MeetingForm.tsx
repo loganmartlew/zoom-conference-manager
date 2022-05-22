@@ -50,8 +50,8 @@ const MeetingInput: FC = () => {
       startDateTime: dayjs(data.startDateTime).format(formats.dateTime),
     };
 
-    console.log(meetingData);
-    // mutate(meetingData);
+    // console.log(meetingData);
+    mutate(meetingData);
   };
 
   return (
