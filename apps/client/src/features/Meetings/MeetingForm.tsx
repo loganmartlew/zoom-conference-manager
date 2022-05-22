@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import { formats } from '@zoom-conference-manager/dates';
 import { FieldError, SubmitHandler } from 'react-hook-form';
 import { Button, Stack, MenuItem, styled } from '@mui/material';
 import dayjs from 'dayjs';
@@ -22,7 +23,7 @@ const MeetingInput: FC = () => {
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const meetingData: MeetingDTO = {
       ...data,
-      meetingDate: dayjs(data.meetingDate).format('YYYY-MM-DD HH:mm:ss'),
+      meetingDate: dayjs(data.meetingDate).format(formats.dateTime),
     };
 
     console.log(meetingData);

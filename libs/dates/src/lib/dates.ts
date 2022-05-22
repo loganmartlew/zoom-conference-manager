@@ -1,3 +1,3 @@
-export function dates(): string {
-  return 'dates';
-}
+export const formats = {
+  dateTime: 'YYYY-MM-DD HH:mm:ss',
+};
