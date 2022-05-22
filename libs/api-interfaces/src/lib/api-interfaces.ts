@@ -6,6 +6,7 @@ export interface EventDTO {
 }
 
 export interface MeetingDTO {
+  event: string;
   name: string;
   description: string;
   meetingDate: string;
