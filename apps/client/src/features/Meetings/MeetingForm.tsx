@@ -1,43 +1,23 @@
 import { FC } from 'react';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
-import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { FieldError, SubmitHandler } from 'react-hook-form';
 import { Button, Stack, MenuItem, styled } from '@mui/material';
 import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import Select from '../../components/forms/Select';
-import meetingSchema from './meetingSchema';
 import DatetimePicker from '../../components/forms/DatetimePicker';
-import { useEventNames } from '../Events/api/getEventNames';
+import { IFormInput, useMeetingForm } from './useMeetingForm';
 
 const Form = styled('form')({});
-
-interface IFormInput {
-  event: string;
-  name: string;
-  description: string;
-  meetingDate: Date;
-  meetingDuration: number;
-}
 
 const MeetingInput: FC = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>({
-    defaultValues: {
-      event: '',
-      name: '',
-      description: '',
-      meetingDate: dayjs().toDate(),
-      meetingDuration: 0,
-    },
-    resolver: yupResolver(meetingSchema),
-  });
-
-  const { data: events } = useEventNames();
+    eventNames,
+  } = useMeetingForm();
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const meetingData: MeetingDTO = {
@@ -70,8 +50,8 @@ const MeetingInput: FC = () => {
           <MenuItem value='' disabled>
             Select an event...
           </MenuItem>
-          {events &&
-            events.map((event) => (
+          {eventNames &&
+            eventNames.map((event) => (
               <MenuItem value={event.id} key={event.id}>
                 {event.name}
               </MenuItem>
