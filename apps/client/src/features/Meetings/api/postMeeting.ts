@@ -3,17 +3,17 @@ import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { allEventsKey } from '../../Events/api/getEvents';
 
-export const postEvent = async (eventData: MeetingDTO) => {
-  return axios.post('/meeting', { eventData });
+export const postMeeting = async (meetingData: MeetingDTO) => {
+  return axios.post('/meeting', { meetingData });
 };
 
-export const usePostEvent = (
+export const usePostMeeting = (
   onSuccess: () => void,
   onError: (error: unknown, variables: MeetingDTO) => void
 ) => {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(postEvent, {
+  const { mutate, isLoading } = useMutation(postMeeting, {
     onSuccess,
     onError,
     onSettled: () => {
