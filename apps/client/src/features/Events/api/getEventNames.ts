@@ -8,6 +8,6 @@ export const getEventNames = (): Promise<IEventName[]> => {
   return axios.get('/event');
 };
 
-export const useAllEvents = () => {
+export const useEventNames = () => {
   return useQuery(eventNamesKey, getEventNames);
 };

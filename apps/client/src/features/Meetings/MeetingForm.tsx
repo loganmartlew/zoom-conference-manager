@@ -1,20 +1,15 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Button,
-  Stack,
-  Select,
-  MenuItem,
-  styled,
-  SelectChangeEvent,
-} from '@mui/material';
+import { Button, Stack, MenuItem, styled } from '@mui/material';
 import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
+import Select from '../../components/forms/Select';
 import meetingSchema from './meetingSchema';
 import DatetimePicker from '../../components/forms/DatetimePicker';
+import { useEventNames } from '../Events/api/getEventNames';
 
 const Form = styled('form')({});
 
@@ -42,6 +37,8 @@ const MeetingInput: FC = () => {
     resolver: yupResolver(meetingSchema),
   });
 
+  const { data: events } = useEventNames();
+
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const meetingData: MeetingDTO = {
       ...data,
@@ -49,12 +46,6 @@ const MeetingInput: FC = () => {
     };
 
     console.log(meetingData);
-  };
-
-  const [event, setEvents] = useState('');
-
-  const handleChange = (e: SelectChangeEvent) => {
-    setEvents(e.target.value as string);
   };
 
   return (
@@ -70,16 +61,21 @@ const MeetingInput: FC = () => {
     >
       <Stack spacing={2}>
         <Select
-          name='event-select'
-          displayEmpty
-          value={event}
-          onChange={handleChange}
+          name='event'
+          label='Event'
+          control={control}
+          error={errors.event}
+          helperText={errors.event?.message}
         >
           <MenuItem value='' disabled>
             Select an event...
           </MenuItem>
-          <MenuItem value='Event 1'>Event 1</MenuItem>
-          <MenuItem value='Event 2'>Event 2</MenuItem>
+          {events &&
+            events.map((event) => (
+              <MenuItem value={event.id} key={event.id}>
+                {event.name}
+              </MenuItem>
+            ))}
         </Select>
         <TextInput
           name='name'
