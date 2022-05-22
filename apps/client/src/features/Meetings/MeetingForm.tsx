@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Stack, styled, FormControlLabel, Switch, TextField } from '@mui/material';
@@ -6,7 +6,6 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
-import React from 'react';
 import meetingSchema from './meetingSchema'
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 
@@ -45,7 +44,7 @@ interface IFormInput {
         console.log(errors);
       }, [errors]);
 
-    const [value, setValue] = React.useState<Date | null>(
+    const [value, setValue] = useState<Date | null>(
         new Date(dayjs().toDate()),
     );
       
