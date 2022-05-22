@@ -1,13 +1,13 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Stack, styled, TextField } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
+import { Button, Stack, styled } from '@mui/material';
 import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import meetingSchema from './meetingSchema';
+import DatetimePicker from '../../components/forms/DatetimePicker';
 
 /**
  * Form needs following fields:
@@ -41,20 +41,10 @@ const MeetingInput: FC = () => {
     resolver: yupResolver(meetingSchema),
   });
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
-  const [value, setValue] = useState<Date | null>(new Date(dayjs().toDate()));
-
-  const handleChange = (newValue: Date | null) => {
-    setValue(newValue);
-  };
-
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const meetingData: MeetingDTO = {
       ...data,
-      meetingDate: dayjs(data.meetingDate).format('YYYY-MM-DDHH:mm:ss'),
+      meetingDate: dayjs(data.meetingDate).format('YYYY-MM-DD HH:mm:ss'),
     };
 
     console.log(meetingData);
@@ -85,11 +75,11 @@ const MeetingInput: FC = () => {
           error={errors.description}
           minRows={3}
         />
-        <DateTimePicker
-          label='Meeting Date'
-          value={value}
-          renderInput={(props) => <TextField {...props} />}
-          onChange={handleChange}
+        <DatetimePicker
+          name='meetingDate'
+          label='Meeting Date and Time'
+          control={control}
+          error={errors.meetingDate as FieldError | void}
         />
         <TextInput
           name='meetingDuration'
