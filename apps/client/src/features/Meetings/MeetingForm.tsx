@@ -1,13 +1,21 @@
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { formats } from '@zoom-conference-manager/dates';
 import { FieldError, SubmitHandler } from 'react-hook-form';
-import { Button, Stack, MenuItem, styled } from '@mui/material';
+import {
+  Button,
+  Stack,
+  MenuItem,
+  CircularProgress,
+  styled,
+} from '@mui/material';
 import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import Select from '../../components/forms/Select';
 import DatetimePicker from '../../components/forms/DatetimePicker';
 import { IFormInput, useMeetingForm } from './useMeetingForm';
+import { usePostMeeting } from './api/postMeeting';
 
 const Form = styled('form')({});
 
@@ -19,6 +27,23 @@ const MeetingInput: FC = () => {
     eventNames,
   } = useMeetingForm();
 
+  const navigate = useNavigate();
+
+  const onPostSuccess = () => {
+    // Notification, meeting added
+    // Should navigate to /events/:eventId
+    navigate('/events');
+  };
+
+  const onPostError = (error: unknown, variables: MeetingDTO) => {
+    // Notification, error
+    console.log('An error occurred');
+    console.log('Error: ', error);
+    console.log('Data: ', variables);
+  };
+
+  const { mutate, isLoading } = usePostMeeting(onPostSuccess, onPostError);
+
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const meetingData: MeetingDTO = {
       ...data,
@@ -26,6 +51,7 @@ const MeetingInput: FC = () => {
     };
 
     console.log(meetingData);
+    // mutate(meetingData);
   };
 
   return (
@@ -81,8 +107,15 @@ const MeetingInput: FC = () => {
               </MenuItem>
             ))}
         </Select>
-        <Button type='submit' variant='contained'>
-          Submit Meeting
+        <Button
+          type='submit'
+          variant='contained'
+          disabled={isLoading}
+          startIcon={
+            isLoading ? <CircularProgress color='inherit' size='16px' /> : null
+          }
+        >
+          {isLoading ? 'Submitting' : 'Create Meeting'}
         </Button>
       </Stack>
     </Form>
