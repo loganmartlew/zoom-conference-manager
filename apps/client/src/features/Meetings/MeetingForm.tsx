@@ -25,6 +25,7 @@ interface IFormInput {
   meetingDate: Date;
   meetingDuration: number;
 }
+
 const MeetingInput: FC = () => {
   const {
     control,
