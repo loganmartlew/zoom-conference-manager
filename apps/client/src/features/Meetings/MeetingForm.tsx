@@ -1,25 +1,18 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Stack, styled } from '@mui/material';
+import { Button, Stack, Select, MenuItem, styled, SelectChangeEvent } from '@mui/material';
 import dayjs from 'dayjs';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import meetingSchema from './meetingSchema';
 import DatetimePicker from '../../components/forms/DatetimePicker';
 
-/**
- * Form needs following fields:
- * - Name of Meeting
- * - Description
- * - Meeting day + Meeting start time
- * - Meeting duration
- * */
-
 const Form = styled('form')({});
 
 interface IFormInput {
+  event: string;
   name: string;
   description: string;
   meetingDate: Date;
@@ -33,6 +26,7 @@ const MeetingInput: FC = () => {
     formState: { errors },
   } = useForm<IFormInput>({
     defaultValues: {
+      event:'',
       name: '',
       description: '',
       meetingDate: dayjs().toDate(),
@@ -50,6 +44,12 @@ const MeetingInput: FC = () => {
     console.log(meetingData);
   };
 
+  const [event, setEvents] = useState('');
+  
+  const handleChange = (event: SelectChangeEvent) => {
+      setEvents(event.target.value as string);
+    };
+
   return (
     <Form
       autoComplete='off'
@@ -62,6 +62,16 @@ const MeetingInput: FC = () => {
       }}
     >
       <Stack spacing={2}>
+        <Select
+            name='event-select'
+            displayEmpty
+            value={event}
+            onChange={handleChange}
+        >
+            <MenuItem value="">Please select an event...</MenuItem>
+            <MenuItem value={'Event 1'}>Event 1</MenuItem>
+            <MenuItem value={'Event 2'}>Event 2</MenuItem>
+        </Select>
         <TextInput
           name='name'
           label='Name'

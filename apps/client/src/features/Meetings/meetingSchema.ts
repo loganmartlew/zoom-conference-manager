@@ -1,6 +1,7 @@
 import { object, string, date, number } from 'yup';
 
 const meetingSchema = object ({
+    event: string().required('Must select Event.'),
     name: string().required('Name is required.'),
     description: string().required('Description is required.'),
     meetingDate: date().nullable()
