@@ -45,6 +45,7 @@
     "react-hook-form": "^7.30.0",
     "react-query": "^3.38.1",
     "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.0.1",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
     "tslib": "^2.0.0",
