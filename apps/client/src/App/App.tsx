@@ -13,7 +13,7 @@ const App: FC = () => (
     <CssBaseline />
     {globalStyles}
     <AppRoutes />
-    <ToastContainer />
+    <ToastContainer theme='colored' position='bottom-right' autoClose={5000} />
     {notificationStyles}
   </Providers>
 );
