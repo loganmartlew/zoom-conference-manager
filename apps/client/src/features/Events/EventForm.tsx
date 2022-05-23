@@ -81,7 +81,7 @@ const EventInput: FC = () => {
           control={control}
           error={errors.startDate as FieldError | void}
         />
-        <DatePicker<IFormInput>
+        <DatePicker
           name='endDate'
           label='End Date'
           control={control}

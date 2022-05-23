@@ -1,7 +1,3 @@
-export interface Message {
-  message: string;
-}
-
 export interface EventDTO {
   name: string;
   description: string;
@@ -12,7 +8,7 @@ export interface EventDTO {
 export interface MeetingDTO {
   ubid: string;
   name: string;
-  startDateTime: Date;
+  startDateTime: string;
   duration: number;
   eventId: string;
 }

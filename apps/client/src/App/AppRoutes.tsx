@@ -4,6 +4,7 @@ import NavLayout from '../features/Navigation/NavLayout';
 
 import HomePage from '../pages/HomePage';
 import NewEventPage from '../pages/NewEventPage';
+import NewMeetingPage from '../pages/NewMeetingPage';
 
 const AppRoutes: FC = () => {
   return (
@@ -14,6 +15,7 @@ const AppRoutes: FC = () => {
           <Route path='/dashboard' element={<h1>Dashboard</h1>} />
           <Route path='/events' element={<h1>Events</h1>} />
           <Route path='/new-event' element={<NewEventPage />} />
+          <Route path='/new-meeting' element={<NewMeetingPage />} />
         </Route>
       </Routes>
     </Router>

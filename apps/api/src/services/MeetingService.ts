@@ -1,5 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import { formats } from '@zoom-conference-manager/dates';
+import dayjs from 'dayjs';
 import Meeting from '../entities/Meeting';
 import EventService from './EventService';
 
@@ -29,7 +31,10 @@ export default class MeetingService {
 
     meetingStub.ubid = meetingData.ubid;
     meetingStub.name = meetingData.name;
-    meetingStub.startDateTime = meetingData.startDateTime;
+    meetingStub.startDateTime = dayjs(
+      meetingData.startDateTime,
+      formats.dateTime
+    ).toDate();
     meetingStub.duration = meetingData.duration;
     meetingStub.event = event;
 
