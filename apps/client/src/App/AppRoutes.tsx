@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import EventsList from '../features/Events/EventsList';
 import NavLayout from '../features/Navigation/NavLayout';
 
 import HomePage from '../pages/HomePage';
@@ -13,7 +14,7 @@ const AppRoutes: FC = () => {
         <Route element={<NavLayout />}>
           <Route path='/' element={<HomePage />} />
           <Route path='/dashboard' element={<h1>Dashboard</h1>} />
-          <Route path='/events' element={<h1>Events</h1>} />
+          <Route path='/events' element={<EventsList />} />
           <Route path='/new-event' element={<NewEventPage />} />
           <Route path='/new-meeting' element={<NewMeetingPage />} />
         </Route>
