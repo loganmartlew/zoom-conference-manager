@@ -5,7 +5,7 @@ import EventsList from '../features/Events/EventsList';
 const EventsPage: FC = () => {
   return (
     <>
-      <Typography variant='h3' sx={{ my: 3 }}>
+      <Typography variant='h3' sx={{ mb: 3 }}>
         Events
       </Typography>
       <EventsList />
