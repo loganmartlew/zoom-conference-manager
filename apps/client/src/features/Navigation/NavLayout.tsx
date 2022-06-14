@@ -32,7 +32,7 @@ const NavLayout: FC<Props> = ({ collapsable }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <TopBar
         collapsable={collapsable}
         open={open}
@@ -47,7 +47,7 @@ const NavLayout: FC<Props> = ({ collapsable }) => {
       </SideNavigation>
       <Box sx={{ flexGrow: 1 }}>
         <DrawerHeader />
-        <Container>
+        <Container sx={{ minHeight: 'calc(100vh - 4em)' }}>
           <Outlet />
         </Container>
       </Box>
