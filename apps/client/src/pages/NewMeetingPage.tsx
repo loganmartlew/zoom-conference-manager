@@ -9,7 +9,6 @@ const NewMeetingPage: FC = () => {
         New Meeting
       </Typography>
       <MeetingInput />
-      <Box sx={{ mb: 15 }} />
     </Box>
   );
 };

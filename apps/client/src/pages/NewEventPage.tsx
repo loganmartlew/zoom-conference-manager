@@ -9,7 +9,6 @@ const NewEventPage: FC = () => {
         New Event
       </Typography>
       <EventInput />
-      <Box sx={{ mb: 15 }} />
     </Box>
   );
 };
