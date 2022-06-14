@@ -1,6 +1,6 @@
 import { useState, FC } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { Home, Dashboard, Event, AddBox } from '@mui/icons-material';
 import TopBar from './TopBar';
 import SideNavigation, { DrawerHeader } from './SideNavigation';
@@ -47,7 +47,9 @@ const NavLayout: FC<Props> = ({ collapsable }) => {
       </SideNavigation>
       <Box sx={{ flexGrow: 1 }}>
         <DrawerHeader />
-        <Outlet />
+        <Container>
+          <Outlet />
+        </Container>
       </Box>
     </Box>
   );

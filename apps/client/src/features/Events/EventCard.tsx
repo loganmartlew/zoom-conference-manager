@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Paper, Stack, Typography, styled } from '@mui/material';
+import { Paper, Stack, Typography } from '@mui/material';
 
 interface EventCardProps {
   name: string;
@@ -14,7 +14,7 @@ const EventCard: FC<EventCardProps> = (props) => {
     <Paper
       sx={{
         padding: '1.5em',
-        maxWidth: '100ch',
+        // maxWidth: '100ch',
       }}
       elevation={3}
     >
