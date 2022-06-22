@@ -47,9 +47,26 @@ const EventsList: FC = () => {
     );
   }
 
+  if (!events) {
+    return (
+      <Collapse in={showNoEvents}>
+        <Alert
+          onClose={() => {
+            setShowNoEvents(false);
+          }}
+          severity='success'
+          variant='outlined'
+        >
+          <AlertTitle>No Events</AlertTitle>
+          No events found...
+        </Alert>
+      </Collapse>
+    );
+  }
+
   return (
     <>
-      {events?.map((event) => {
+      {events.map((event) => {
         return (
           <EventCard
             key={event.id}
