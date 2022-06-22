@@ -1,7 +1,8 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Paper, Stack, Typography, Chip, Button } from '@mui/material';
+import { Paper, Stack, Typography, Button } from '@mui/material';
 import { Groups } from '@mui/icons-material';
+import EventStatusBadge from './EventStatusBadge';
 
 interface Props {
   id: string;
@@ -26,7 +27,7 @@ const EventCard: FC<Props> = (props) => {
           {name}
         </Typography>
         <Stack direction='row' spacing={2}>
-          <Chip label='Draft' size='small' color='warning' />
+          <EventStatusBadge status='draft' />
           <Stack direction='row' spacing={1}>
             <Groups />
             <Typography>0 Meetings</Typography>
