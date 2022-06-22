@@ -47,7 +47,7 @@ interface Props {
 const TopBar: FC<Props> = ({ collapsable, open, handleDrawerOpen }) => {
   return (
     <AppBar position='fixed' open={collapsable ? open : true}>
-      <Toolbar>
+      <Toolbar sx={{ height: '4em' }}>
         {collapsable && (
           <IconButton
             color='inherit'
