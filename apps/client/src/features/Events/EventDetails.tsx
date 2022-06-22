@@ -4,6 +4,7 @@ import { IEvent } from '@zoom-conference-manager/types';
 import { Stack, Typography, Button } from '@mui/material';
 import { Add, Upload } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
+import MeetingsList from '../Meetings/MeetingsList';
 
 interface Props {
   event: IEvent | undefined;
@@ -63,6 +64,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
             Upload Meetings
           </Button>
         </Stack>
+        <MeetingsList meetings={event.meetings} />
       </Stack>
     </Stack>
   );

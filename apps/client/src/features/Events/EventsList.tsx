@@ -8,8 +8,6 @@ const EventsList: FC = () => {
   const [showError, setShowError] = useState(true);
   const [showNoEvents, setShowNoEvents] = useState(true);
 
-  console.log(events);
-
   if (isError) {
     return (
       <Collapse in={showError}>

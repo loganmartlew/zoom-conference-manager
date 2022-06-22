@@ -28,6 +28,7 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
     control,
     handleSubmit,
     formState: { errors },
+    getValues,
     eventNames,
   } = useMeetingForm(eventId);
 
@@ -36,7 +37,8 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
   const onPostSuccess = () => {
     // Notification, meeting added
     // Should navigate to /events/:eventId
-    navigate('/events');
+    const { eventId: finalEventId } = getValues();
+    navigate(`/events/${finalEventId}`);
   };
 
   const onPostError = (error: unknown, variables: MeetingDTO) => {
