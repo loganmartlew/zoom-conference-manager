@@ -12,7 +12,7 @@ import { IFormInput, useEventForm } from './useEventForm';
 
 const Form = styled('form')({});
 
-const EventInput: FC = () => {
+const EventForm: FC = () => {
   const {
     control,
     handleSubmit,
@@ -97,4 +97,4 @@ const EventInput: FC = () => {
   );
 };
 
-export default EventInput;
+export default EventForm;

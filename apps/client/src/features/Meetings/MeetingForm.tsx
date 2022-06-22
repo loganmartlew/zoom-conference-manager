@@ -19,13 +19,17 @@ import { usePostMeeting } from './api/postMeeting';
 
 const Form = styled('form')({});
 
-const MeetingInput: FC = () => {
+interface Props {
+  eventId: string | null;
+}
+
+const MeetingForm: FC<Props> = ({ eventId }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
     eventNames,
-  } = useMeetingForm();
+  } = useMeetingForm(eventId);
 
   const navigate = useNavigate();
 
@@ -92,7 +96,7 @@ const MeetingInput: FC = () => {
         />
         <Select
           name='eventId'
-          label='Event'
+          label=''
           control={control}
           error={errors.eventId}
           helperText={errors.eventId?.message}
@@ -122,4 +126,4 @@ const MeetingInput: FC = () => {
   );
 };
 
-export default MeetingInput;
+export default MeetingForm;

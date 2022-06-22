@@ -52,7 +52,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
         <Stack direction='row' spacing={1}>
           <Button
             component={Link}
-            to={`/new-event?event=${event.id}`}
+            to={`/new-meeting?event=${event.id}`}
             variant='contained'
             size='small'
             startIcon={<Add />}
