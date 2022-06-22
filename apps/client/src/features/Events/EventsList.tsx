@@ -53,6 +53,7 @@ const EventsList: FC = () => {
         return (
           <EventCard
             key={event.id}
+            id={event.id}
             name={event.name}
             desc={event.description}
             start={event.startDate}
