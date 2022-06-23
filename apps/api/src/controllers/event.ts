@@ -1,15 +1,16 @@
 import {
-  ApiResponse,
-  IEvent,
-  IEventName,
+  CreateEvent,
+  GetAllEvents,
+  GetEvent,
+  GetEventNames,
+  UpdateEvent,
+  DeleteEvent,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import EventService from '../services/EventService';
 
-export const createEvent = async (
-  req: Request
-): Promise<ApiResponse<IEvent>> => {
+export const createEvent: CreateEvent = async (req: Request) => {
   const { eventData } = req.body;
 
   try {
@@ -28,14 +29,14 @@ export const createEvent = async (
   }
 };
 
-export const getEvent = async (req: Request): Promise<ApiResponse<IEvent>> => {
+export const getEvent: GetEvent = async (req: Request) => {
   const { id } = req.params;
   const event = await EventService.getOne(id);
 
   return { status: StatusCodes.OK, message: 'Found Event', data: event };
 };
 
-export const getAllEvents = async (): Promise<ApiResponse<IEvent[]>> => {
+export const getAllEvents: GetAllEvents = async () => {
   const events = await EventService.getAll();
   return {
     status: StatusCodes.OK,
@@ -44,7 +45,7 @@ export const getAllEvents = async (): Promise<ApiResponse<IEvent[]>> => {
   };
 };
 
-export const getEventNames = async (): Promise<ApiResponse<IEventName[]>> => {
+export const getEventNames: GetEventNames = async () => {
   const eventNames = await EventService.getNames();
   return {
     status: StatusCodes.OK,
@@ -53,9 +54,7 @@ export const getEventNames = async (): Promise<ApiResponse<IEventName[]>> => {
   };
 };
 
-export const updateEvent = async (
-  req: Request
-): Promise<ApiResponse<IEvent>> => {
+export const updateEvent: UpdateEvent = async (req: Request) => {
   const { eventData } = req.body;
   const { id } = req.params;
   try {
@@ -74,7 +73,7 @@ export const updateEvent = async (
   }
 };
 
-export const deleteEvent = async (req: Request): Promise<ApiResponse<void>> => {
+export const deleteEvent: DeleteEvent = async (req: Request) => {
   const { id } = req.params;
 
   if (!id) {
