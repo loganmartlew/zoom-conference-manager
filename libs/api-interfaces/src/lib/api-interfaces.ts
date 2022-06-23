@@ -1,7 +1,8 @@
 export interface ApiResponse<T> {
   status: number;
   message: string;
-  data: T;
+  data?: T;
+  error?: unknown;
 }
 
 export interface EventDTO {

@@ -7,13 +7,14 @@ import {
   updateEvent,
   deleteEvent,
 } from '../controllers/event';
+import response from '../util/response';
 
 const router = express.Router();
 
-router.get('/', getAllEvents);
-router.post('/', createEvent);
-router.get('/:id', getEvent);
-router.patch('/:id', updateEvent);
-router.delete('/:id', deleteEvent);
+router.get('/', response(getAllEvents));
+router.post('/', response(createEvent));
+router.get('/:id', response(getEvent));
+router.patch('/:id', response(updateEvent));
+router.delete('/:id', response(deleteEvent));
 
 export default router;

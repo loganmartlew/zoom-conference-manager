@@ -1,6 +1,13 @@
 import { ApiResponse } from '@zoom-conference-manager/api-interfaces';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
-export default (json: ApiResponse<unknown>, res: Response) => {
+const responseFn = (json: ApiResponse<unknown>, res: Response) => {
   return res.status(json.status).json(json);
+};
+
+export default (
+  controller: (req: Request) => Promise<ApiResponse<unknown>>
+) => {
+  return async (req: Request, res: Response) =>
+    responseFn(await controller(req), res);
 };
