@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { IMeeting } from '@zoom-conference-manager/types';
+import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import { Collapse, Alert, AlertTitle } from '@mui/material';
 import MeetingCard from './MeetingCard';
 

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { IMeeting } from '@zoom-conference-manager/types';
+import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
 import { Paper, Stack, Typography, IconButton } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';

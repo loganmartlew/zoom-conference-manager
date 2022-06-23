@@ -11,9 +11,9 @@ const EventDetailsPage: FC = () => {
   return (
     <>
       <Typography variant='h3' sx={{ mb: 3 }}>
-        {data?.event?.name || 'Event Details'}
+        {data?.name || 'Event Details'}
       </Typography>
-      <EventDetails event={data?.event} isLoading={isLoading} />
+      <EventDetails event={data} isLoading={isLoading} />
     </>
   );
 };

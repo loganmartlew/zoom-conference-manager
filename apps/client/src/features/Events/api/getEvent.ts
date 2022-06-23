@@ -1,21 +1,27 @@
-import { IEvent, IMeeting } from '@zoom-conference-manager/types';
+import {
+  GetEvent,
+  IEvent,
+  IMeeting,
+} from '@zoom-conference-manager/api-interfaces';
+import fetchFromApi from 'apps/client/src/util/fetchFromApi';
 import { useQuery } from 'react-query';
 import { axios } from '../../../config/axios';
 
 export const eventKey = ['event'];
 
-export const getEvent = (id: string): Promise<{ event: IEvent }> => {
-  return axios.get<{ event: IEvent }>(`/event/${id}`).then((res) => {
-    const data = res as unknown as { event: IEvent };
-    const parsedMeetings: IMeeting[] = data.event.meetings.map(
-      (meeting: IMeeting) => ({
-        ...meeting,
-        startDateTime: new Date(meeting.startDateTime),
-      })
-    );
+export const getEvent = (id: string) => {
+  return fetchFromApi<GetEvent>(axios.get(`/events/${id}`)).then(
+    (event): IEvent => {
+      const parsedMeetings: IMeeting[] = event.meetings.map(
+        (meeting: IMeeting) => ({
+          ...meeting,
+          startDateTime: new Date(meeting.startDateTime),
+        })
+      );
 
-    return { event: { ...data.event, meetings: parsedMeetings } };
-  });
+      return { ...event, meetings: parsedMeetings };
+    }
+  );
 };
 
 export const useEvent = (id: string) => {

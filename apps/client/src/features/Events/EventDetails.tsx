@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { IEvent } from '@zoom-conference-manager/types';
+import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { Stack, Typography, Button } from '@mui/material';
 import { Add, Delete, Upload } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';

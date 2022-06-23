@@ -1,10 +1,11 @@
-import { EventDTO } from '@zoom-conference-manager/api-interfaces';
+import { CreateEvent, EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { allEventsKey } from './getEvents';
+import fetchFromApi from '../../../util/fetchFromApi';
 
 export const postEvent = async (eventData: EventDTO) => {
-  return axios.post('/event', { eventData });
+  return fetchFromApi<CreateEvent>(axios.post('/events', { eventData }));
 };
 
 export const usePostEvent = (
