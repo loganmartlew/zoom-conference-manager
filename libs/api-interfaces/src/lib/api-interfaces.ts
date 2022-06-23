@@ -51,3 +51,7 @@ export type GetEventNames = (
 ) => Promise<ApiResponse<IEventName[]>>;
 export type UpdateEvent = (req: Request) => Promise<ApiResponse<IEvent>>;
 export type DeleteEvent = (req: Request) => Promise<ApiResponse<void>>;
+
+export type CreateMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
+export type GetMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
+export type GetAllMeetings = (req: Request) => Promise<ApiResponse<IMeeting[]>>;
