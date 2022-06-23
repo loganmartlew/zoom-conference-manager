@@ -1,11 +1,12 @@
-import { IEventName } from '@zoom-conference-manager/types';
+import { GetEventNames } from '@zoom-conference-manager/api-interfaces';
 import { useQuery } from 'react-query';
 import { axios } from '../../../config/axios';
+import fetchFromApi from '../../../util/fetchFromApi';
 
 export const eventNamesKey = ['events', { type: 'names' }];
 
-export const getEventNames = (): Promise<IEventName[]> => {
-  return axios.get('/event');
+export const getEventNames = () => {
+  return fetchFromApi<GetEventNames>(axios.get('/events'));
 };
 
 export const useEventNames = () => {
