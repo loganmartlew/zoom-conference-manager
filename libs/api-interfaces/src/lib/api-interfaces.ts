@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { EventStatus } from '@zoom-conference-manager/types';
 
 export interface ApiResponse<T> {
   status: number;
@@ -28,6 +29,7 @@ export interface IEvent {
   description: string;
   startDate: string;
   endDate: string;
+  status: EventStatus;
   meetings: IMeeting[];
 }
 
