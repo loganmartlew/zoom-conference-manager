@@ -1,4 +1,4 @@
-import { IEventName } from '@zoom-conference-manager/types';
+import { IEventName } from '@zoom-conference-manager/api-interfaces';
 import { useQuery } from 'react-query';
 import { axios } from '../../../config/axios';
 
