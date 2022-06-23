@@ -1,4 +1,5 @@
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
+import { EventStatus } from '@zoom-conference-manager/types';
 import Event from '../entities/Event';
 
 export default class EventService {
@@ -68,6 +69,40 @@ export default class EventService {
       return updatedEvent;
     } catch (error) {
       throw new Error('Unable to update Event');
+    }
+  }
+
+  static async publish(id: string): Promise<Event> {
+    try {
+      const event = await this.getOne(id);
+
+      if (event.status === EventStatus.PUBLISHED) {
+        throw new Error('Event is already published');
+      }
+
+      event.status = EventStatus.PUBLISHED;
+      const updatedEvent = await event.save();
+
+      return updatedEvent;
+    } catch (error) {
+      throw new Error('Unable to publish event');
+    }
+  }
+
+  static async unpublish(id: string): Promise<Event> {
+    try {
+      const event = await this.getOne(id);
+
+      if (event.status === EventStatus.DRAFT) {
+        throw new Error('Event is not published');
+      }
+
+      event.status = EventStatus.DRAFT;
+      const updatedEvent = await event.save();
+
+      return updatedEvent;
+    } catch (error) {
+      throw new Error('Unable to unpublish event');
     }
   }
 }

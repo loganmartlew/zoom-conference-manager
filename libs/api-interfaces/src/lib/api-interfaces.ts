@@ -55,6 +55,8 @@ export type GetEvent = Controller<IEvent>;
 export type GetAllEvents = Controller<IEvent[]>;
 export type GetEventNames = Controller<IEventName[]>;
 export type UpdateEvent = Controller<IEvent>;
+export type PublishEvent = Controller<IEvent>;
+export type UnpublishEvent = Controller<IEvent>;
 export type DeleteEvent = Controller<void>;
 
 export type CreateMeeting = Controller<IMeeting>;
