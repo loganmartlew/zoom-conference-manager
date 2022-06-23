@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/', getAllMeeting);
 router.post('/', createMeeting);
 router.get('/:id', getMeeting);
-router.patch('/:id', updateMeeting);
+router.put('/:id', updateMeeting);
 router.delete('/:id', deleteMeeting);
 
 export default router;
