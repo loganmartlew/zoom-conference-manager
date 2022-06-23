@@ -5,7 +5,7 @@ import {
   GetMeeting,
   UpdateMeeting,
 } from '@zoom-conference-manager/api-interfaces';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import MeetingService from '../services/MeetingService';
 

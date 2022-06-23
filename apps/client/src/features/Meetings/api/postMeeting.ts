@@ -1,10 +1,21 @@
-import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import {
+  CreateMeeting,
+  MeetingDTO,
+} from '@zoom-conference-manager/api-interfaces';
 import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { allEventsKey } from '../../Events/api/getEvents';
 
 export const postMeeting = async (meetingData: MeetingDTO) => {
-  return axios.post('/meeting', { meetingData });
+  return (
+    axios.post('/meetings', { meetingData }) as ReturnType<CreateMeeting>
+  ).then((res) => {
+    if (!res.data) {
+      throw new Error();
+    }
+
+    return res.data;
+  });
 };
 
 export const usePostMeeting = (
