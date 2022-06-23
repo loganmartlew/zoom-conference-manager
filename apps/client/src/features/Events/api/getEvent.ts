@@ -3,9 +3,9 @@ import {
   IEvent,
   IMeeting,
 } from '@zoom-conference-manager/api-interfaces';
-import fetchFromApi from 'apps/client/src/util/fetchFromApi';
 import { useQuery } from 'react-query';
 import { axios } from '../../../config/axios';
+import fetchFromApi from '../../../util/fetchFromApi';
 
 export const eventKey = ['event'];
 
