@@ -5,17 +5,10 @@ import {
 import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { allEventsKey } from '../../Events/api/getEvents';
+import fetchFromApi from '../../../util/fetchFromApi';
 
 export const postMeeting = async (meetingData: MeetingDTO) => {
-  return (
-    axios.post('/meetings', { meetingData }) as ReturnType<CreateMeeting>
-  ).then((res) => {
-    if (!res.data) {
-      throw new Error();
-    }
-
-    return res.data;
-  });
+  return fetchFromApi<CreateMeeting>(axios.post('/meetings', { meetingData }));
 };
 
 export const usePostMeeting = (

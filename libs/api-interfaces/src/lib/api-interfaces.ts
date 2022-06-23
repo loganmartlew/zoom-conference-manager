@@ -43,17 +43,20 @@ export interface IMeeting {
   duration: number;
 }
 
-export type CreateEvent = (req: Request) => Promise<ApiResponse<IEvent>>;
-export type GetEvent = (req: Request) => Promise<ApiResponse<IEvent>>;
-export type GetAllEvents = (req: Request) => Promise<ApiResponse<IEvent[]>>;
-export type GetEventNames = (
-  req: Request
-) => Promise<ApiResponse<IEventName[]>>;
-export type UpdateEvent = (req: Request) => Promise<ApiResponse<IEvent>>;
-export type DeleteEvent = (req: Request) => Promise<ApiResponse<void>>;
+export type Controller<T> = (req: Request) => Promise<ApiResponse<T>>;
+export type ExtractControllerData<T> = T extends Controller<infer U>
+  ? U
+  : never;
 
-export type CreateMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
-export type GetMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
-export type GetAllMeetings = (req: Request) => Promise<ApiResponse<IMeeting[]>>;
-export type UpdateMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
-export type DeleteMeeting = (req: Request) => Promise<ApiResponse<void>>;
+export type CreateEvent = Controller<IEvent>;
+export type GetEvent = Controller<IEvent>;
+export type GetAllEvents = Controller<IEvent[]>;
+export type GetEventNames = Controller<IEventName[]>;
+export type UpdateEvent = Controller<IEvent>;
+export type DeleteEvent = Controller<void>;
+
+export type CreateMeeting = Controller<IMeeting>;
+export type GetMeeting = Controller<IMeeting>;
+export type GetAllMeetings = Controller<IMeeting[]>;
+export type UpdateMeeting = Controller<IMeeting>;
+export type DeleteMeeting = Controller<void>;
