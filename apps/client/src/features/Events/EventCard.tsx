@@ -18,7 +18,6 @@ const EventCard: FC<Props> = (props) => {
     <Paper
       sx={{
         padding: '1.5em',
-        // maxWidth: '100ch',
       }}
       elevation={3}
     >

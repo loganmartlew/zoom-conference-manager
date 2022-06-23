@@ -50,7 +50,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
 
       <Stack spacing={1}>
         <Typography variant='h5'>Meetings</Typography>
-        <Stack direction='row' spacing={1}>
+        <Stack direction='row' spacing={1} sx={{ mb: '1em !important' }}>
           <Button
             component={Link}
             to={`/new-meeting?event=${event.id}`}

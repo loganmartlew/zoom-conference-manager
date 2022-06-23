@@ -15,8 +15,7 @@ export interface IEventName {
 export interface IMeeting {
   ubid: string;
   name: string;
-  description: string;
-  meetingDate: Date;
-  meetingDuration: number;
+  startDateTime: Date;
+  duration: number;
   event: IEvent;
 }
