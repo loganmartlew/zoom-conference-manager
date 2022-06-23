@@ -55,3 +55,5 @@ export type DeleteEvent = (req: Request) => Promise<ApiResponse<void>>;
 export type CreateMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
 export type GetMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
 export type GetAllMeetings = (req: Request) => Promise<ApiResponse<IMeeting[]>>;
+export type UpdateMeeting = (req: Request) => Promise<ApiResponse<IMeeting>>;
+export type DeleteMeeting = (req: Request) => Promise<ApiResponse<void>>;

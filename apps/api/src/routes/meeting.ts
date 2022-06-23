@@ -14,7 +14,7 @@ const router = express.Router();
 router.get('/', response(getAllMeeting));
 router.post('/', response(createMeeting));
 router.get('/:id', response(getMeeting));
-router.put('/:id', updateMeeting);
-router.delete('/:id', deleteMeeting);
+router.put('/:id', response(updateMeeting));
+router.delete('/:id', response(deleteMeeting));
 
 export default router;

@@ -1,7 +1,9 @@
 import {
   CreateMeeting,
+  DeleteMeeting,
   GetAllMeetings,
   GetMeeting,
+  UpdateMeeting,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -41,10 +43,10 @@ export const getMeeting: GetMeeting = async (req: Request) => {
   return { status: StatusCodes.OK, message: 'Get Meeting', data: meeting };
 };
 
-export const updateMeeting = async (req: Request, res: Response) => {
-  return res.json({ message: 'Update Meeting' });
+export const updateMeeting: UpdateMeeting = async () => {
+  return { status: StatusCodes.OK, message: 'Update Meeting' };
 };
 
-export const deleteMeeting = async (req: Request, res: Response) => {
-  return res.json({ message: 'Delete Meeting' });
+export const deleteMeeting: DeleteMeeting = async () => {
+  return { status: StatusCodes.OK, message: 'Delete Meeting' };
 };
