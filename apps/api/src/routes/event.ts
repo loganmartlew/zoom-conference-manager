@@ -17,8 +17,8 @@ router.get('/', response(getAllEvents));
 router.post('/', response(createEvent));
 router.get('/:id', response(getEvent));
 router.put('/:id', response(updateEvent));
-router.put('/:id/publish', response(publishEvent));
-router.put('/:id/unpublish', response(unpublishEvent));
+router.patch('/:id/publish', response(publishEvent));
+router.patch('/:id/unpublish', response(unpublishEvent));
 router.delete('/:id', response(deleteEvent));
 
 export default router;
