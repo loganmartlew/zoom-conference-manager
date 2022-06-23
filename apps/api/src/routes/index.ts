@@ -6,7 +6,7 @@ import eventRoute from './event';
 const router = express.Router();
 
 /// All routes here :
-router.use('/meeting', meetingRoute);
-router.use('/event', eventRoute);
+router.use('/meetings', meetingRoute);
+router.use('/events', eventRoute);
 
 export default router;
