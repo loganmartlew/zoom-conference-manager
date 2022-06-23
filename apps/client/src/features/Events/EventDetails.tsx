@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/types';
 import { Stack, Typography, Button } from '@mui/material';
-import { Add, Upload } from '@mui/icons-material';
+import { Add, Delete, Upload } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
 
@@ -62,6 +62,14 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
           </Button>
           <Button variant='outlined' size='small' startIcon={<Upload />}>
             Upload Meetings
+          </Button>
+          <Button
+            variant='contained'
+            size='small'
+            color='error'
+            startIcon={<Delete />}
+          >
+            Clear Meetings
           </Button>
         </Stack>
         <MeetingsList meetings={event.meetings} />
