@@ -1,5 +1,9 @@
+import { ZoomTokenResponse } from '@zoom-conference-manager/types';
+import axios from 'axios';
+import { zoom } from '../config';
+
 const zoomTokenUrl = `https://zoom.us/oauth/token`;
-const grantType = ``;
+const grantType = `account_credentials`;
 
 export default class ZoomTokenService {
   private static instance: ZoomTokenService;
@@ -31,7 +35,18 @@ export default class ZoomTokenService {
     service.token = await ZoomTokenService.fetchToken();
   }
 
-  private static fetchToken(): string {
-    return '';
+  private static async fetchToken(): Promise<string> {
+    const zoomConfig = zoom();
+
+    const url = `${zoomTokenUrl}?grant_type=${grantType}&account_id=${zoomConfig.accountId}`;
+    const config = {
+      auth: {
+        username: zoomConfig.clientId,
+        password: zoomConfig.clientSecret,
+      },
+    };
+
+    const res = await axios.post<ZoomTokenResponse>(url, null, config);
+    return res.data.access_token;
   }
 }
