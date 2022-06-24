@@ -24,7 +24,8 @@ export default class ZoomTokenService {
   public static async getToken(): Promise<string> {
     const service = ZoomTokenService.getInstance();
 
-    if (!service.token) await ZoomTokenService.refreshToken();
+    if (!service.token || service.token === '')
+      await ZoomTokenService.refreshToken();
 
     return service.token;
   }
@@ -32,10 +33,15 @@ export default class ZoomTokenService {
   public static async refreshToken() {
     const service = ZoomTokenService.getInstance();
 
-    service.token = await ZoomTokenService.fetchToken();
+    const [newToken, timeout] = await ZoomTokenService.fetchToken();
+    service.token = newToken;
+
+    setTimeout(() => {
+      service.token = '';
+    }, timeout - 10);
   }
 
-  private static async fetchToken(): Promise<string> {
+  private static async fetchToken(): Promise<[string, number]> {
     const zoomConfig = zoom();
 
     const url = `${zoomTokenUrl}?grant_type=${grantType}&account_id=${zoomConfig.accountId}`;
@@ -47,6 +53,6 @@ export default class ZoomTokenService {
     };
 
     const res = await axios.post<ZoomTokenResponse>(url, null, config);
-    return res.data.access_token;
+    return [res.data.access_token, res.data.expires_in];
   }
 }
