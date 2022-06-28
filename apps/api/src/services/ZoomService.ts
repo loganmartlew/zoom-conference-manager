@@ -1,6 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
+import { axios } from '../loaders/axios';
 
 const dateFormat = 'YYYY-MM-DD';
 type Duration = [Dayjs, Dayjs];
@@ -91,5 +92,19 @@ export default class ZoomService {
         userMeetings.push({ user, meeting });
       });
     });
+  }
+
+  static async scheduleMeeting(meeting: Meeting, userEmail: string) {
+    const meetingData = {
+      topic: meeting.name,
+      schedule_for: userEmail,
+      start_time: meeting.startDateTime.toISOString(),
+      duration: meeting.duration,
+      type: 2,
+    };
+
+    const res = await axios.post(`/users/${userEmail}/meetings`, meetingData);
+
+    return {};
   }
 }
