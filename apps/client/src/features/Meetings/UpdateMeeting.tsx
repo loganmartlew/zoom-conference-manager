@@ -1,11 +1,12 @@
 import { FC, useState, ChangeEvent } from 'react';
-import { Stack, Box, TextField, Button } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Stack, Button } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
-// interface Props {
-//   getMeeting: () => void;
-//   meetingID: number;
-// }
+import UpdateMeetingState from './MeetingTypes/UpdateMeetingState';
+
+interface Props {
+  getMeeting: (id: number) => UpdateMeetingState;
+  meetingID: number;
+}
 
 interface Edit {
   ubid: boolean;
@@ -16,17 +17,28 @@ interface Edit {
   event: boolean;
 }
 
-// need to take the meeting info, as well as id as input
-const UpdateMeeting: FC = () => {
-  // need to refactor to use an alternative hook for object
-  const [ubid, setUbid] = useState('00000000');
-  const [name, setName] = useState('Test');
-  const [date, setDate] = useState('23/06/22');
-  const [time, setTime] = useState('1400');
-  const [duration, setDuration] = useState('1');
-  const [event, setEvent] = useState('Hello');
+const UpdateMeeting: FC<Props> = (props: Props) => {
+  const { getMeeting, meetingID } = props;
+  const initialState = getMeeting(meetingID);
+
+  // need to use, useReducer for more modularity (refacotor)
+  const [ubid, setUbid] = useState(initialState.ubid);
+  const [name, setName] = useState(initialState.name);
+  const [date, setDate] = useState(initialState.date);
+  const [time, setTime] = useState(initialState.time);
+  const [duration, setDuration] = useState(initialState.duration);
+  const [event, setEvent] = useState(initialState.event);
 
   const [edit, setEdit] = useState<Edit>({
+    ubid: false,
+    name: false,
+    date: false,
+    duration: false,
+    event: false,
+    time: false,
+  });
+
+  const [error, setError] = useState<Edit>({
     ubid: false,
     name: false,
     date: false,
@@ -59,14 +71,16 @@ const UpdateMeeting: FC = () => {
   const handleDurationChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
+    const pattern = /[A-Za-z]/;
+
     // note is in base 10
-    if (parseInt(value, 10) && value >= '0') {
+    if (parseInt(value, 10) && value >= '0' && !pattern.test(value)) {
       setDuration(value);
     } else {
-      // do something to tell them they are wrong
-      console.log('incorrect input');
+      setError({ ...error, duration: true });
+      return;
     }
-    console.log(duration);
+    setError({ ...error, duration: false });
   };
 
   const handleTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,10 +95,11 @@ const UpdateMeeting: FC = () => {
       ) {
         setTime(value);
       } else {
-        console.log('something went wrong with time input');
+        setError({ ...error, time: true });
+        return;
       }
     }
-    console.log(time);
+    setError({ ...error, time: false });
   };
 
   const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +112,7 @@ const UpdateMeeting: FC = () => {
     const pattern = /[A-Za-z]/;
 
     if (pattern.test(day) || pattern.test(month) || pattern.test(year)) {
-      // display error
+      // do nothing
     } else if (parseInt(day, 10) && parseInt(month, 10) && parseInt(year, 10)) {
       const intDay = parseInt(day, 10);
       const intMonth = parseInt(month, 10);
@@ -118,10 +133,10 @@ const UpdateMeeting: FC = () => {
     }
 
     if (!isValid) {
-      // display an error msg?
-      console.log('error in date input');
+      setError({ ...error, date: true });
+      return;
     }
-    console.log(date);
+    setError({ ...error, date: false });
   };
 
   const editField = (fieldName: string) => {
@@ -135,17 +150,14 @@ const UpdateMeeting: FC = () => {
         break;
       }
       case 'time': {
-        // check valid time on change?
         setEdit({ ...edit, [fieldName]: !edit[fieldName] });
         break;
       }
       case 'duration': {
-        // check valid duration on change?
         setEdit({ ...edit, [fieldName]: !edit[fieldName] });
         break;
       }
       case 'date': {
-        // check valid date on change perhaps?
         setEdit({ ...edit, [fieldName]: !edit[fieldName] });
         break;
       }
@@ -166,6 +178,8 @@ const UpdateMeeting: FC = () => {
         isEditable={edit.ubid}
         handleChange={handleChange}
         name='ubid'
+        error={error.ubid}
+        errorText=''
       />
       <UpdateMeetingField
         value={date}
@@ -173,6 +187,8 @@ const UpdateMeeting: FC = () => {
         isEditable={edit.date}
         handleChange={handleDateChange}
         name='date'
+        error={error.date}
+        errorText='date format dd/mm/yyyy'
       />
       <UpdateMeetingField
         value={time}
@@ -180,6 +196,8 @@ const UpdateMeeting: FC = () => {
         isEditable={edit.time}
         handleChange={handleTimeChange}
         name='time'
+        error={error.time}
+        errorText='time format 0000 - 2400 where 2400 represents 24:00'
       />
       <UpdateMeetingField
         value={name}
@@ -187,6 +205,8 @@ const UpdateMeeting: FC = () => {
         isEditable={edit.name}
         handleChange={handleChange}
         name='name'
+        error={error.name}
+        errorText=''
       />
       <UpdateMeetingField
         value={duration}
@@ -194,13 +214,17 @@ const UpdateMeeting: FC = () => {
         isEditable={edit.duration}
         handleChange={handleDurationChange}
         name='duration'
+        error={error.duration}
+        errorText='duration must be a postive number'
       />
       <UpdateMeetingField
         value={event}
         editField={editField}
-        isEditable={edit.duration}
+        isEditable={edit.event}
         handleChange={handleChange}
         name='event'
+        error={error.event}
+        errorText=''
       />
       <Button variant='contained' sx={{ width: '5rem' }}>
         Update

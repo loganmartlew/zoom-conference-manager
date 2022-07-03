@@ -8,19 +8,41 @@ interface Props {
   isEditable: boolean;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   name: string;
+  error: boolean;
+  errorText: string;
 }
 
 const UpdateMeetingField: FC<Props> = (props: Props) => {
-  const { value, editField, isEditable, handleChange, name } = props;
-  return (
-    <Box>
-      {isEditable ? (
+  const { value, editField, isEditable, handleChange, name, error, errorText } =
+    props;
+
+  const getEditableField = (isError: boolean) => {
+    if (!isError) {
+      return (
         <TextField
           defaultValue={value}
           label={name}
           name={name}
           onChange={handleChange}
         />
+      );
+    }
+    return (
+      <TextField
+        defaultValue={value}
+        label={name}
+        name={name}
+        onChange={handleChange}
+        error
+        helperText={errorText}
+      />
+    );
+  };
+
+  return (
+    <Box>
+      {isEditable ? (
+        getEditableField(error)
       ) : (
         <TextField disabled defaultValue={value} label={name} name={name} />
       )}
