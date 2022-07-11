@@ -17,6 +17,7 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
     props;
 
   const getEditableField = (isError: boolean) => {
+    console.log(isError);
     if (!isError) {
       return (
         <TextField
