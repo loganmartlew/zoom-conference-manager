@@ -17,18 +17,14 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
     props;
 
   const getEditableField = (isError: boolean) => {
-    console.log(isError);
-    if (!isError) {
-      return (
-        <TextField
-          defaultValue={value}
-          label={name}
-          name={name}
-          onChange={handleChange}
-        />
-      );
-    }
-    return (
+    return !isError ? (
+      <TextField
+        defaultValue={value}
+        label={name}
+        name={name}
+        onChange={handleChange}
+      />
+    ) : (
       <TextField
         defaultValue={value}
         label={name}

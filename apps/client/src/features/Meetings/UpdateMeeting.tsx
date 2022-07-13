@@ -13,72 +13,38 @@ interface Props {
   meetingID: number;
 }
 
+const getEditValue = (state: UpdateState, name: string): boolean => {
+  const editObj = state.edit;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [editKey, editValue] of Object.entries(editObj)) {
+    if (editKey.toString() === name) {
+      return editValue;
+    }
+  }
+  throw Error('No key represents input name');
+};
+
 const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
   switch (action.type) {
-    case UpdateMeetingType.SET_UBID:
-      return { ...state, value: { ...state.value, ubid: action.payload } };
-    case UpdateMeetingType.SET_NAME:
-      return { ...state, value: { ...state.value, name: action.payload } };
-    case UpdateMeetingType.SET_DATE:
-      return { ...state, value: { ...state.value, date: action.payload } };
-    case UpdateMeetingType.SET_TIME:
-      return { ...state, value: { ...state.value, time: action.payload } };
-    case UpdateMeetingType.SET_DURATION:
-      return { ...state, value: { ...state.value, duration: action.payload } };
-    case UpdateMeetingType.SET_EVENT:
-      return { ...state, value: { ...state.value, event: action.payload } };
-    case UpdateMeetingType.EDIT_UBID:
-      return { ...state, edit: { ...state.edit, ubid: !state.edit.ubid } };
-    case UpdateMeetingType.EDIT_NAME:
-      return { ...state, edit: { ...state.edit, name: !state.edit.name } };
-    case UpdateMeetingType.EDIT_DATE:
-      return { ...state, edit: { ...state.edit, date: !state.edit.date } };
-    case UpdateMeetingType.EDIT_TIME:
-      return { ...state, edit: { ...state.edit, time: !state.edit.time } };
-    case UpdateMeetingType.EDIT_DURATION:
+    // change so less reused code
+    case UpdateMeetingType.SET:
       return {
         ...state,
-        edit: { ...state.edit, duration: !state.edit.duration },
+        value: { ...state.value, [action.name]: action.payload },
       };
-    case UpdateMeetingType.EDIT_EVENT:
-      return { ...state, edit: { ...state.edit, event: !state.edit.event } };
-    case UpdateMeetingType.ERR_UBID: {
-      if (action.payload === 'true') {
-        return { ...state, error: { ...state.error, ubid: false } };
-      }
-      return { ...state, error: { ...state.error, ubid: true } };
-    }
-    case UpdateMeetingType.ERR_NAME: {
-      if (action.payload === 'true') {
-        return { ...state, error: { ...state.error, name: false } };
-      }
-      return { ...state, error: { ...state.error, name: true } };
-    }
-    case UpdateMeetingType.ERR_DATE: {
-      console.log(state.error.date);
-      if (action.payload === 'true') {
-        return { ...state, error: { ...state.error, date: false } };
-      }
-      return { ...state, error: { ...state.error, date: true } };
-    }
-    case UpdateMeetingType.ERR_TIME: {
-      if (action.payload === 'true') {
-        return { ...state, error: { ...state.error, time: false } };
-      }
-      return { ...state, error: { ...state.error, time: true } };
-    }
-    case UpdateMeetingType.ERR_DURATION: {
-      if (action.payload === 'true') {
-        return { ...state, error: { ...state.error, duration: false } };
-      }
-      return { ...state, error: { ...state.error, duration: true } };
-    }
-    case UpdateMeetingType.ERR_EVENT: {
-      if (action.payload === 'true') {
-        return { ...state, error: { ...state.error, event: false } };
-      }
-      return { ...state, error: { ...state.error, event: true } };
-    }
+    case UpdateMeetingType.EDIT:
+      return {
+        ...state,
+        edit: {
+          ...state.edit,
+          [action.name]: getEditValue(state, action.name),
+        },
+      };
+    case UpdateMeetingType.ERR:
+      return {
+        ...state,
+        error: { ...state.error, [action.name]: action.payload },
+      };
     default:
       return { ...state };
   }
@@ -115,30 +81,43 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       // return at end
     } else {
       meetingDispatch({
-        type: UpdateMeetingType.ERR_DURATION,
+        type: UpdateMeetingType.ERR,
         payload: 'false',
+        name: 'duration',
       });
       return false;
     }
-    meetingDispatch({ type: UpdateMeetingType.ERR_DURATION, payload: 'true' });
+    meetingDispatch({
+      type: UpdateMeetingType.ERR,
+      payload: 'true',
+      name: 'duration',
+    });
     return true;
   };
 
   const validateTimeChange = (value: string): boolean => {
-    // note is in base 10
+    // note input param is 10 in parseInt represents base 10
     if (parseInt(value, 10)) {
       if (
         value.length === 4 &&
         value.charAt(0) >= '0' &&
         value.charAt(0) <= '2'
       ) {
-        // return at end
+        // calls meetingDispatch and returns at end
       } else {
-        meetingDispatch({ type: UpdateMeetingType.ERR_TIME, payload: 'false' });
+        meetingDispatch({
+          type: UpdateMeetingType.ERR,
+          payload: 'false',
+          name: 'time',
+        });
         return false;
       }
     }
-    meetingDispatch({ type: UpdateMeetingType.ERR_TIME, payload: 'true' });
+    meetingDispatch({
+      type: UpdateMeetingType.ERR,
+      payload: 'true',
+      name: 'time',
+    });
     return true;
   };
 
@@ -149,13 +128,14 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     const pattern = /[A-Za-z]/;
 
     if (pattern.test(day) || pattern.test(month) || pattern.test(year)) {
-      // do nothing
+      // test fails, is valid is false so move on to dispatch and return
+      // note that for parseInt the second parameter represents base 10
     } else if (parseInt(day, 10) && parseInt(month, 10) && parseInt(year, 10)) {
       const intDay = parseInt(day, 10);
       const intMonth = parseInt(month, 10);
       const intYear = parseInt(year, 10);
 
-      // dont check for an upper limit on year since year theorically have an upperbound
+      // dont check for an upper limit on year since year theorically has no upperbound
       if (
         intDay >= 1 &&
         intDay <= 31 &&
@@ -168,48 +148,30 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     }
 
     if (!isValid) {
-      meetingDispatch({ type: UpdateMeetingType.ERR_DATE, payload: 'false' });
+      meetingDispatch({
+        type: UpdateMeetingType.ERR,
+        payload: 'false',
+        name: 'date',
+      });
       return false;
     }
-    meetingDispatch({ type: UpdateMeetingType.ERR_DATE, payload: 'true' });
+    meetingDispatch({
+      type: UpdateMeetingType.ERR,
+      payload: 'true',
+      name: 'date',
+    });
     return true;
   };
 
+  // method used as argument to UpdateMeetingField component in order
+  // to dispatch allow for editing different fields.
   const editField = (fieldName: string) => {
-    switch (fieldName) {
-      case 'ubid': {
-        meetingDispatch({ type: UpdateMeetingType.EDIT_UBID, payload: 'ubid' });
-        break;
-      }
-      case 'name': {
-        meetingDispatch({ type: UpdateMeetingType.EDIT_NAME, payload: 'name' });
-        break;
-      }
-      case 'time': {
-        meetingDispatch({ type: UpdateMeetingType.EDIT_TIME, payload: 'time' });
-        break;
-      }
-      case 'duration': {
-        meetingDispatch({
-          type: UpdateMeetingType.EDIT_DURATION,
-          payload: 'duration',
-        });
-        break;
-      }
-      case 'date': {
-        meetingDispatch({ type: UpdateMeetingType.EDIT_DATE, payload: 'date' });
-        break;
-      }
-      case 'event': {
-        meetingDispatch({
-          type: UpdateMeetingType.EDIT_EVENT,
-          payload: 'event',
-        });
-        break;
-      }
-      default:
-        break;
-    }
+    // note payload is blank is it is just toggling the current edit boolean value
+    meetingDispatch({
+      type: UpdateMeetingType.EDIT,
+      payload: '',
+      name: fieldName,
+    });
   };
 
   return (
@@ -220,7 +182,11 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.ubid}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          meetingDispatch({ type: UpdateMeetingType.SET_UBID, payload: value });
+          meetingDispatch({
+            type: UpdateMeetingType.SET,
+            payload: value,
+            name: 'ubid',
+          });
         }}
         name='ubid'
         error={meetingState.error.ubid}
@@ -234,8 +200,9 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           const { value } = e.target;
           if (validateDateChange(value)) {
             meetingDispatch({
-              type: UpdateMeetingType.SET_DATE,
+              type: UpdateMeetingType.SET,
               payload: value,
+              name: 'date',
             });
           }
         }}
@@ -251,8 +218,9 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           const { value } = e.target;
           if (validateTimeChange(value)) {
             meetingDispatch({
-              type: UpdateMeetingType.SET_TIME,
+              type: UpdateMeetingType.SET,
               payload: value,
+              name: 'time',
             });
           }
         }}
@@ -266,7 +234,11 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.name}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          meetingDispatch({ type: UpdateMeetingType.SET_NAME, payload: value });
+          meetingDispatch({
+            type: UpdateMeetingType.SET,
+            payload: value,
+            name: 'name',
+          });
         }}
         name='name'
         error={meetingState.error.name}
@@ -280,8 +252,9 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           const { value } = e.target;
           if (validateDurationChange(value)) {
             meetingDispatch({
-              type: UpdateMeetingType.SET_DURATION,
+              type: UpdateMeetingType.SET,
               payload: value,
+              name: 'duration',
             });
           }
         }}
@@ -296,8 +269,9 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
           meetingDispatch({
-            type: UpdateMeetingType.SET_EVENT,
+            type: UpdateMeetingType.SET,
             payload: value,
+            name: 'event',
           });
         }}
         name='event'
