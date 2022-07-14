@@ -47,6 +47,11 @@ export interface IMeeting {
   duration: number;
 }
 
+export interface IZoomUser {
+  id: string;
+  email: string;
+}
+
 export type Controller<T> = (req: Request) => Promise<ApiResponse<T>>;
 export type ExtractControllerData<T> = T extends Controller<infer U>
   ? U
@@ -64,3 +69,7 @@ export type GetMeeting = Controller<IMeeting>;
 export type GetAllMeetings = Controller<IMeeting[]>;
 export type UpdateMeeting = Controller<IMeeting>;
 export type DeleteMeeting = Controller<void>;
+
+export type CreateZoomUser = Controller<IZoomUser>;
+export type GetAllZoomUsers = Controller<IZoomUser[]>;
+export type DeleteZoomUser = Controller<void>;
