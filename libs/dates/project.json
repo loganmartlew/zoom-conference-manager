@@ -1,20 +1,20 @@
 {
-  "root": "libs/types",
-  "sourceRoot": "libs/types/src",
+  "root": "libs/dates",
+  "sourceRoot": "libs/dates/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/types/**/*.ts"]
+        "lintFilePatterns": ["libs/dates/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/types"],
+      "outputs": ["coverage/libs/dates"],
       "options": {
-        "jestConfig": "libs/types/jest.config.js",
+        "jestConfig": "libs/dates/jest.config.js",
         "passWithNoTests": true
       }
     }

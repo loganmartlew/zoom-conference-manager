@@ -1,41 +1,92 @@
-import { Request, Response } from 'express';
+import {
+  CreateEvent,
+  GetAllEvents,
+  GetEvent,
+  GetEventNames,
+  UpdateEvent,
+  DeleteEvent,
+} from '@zoom-conference-manager/api-interfaces';
+import { Request } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import EventService from '../services/EventService';
 
-export const createEvent = async (req: Request, res: Response) => {
+export const createEvent: CreateEvent = async (req: Request) => {
   const { eventData } = req.body;
 
   try {
     const newEvent = await EventService.create(eventData);
-    return res.status(201).json({ message: 'Created Event', event: newEvent });
+    return {
+      status: StatusCodes.CREATED,
+      message: 'Created Event',
+      data: newEvent,
+    };
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to create Event', error });
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to create Event',
+      error,
+    };
   }
 };
 
-export const getEvent = async (req: Request, res: Response) => {
-  return res.json({ message: 'Get Event' });
+export const getEvent: GetEvent = async (req: Request) => {
+  const { id } = req.params;
+  const event = await EventService.getOne(id);
+
+  return { status: StatusCodes.OK, message: 'Found Event', data: event };
 };
 
-export const getAllEvents = async (req: Request, res: Response) => {
+export const getAllEvents: GetAllEvents = async () => {
   const events = await EventService.getAll();
-  return res.status(200).json(events);
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved all events',
+    data: events,
+  };
 };
 
-export const updateEvent = async (req: Request, res: Response) => {
-  return res.json({ message: 'Update Event' });
+export const getEventNames: GetEventNames = async () => {
+  const eventNames = await EventService.getNames();
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved event names',
+    data: eventNames,
+  };
 };
 
-export const deleteEvent = async (req: Request, res: Response) => {
+export const updateEvent: UpdateEvent = async (req: Request) => {
+  const { eventData } = req.body;
+  const { id } = req.params;
+  try {
+    const updatedEvent = await EventService.update(id, eventData);
+    return {
+      status: StatusCodes.OK,
+      message: 'Updated Event',
+      data: updatedEvent,
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to update Event ',
+      error,
+    };
+  }
+};
+
+export const deleteEvent: DeleteEvent = async (req: Request) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.json({ message: 'ID Must be provided' });
+    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
   }
 
   const deleted = await EventService.delete(id);
 
   if (!deleted) {
-    return res.json({ message: 'Failed to delete Event' });
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to delete Event',
+    };
   }
-  return res.json({ message: 'Event deleted' });
+  return { status: StatusCodes.OK, message: 'Event deleted' };
 };

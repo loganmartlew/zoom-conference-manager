@@ -41,6 +41,12 @@
           }
         ],
         "arrow-body-style": "off",
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true
+          }
+        ],
         "react/jsx-no-bind": "off",
         "no-console": "off",
         "react/jsx-props-no-spreading": "off",

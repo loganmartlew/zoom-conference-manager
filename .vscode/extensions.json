@@ -7,7 +7,6 @@
     "christian-kohler.path-intellisense",
     "esbenp.prettier-vscode",
     "visualstudioexptteam.vscodeintellicode",
-    "styled-components.vscode-styled-components",
-    "firsttris.vscode-jest-runner"
+    "styled-components.vscode-styled-components"
   ]
 }

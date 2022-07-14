@@ -1,42 +1,39 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
-import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Stack, styled } from '@mui/material';
+import { FieldError, SubmitHandler } from 'react-hook-form';
+import { Button, CircularProgress, Stack, styled } from '@mui/material';
 import dayjs from 'dayjs';
-import eventDtoSchema from './eventDtoSchema';
 import TextInput from '../../components/forms/TextInput';
 import TextArea from '../../components/forms/TextArea';
 import DatePicker from '../../components/forms/DatePicker';
-import { axios } from '../../config/axios';
+import { usePostEvent } from './api/postEvent';
+import { IFormInput, useEventForm } from './useEventForm';
 
 const Form = styled('form')({});
 
-interface IFormInput {
-  name: string;
-  description: string;
-  startDate: Date;
-  endDate: Date;
-}
-
-const EventInput: FC = () => {
+const EventForm: FC = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>({
-    defaultValues: {
-      name: '',
-      description: '',
-      startDate: dayjs().toDate(),
-      endDate: dayjs().toDate(),
-    },
-    resolver: yupResolver(eventDtoSchema),
-  });
+  } = useEventForm();
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+  const navigate = useNavigate();
+
+  const onPostSuccess = () => {
+    // Notification, event added
+    navigate('/events');
+  };
+
+  const onPostError = (error: unknown, variables: EventDTO) => {
+    // Notification, error
+    console.log('An error occurred');
+    console.log('Error: ', error);
+    console.log('Data: ', variables);
+  };
+
+  const { mutate, isLoading } = usePostEvent(onPostSuccess, onPostError);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const eventData: EventDTO = {
@@ -45,9 +42,7 @@ const EventInput: FC = () => {
       endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
     };
 
-    axios.post('/event', { eventData });
-
-    console.log(eventData);
+    mutate(eventData);
   };
 
   return (
@@ -81,18 +76,25 @@ const EventInput: FC = () => {
           control={control}
           error={errors.startDate as FieldError | void}
         />
-        <DatePicker<IFormInput>
+        <DatePicker
           name='endDate'
           label='End Date'
           control={control}
           error={errors.endDate as FieldError | void}
         />
-        <Button type='submit' variant='contained'>
-          Create Event
+        <Button
+          type='submit'
+          variant='contained'
+          disabled={isLoading}
+          startIcon={
+            isLoading ? <CircularProgress color='inherit' size='16px' /> : null
+          }
+        >
+          {isLoading ? 'Submitting' : 'Create Event'}
         </Button>
       </Stack>
     </Form>
   );
 };
 
-export default EventInput;
+export default EventForm;
