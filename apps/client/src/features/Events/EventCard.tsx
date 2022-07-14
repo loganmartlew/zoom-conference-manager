@@ -1,21 +1,23 @@
 import { FC } from 'react';
-import { Paper, Stack, Typography, Chip, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Paper, Stack, Typography, Button } from '@mui/material';
 import { Groups } from '@mui/icons-material';
+import EventStatusBadge from './EventStatusBadge';
 
-interface EventCardProps {
+interface Props {
+  id: string;
   name: string;
   desc: string;
   start: string;
   end: string;
 }
 
-const EventCard: FC<EventCardProps> = (props) => {
-  const { name, desc, start, end } = props;
+const EventCard: FC<Props> = (props) => {
+  const { id, name, desc, start, end } = props;
   return (
     <Paper
       sx={{
         padding: '1.5em',
-        // maxWidth: '100ch',
       }}
       elevation={3}
     >
@@ -24,7 +26,7 @@ const EventCard: FC<EventCardProps> = (props) => {
           {name}
         </Typography>
         <Stack direction='row' spacing={2}>
-          <Chip label='Draft' size='small' color='warning' />
+          <EventStatusBadge status='draft' />
           <Stack direction='row' spacing={1}>
             <Groups />
             <Typography>0 Meetings</Typography>
@@ -34,7 +36,12 @@ const EventCard: FC<EventCardProps> = (props) => {
           sx={{ width: 'max-content', whiteSpace: 'noWrap' }}
         >{`${start} - ${end}`}</Typography>
         <Typography variant='body1'>{desc}</Typography>
-        <Button variant='outlined' sx={{ width: 'max-content' }}>
+        <Button
+          component={Link}
+          to={`/events/${id}`}
+          variant='outlined'
+          sx={{ width: 'max-content' }}
+        >
           View Details
         </Button>
       </Stack>

@@ -12,14 +12,14 @@ export interface IFormInput {
   eventId: string;
 }
 
-export const useMeetingForm = () => {
+export const useMeetingForm = (eventId: string | null) => {
   const form = useForm<IFormInput>({
     defaultValues: {
       ubid: '',
       name: '',
       startDateTime: dayjs().toDate(),
       duration: 0,
-      eventId: '',
+      eventId: eventId || '',
     },
     resolver: yupResolver(meetingSchema),
   });

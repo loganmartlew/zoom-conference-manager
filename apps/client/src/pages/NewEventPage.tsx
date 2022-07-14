@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
-import EventInput from '../features/Events/EventForm';
+import EventForm from '../features/Events/EventForm';
 
 const NewEventPage: FC = () => {
   return (
@@ -8,7 +8,7 @@ const NewEventPage: FC = () => {
       <Typography variant='h3' sx={{ mb: 3 }}>
         New Event
       </Typography>
-      <EventInput />
+      <EventForm />
     </Box>
   );
 };
