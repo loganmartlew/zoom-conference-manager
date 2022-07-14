@@ -10,21 +10,19 @@ import Container from '@material-ui/core/Container';
 import { AppBar } from '@mui/material';
 import Toolbar from "@material-ui/core/Toolbar";
 
-
 export default function addAccount() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      fname: data.get('firstName'),
-      lnane: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
+      fname: data.get('name'),
+      email: data.get('email')
     });
   };
   
   return (
+    
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
         <Box
@@ -35,38 +33,26 @@ export default function addAccount() {
             alignItems: 'center',
           }}
         >
-          {/* <Typography component='h1' variant='h5'>
-            Link New Zoom Account
-          </Typography> */}
-
 <AppBar position="static">
           <Toolbar>
             <Typography variant="h6">Link New Zoom Account</Typography>
           </Toolbar>
+         
 </AppBar>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete='given-name'
-                  name='firstName'
+                  name='name'
                   required
                   fullWidth
-                  id='firstName'
-                  label='First Name'
+                  id='name'
+                  label='Name'
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id='lastName'
-                  label='Last Name'
-                  name='lastName'
-                  autoComplete='family-name'
-                />
-              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -77,19 +63,8 @@ export default function addAccount() {
                   autoComplete='email'
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name='password'
-                  label='Password'
-                  type='password'
-                  id='password'
-                  autoComplete='new-password'
-                />
               </Grid>
-              
-            </Grid>
+
             <Button
               type='submit'
               fullWidth
@@ -97,17 +72,22 @@ export default function addAccount() {
               sx={{ mt: 3, mb: 2 }}
             >
               Add Zoom Account
+              
             </Button>
             <Grid container justifyContent='flex-end'>
               <Grid item>
               <Link to='/'>
               <MuiLink variant='body2'>Return to Dashboard</MuiLink>
                 </Link>
-              </Grid>
+                
+              </Grid>     
             </Grid>
           </Box>
         </Box>
       </Container>
-  );
+ 
 
+  )
+
+  
 }
