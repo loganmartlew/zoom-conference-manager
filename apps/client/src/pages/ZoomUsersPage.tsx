@@ -1,14 +1,25 @@
+import { ZoomUserDTO } from '@zoom-conference-manager/api-interfaces';
 import { FC, useState } from 'react';
 import { Box, Typography, Stack, Button } from '@mui/material';
 import { PersonAdd } from '@mui/icons-material';
 import ZoomUserList from '../features/ZoomUsers/ZoomUserList';
 import { useAllZoomUsers } from '../features/ZoomUsers/api/getZoomUsers';
 import AddUserDialog from '../features/ZoomUsers/AddUserDialog';
+import { usePostZoomUser } from '../features/ZoomUsers/api/postZoomUser';
 
 const ZoomUsersPage: FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data, isLoading } = useAllZoomUsers();
+
+  const { mutate } = usePostZoomUser(
+    () => {},
+    () => {}
+  );
+
+  const onConfirm = (zoomUserDto: ZoomUserDTO) => {
+    mutate(zoomUserDto);
+  };
 
   return (
     <Box sx={{ display: 'grid', placeContent: 'center' }}>
@@ -27,7 +38,7 @@ const ZoomUsersPage: FC = () => {
         <AddUserDialog
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
-          onConfirm={() => {}}
+          onConfirm={onConfirm}
         />
       </Stack>
       <Typography sx={{ mb: 3 }}>

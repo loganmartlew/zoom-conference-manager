@@ -18,7 +18,7 @@ const ZoomUserList: FC<Props> = ({ zoomUsers, isLoading }) => {
   }
 
   return (
-    <Stack>
+    <Stack spacing={2}>
       {zoomUsers.map((zoomUser) => (
         <ZoomUserCard key={zoomUser.id} zoomUser={zoomUser} />
       ))}
