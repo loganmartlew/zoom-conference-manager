@@ -22,6 +22,10 @@ export interface MeetingDTO {
   eventId: string;
 }
 
+export interface ZoomUserDTO {
+  email: string;
+}
+
 export interface IEvent {
   id: string;
   name: string;
