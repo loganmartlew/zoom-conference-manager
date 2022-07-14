@@ -8,6 +8,7 @@ export interface IFormInput {
   ubid: string;
   name: string;
   startDate: Date;
+  startTime: string;
   duration: number;
   eventId: string;
 }
@@ -18,6 +19,7 @@ export const useMeetingForm = () => {
       ubid: '',
       name: '',
       startDate: dayjs().toDate(),
+      startTime: '00:00',
       duration: 0,
       eventId: '',
     },

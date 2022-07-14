@@ -84,6 +84,12 @@ const MeetingInput: FC = () => {
           error={errors.startDate as FieldError | void}
         />
         <TextInput
+          name='startTime'
+          label='Start Time (24hr NZST)'
+          control={control}
+          error={errors.startTime}
+        />
+        <TextInput
           name='duration'
           label='Meeting Duration (minutes)'
           control={control}
