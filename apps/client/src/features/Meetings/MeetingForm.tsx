@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
-import { formats } from '@zoom-conference-manager/dates';
 import { FieldError, SubmitHandler } from 'react-hook-form';
 import {
   Button,
@@ -11,9 +10,9 @@ import {
   styled,
 } from '@mui/material';
 import dayjs from 'dayjs';
+import DatePicker from '../../components/forms/DatePicker';
 import TextInput from '../../components/forms/TextInput';
 import Select from '../../components/forms/Select';
-import DatetimePicker from '../../components/forms/DatetimePicker';
 import { IFormInput, useMeetingForm } from './useMeetingForm';
 import { usePostMeeting } from './api/postMeeting';
 
@@ -47,7 +46,7 @@ const MeetingInput: FC = () => {
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const meetingData: MeetingDTO = {
       ...data,
-      startDateTime: dayjs(data.startDateTime).format(formats.dateTime),
+      startDate: dayjs(data.startDate).format('DD/MM/YYYY'),
     };
 
     // console.log(meetingData);
@@ -78,11 +77,11 @@ const MeetingInput: FC = () => {
           control={control}
           error={errors.name}
         />
-        <DatetimePicker
-          name='startDateTime'
-          label='Meeting Date and Time'
+        <DatePicker
+          name='startDate'
+          label='Date'
           control={control}
-          error={errors.startDateTime as FieldError | void}
+          error={errors.startDate as FieldError | void}
         />
         <TextInput
           name='duration'

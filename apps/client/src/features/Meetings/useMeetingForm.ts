@@ -7,7 +7,7 @@ import meetingSchema from './meetingSchema';
 export interface IFormInput {
   ubid: string;
   name: string;
-  startDateTime: Date;
+  startDate: Date;
   duration: number;
   eventId: string;
 }
@@ -17,7 +17,7 @@ export const useMeetingForm = () => {
     defaultValues: {
       ubid: '',
       name: '',
-      startDateTime: dayjs().toDate(),
+      startDate: dayjs().toDate(),
       duration: 0,
       eventId: '',
     },

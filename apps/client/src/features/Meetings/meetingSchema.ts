@@ -3,7 +3,7 @@ import { object, string, date, number } from 'yup';
 const meetingSchema = object({
   ubid: string().required('UBID is required.'),
   name: string().required('Name is required.'),
-  startDateTime: date()
+  startDate: date()
     .nullable()
     .typeError('Invalid date.')
     .required('Start date is required.'),
