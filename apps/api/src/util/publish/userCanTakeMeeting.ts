@@ -1,8 +1,5 @@
-import { Dayjs } from 'dayjs';
-import Meeting from '../../entities/Meeting';
-
-type Duration = { start: Dayjs; end: Dayjs };
-type MeetingBlock = [Meeting, Duration];
+import { Duration } from '../../types/Duration';
+import { MeetingBlock } from '../../types/MeetingBlock';
 
 // Determines if a user can take a meeting
 export const userCanTakeMeeting = (

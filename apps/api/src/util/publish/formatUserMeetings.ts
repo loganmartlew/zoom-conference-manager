@@ -1,8 +1,5 @@
-import { Dayjs } from 'dayjs';
 import Meeting from '../../entities/Meeting';
-
-type Duration = { start: Dayjs; end: Dayjs };
-type MeetingBlock = [Meeting, Duration];
+import { MeetingBlock } from '../../types/MeetingBlock';
 
 // Flatten the meeting blocks into a single array of users and meetings
 export const formatUserMeetings = (

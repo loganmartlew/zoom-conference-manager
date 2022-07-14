@@ -1,8 +1,7 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Meeting from '../../entities/Meeting';
-
-type Duration = { start: Dayjs; end: Dayjs };
-type MeetingBlock = [Meeting, Duration];
+import { Duration } from '../../types/Duration';
+import { MeetingBlock } from '../../types/MeetingBlock';
 
 // This function generates the duration of each meeting and returns the meeting block
 export const getMeetingBlocks = (meetings: Meeting[]) => {
