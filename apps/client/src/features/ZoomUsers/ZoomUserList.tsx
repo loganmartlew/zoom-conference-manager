@@ -1,6 +1,7 @@
 import { IZoomUser } from '@zoom-conference-manager/api-interfaces';
 import { FC } from 'react';
 import { Stack, Typography } from '@mui/material';
+import ZoomUserCard from './ZoomUserCard';
 
 interface Props {
   zoomUsers: IZoomUser[];
@@ -14,7 +15,7 @@ const ZoomUserList: FC<Props> = ({ zoomUsers }) => {
   return (
     <Stack>
       {zoomUsers.map((zoomUser) => (
-        <div>{zoomUser.email}</div>
+        <ZoomUserCard key={zoomUser.id} zoomUser={zoomUser} />
       ))}
     </Stack>
   );
