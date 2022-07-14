@@ -5,11 +5,16 @@ import ZoomUserCard from './ZoomUserCard';
 
 interface Props {
   zoomUsers: IZoomUser[];
+  isLoading: boolean;
 }
 
-const ZoomUserList: FC<Props> = ({ zoomUsers }) => {
+const ZoomUserList: FC<Props> = ({ zoomUsers, isLoading }) => {
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
+
   if (!zoomUsers || zoomUsers.length < 1) {
-    return <Typography>No users...</Typography>;
+    return <Typography>No users</Typography>;
   }
 
   return (

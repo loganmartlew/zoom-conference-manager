@@ -10,13 +10,13 @@ const ZoomUserCard: FC<Props> = ({ zoomUser }) => {
   return (
     <Paper
       sx={{
-        padding: '1.5em',
+        padding: '1em',
       }}
       elevation={3}
     >
-      <Stack spacing={2}>
-        <Typography>{zoomUser.name}</Typography>
-        <Typography>{zoomUser.email}</Typography>
+      <Stack spacing={1}>
+        <Typography variant='h6'>{zoomUser.name}</Typography>
+        <Typography variant='body2'>{zoomUser.email}</Typography>
       </Stack>
     </Paper>
   );
