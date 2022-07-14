@@ -12,6 +12,7 @@ export default class ZoomUserService {
 
     if (!zoomUserStub) throw new Error('Unable to create zoom user');
 
+    zoomUserStub.name = zoomUserData.name;
     zoomUserStub.email = zoomUserData.email;
 
     try {

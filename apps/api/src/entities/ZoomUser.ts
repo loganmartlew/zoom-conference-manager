@@ -6,5 +6,8 @@ export default class ZoomUser extends BaseEntity {
   id: string;
 
   @Column()
+  name: string;
+
+  @Column({ unique: true })
   email: string;
 }

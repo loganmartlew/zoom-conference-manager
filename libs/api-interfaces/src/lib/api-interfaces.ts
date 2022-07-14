@@ -23,6 +23,7 @@ export interface MeetingDTO {
 }
 
 export interface ZoomUserDTO {
+  name: string;
   email: string;
 }
 
@@ -49,6 +50,7 @@ export interface IMeeting {
 
 export interface IZoomUser {
   id: string;
+  name: string;
   email: string;
 }
 
