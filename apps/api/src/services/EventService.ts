@@ -1,5 +1,4 @@
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
-import { IEventName } from '@zoom-conference-manager/types';
 import Event from '../entities/Event';
 
 export default class EventService {
@@ -9,7 +8,7 @@ export default class EventService {
   }
 
   static async getNames() {
-    const eventNames: IEventName[] = await Event.find({
+    const eventNames = await Event.find({
       select: {
         id: true,
         name: true,

@@ -45,4 +45,25 @@ export default class MeetingService {
       throw new Error('Unable to save Meeting');
     }
   }
+
+  static async update(id: string, meetingData: MeetingDTO): Promise<Meeting> {
+    try {
+      const meeting = await this.getOne(id);
+
+      meeting.name = meetingData.name;
+      meeting.startDateTime = dayjs(
+        meetingData.startDateTime,
+        formats.dateTime
+      ).toDate();
+      meeting.duration = meetingData.duration;
+
+      // TODO : Update meeting.event prop?
+
+      const updatedMeeting = await meeting.save();
+
+      return updatedMeeting;
+    } catch (error) {
+      throw new Error('Unable to update Meeting');
+    }
+  }
 }

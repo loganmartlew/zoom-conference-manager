@@ -24,7 +24,18 @@ export const getMeeting = async (req: Request, res: Response) => {
 };
 
 export const updateMeeting = async (req: Request, res: Response) => {
-  return res.json({ message: 'Update Meeting' });
+  const { meetingData } = req.body;
+  const { id } = req.params;
+  try {
+    const updatedMeeting = await MeetingService.update(id, meetingData);
+    return res
+      .status(200)
+      .json({ message: 'Updated Meeting', meeting: updatedMeeting });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: 'Failed to update Meeting ', error });
+  }
 };
 
 export const deleteMeeting = async (req: Request, res: Response) => {
