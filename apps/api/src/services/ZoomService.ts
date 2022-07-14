@@ -2,48 +2,28 @@ import dayjs, { Dayjs } from 'dayjs';
 import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
+import { Logger } from '../loaders/logger';
 
 const dateFormat = 'YYYY-MM-DD';
 type Duration = [Dayjs, Dayjs];
 
 export default class ZoomService {
-  static async publishEvent(event: Event) {
-    // const meetingsByDay: Map<string, Meeting[]> = new Map();
-
-    // event.meetings.forEach((meeting) => {
-    //   const date = dayjs(meeting.startDateTime);
-    //   const dateString = date.format(dateFormat);
-
-    //   if (meetingsByDay.has(dateString)) {
-    //     let dayMeetings = meetingsByDay.get(dateString);
-
-    //     if (!dayMeetings) {
-    //       dayMeetings = [];
-    //     }
-
-    //     meetingsByDay.set(dateString, [...dayMeetings, meeting]);
-    //   } else {
-    //     meetingsByDay.set(dateString, [meeting]);
-    //   }
-    // });
-
+  static async assignMeetings(meetings: Meeting[]) {
     const users: string[] = ['logan', 'rhys', 'aman', 'amy', 'jack'];
     const userMeetingBlocks: Map<string, [Meeting, Duration][]> = new Map();
     users.forEach((user) => userMeetingBlocks.set(user, []));
     userMeetingBlocks.set('overflow', []);
 
-    const meetingBlockTimes: [Meeting, Duration][] = event.meetings.map(
-      (meeting) => {
-        const start = dayjs(meeting.startDateTime).subtract(30, 'minutes');
-        const end = dayjs(meeting.startDateTime)
-          .add(meeting.duration, 'minutes')
-          .add(30, 'minutes');
+    const meetingBlockTimes: [Meeting, Duration][] = meetings.map((meeting) => {
+      const start = dayjs(meeting.startDateTime).subtract(30, 'minutes');
+      const end = dayjs(meeting.startDateTime)
+        .add(meeting.duration, 'minutes')
+        .add(30, 'minutes');
 
-        const duration: Duration = [start, end];
+      const duration: Duration = [start, end];
 
-        return [meeting, duration];
-      }
-    );
+      return [meeting, duration];
+    });
 
     meetingBlockTimes.forEach((block) => {
       const [, [start, end]] = block;
@@ -87,11 +67,38 @@ export default class ZoomService {
     const userMeetings: { user: string; meeting: Meeting }[] = [];
 
     Object.keys(objUserMeetingBlocks).forEach((user) => {
-      const meetings = objUserMeetingBlocks[user].map(([meeting]) => meeting);
-      meetings.forEach((meeting) => {
+      const singleMeetings = objUserMeetingBlocks[user].map(
+        ([meeting]) => meeting
+      );
+      singleMeetings.forEach((meeting) => {
         userMeetings.push({ user, meeting });
       });
     });
+
+    return userMeetings;
+  }
+
+  static async publishEvent(event: Event) {
+    // const meetingsByDay: Map<string, Meeting[]> = new Map();
+    // event.meetings.forEach((meeting) => {
+    //   const date = dayjs(meeting.startDateTime);
+    //   const dateString = date.format(dateFormat);
+    //   if (meetingsByDay.has(dateString)) {
+    //     let dayMeetings = meetingsByDay.get(dateString);
+    //     if (!dayMeetings) {
+    //       dayMeetings = [];
+    //     }
+    //     meetingsByDay.set(dateString, [...dayMeetings, meeting]);
+    //   } else {
+    //     meetingsByDay.set(dateString, [meeting]);
+    //   }
+    // });
+
+    const assignedMeetings: { user: string; meeting: Meeting }[] =
+      await ZoomService.assignMeetings(event.meetings);
+
+    Logger.info(`Assigned meetings`);
+    Logger.info(JSON.stringify(assignedMeetings, null, 2));
   }
 
   static async scheduleMeeting(meeting: Meeting, userEmail: string) {

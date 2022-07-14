@@ -1,6 +1,7 @@
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
 import Event from '../entities/Event';
+import ZoomService from './ZoomService';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -82,6 +83,8 @@ export default class EventService {
 
       event.status = EventStatus.PUBLISHED;
       const updatedEvent = await event.save();
+
+      await ZoomService.publishEvent(updatedEvent);
 
       return updatedEvent;
     } catch (error) {
