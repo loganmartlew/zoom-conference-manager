@@ -5,7 +5,6 @@
 // import { List, ListItem, ListItemText } from '@material-ui/core/';
 // import Button from '@material-ui/core/Button';
 
-
 // export class Confirm extends Component {
 //   continue = e => {
 //     e.preventDefault();
@@ -21,7 +20,7 @@
 //   override render() {
 //     const {
 //       values: { name, description, startDate, endDate}
-//     } 
+//     }
 //     return (
 //       <MuiThemeProvider>
 //         <>

@@ -63,7 +63,7 @@ const SideNavigation: FC<Props> = ({
   collapsable,
   open,
   handleDrawerClose,
-  children
+  children,
 }) => {
   const theme = useTheme();
 
