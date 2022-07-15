@@ -39,3 +39,8 @@ export const deleteEvent = async (req: Request, res: Response) => {
   }
   return res.json({ message: 'Event deleted' });
 };
+
+export const uploadFile = async (req: Request, res: Response) => {
+  console.log(req.body);
+  res.send('ok');
+};

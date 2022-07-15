@@ -6,6 +6,7 @@ import {
   getAllEvents,
   updateEvent,
   deleteEvent,
+  uploadFile,
 } from '../controllers/event';
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.post('/', createEvent);
 router.get('/:id', getEvent);
 router.patch('/:id', updateEvent);
 router.delete('/:id', deleteEvent);
+router.post('/:id/upload', uploadFile);
 
 export default router;
