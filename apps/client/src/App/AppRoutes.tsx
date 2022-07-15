@@ -8,7 +8,7 @@ import NavLayout from '../features/Navigation/NavLayout';
 // import NewMeetingPage from '../pages/NewMeetingPage';
 import UpdateMeeting from '../features/Meetings/UpdateMeeting';
 
-import UpdateMeetingState from '../features/Meetings/MeetingTypes/UpdateMeetingState';
+import { Meeting } from '../features/Meetings/MeetingTypes/UpdateMeetingTypes';
 
 const AppRoutes: FC = () => {
   return (
@@ -21,8 +21,7 @@ const AppRoutes: FC = () => {
               <UpdateMeeting
                 getMeeting={(id: number) => {
                   if (id === 1) {
-                    const state: UpdateMeetingState = {
-                      ubid: '000000000',
+                    const state: Meeting = {
                       name: 'Test',
                       date: '23/06/22',
                       time: '1400',
@@ -31,8 +30,7 @@ const AppRoutes: FC = () => {
                     };
                     return state;
                   }
-                  const state: UpdateMeetingState = {
-                    ubid: '000000001',
+                  const state: Meeting = {
                     name: 'Test',
                     date: '23/06/22',
                     time: '1400',
@@ -42,6 +40,7 @@ const AppRoutes: FC = () => {
                   return state;
                 }}
                 meetingID={1}
+                editOnRender={false}
               />
             }
           />

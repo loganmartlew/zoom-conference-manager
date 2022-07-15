@@ -1,6 +1,7 @@
 import { FC, ChangeEvent } from 'react';
 import { Box, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { string } from 'yup/lib/locale';
 
 interface Props {
   value: string | number;
@@ -23,6 +24,8 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
         label={name}
         name={name}
         onChange={handleChange}
+        data-testid={`update--meeting--${name}`}
+        inputProps={{ 'data-testid': `update--meeting--textfield--${name}` }}
       />
     ) : (
       <TextField
@@ -32,6 +35,8 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
         onChange={handleChange}
         error
         helperText={errorText}
+        data-testid={`update--meeting--${name}`}
+        inputProps={{ 'data-testid': `update--meeting--textfield--${name}` }}
       />
     );
   };
@@ -41,7 +46,14 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
       {isEditable ? (
         getEditableField(error)
       ) : (
-        <TextField disabled defaultValue={value} label={name} name={name} />
+        <TextField
+          disabled
+          defaultValue={value}
+          label={name}
+          name={name}
+          data-testid={`update--meeting--${name}`}
+          inputProps={{ 'data-testid': `update--meeting--textfield--${name}` }}
+        />
       )}
       <EditIcon
         color={isEditable ? 'primary' : 'secondary'}

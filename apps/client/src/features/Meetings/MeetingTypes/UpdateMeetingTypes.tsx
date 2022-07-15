@@ -1,5 +1,12 @@
+interface Meeting {
+  name: string;
+  date: string;
+  time: string;
+  duration: string;
+  event: string;
+}
+
 interface UpdateValue {
-  ubid: string;
   name: string;
   date: string;
   time: string;
@@ -8,7 +15,6 @@ interface UpdateValue {
 }
 
 interface UpdateEdit {
-  ubid: boolean;
   name: boolean;
   date: boolean;
   time: boolean;
@@ -17,7 +23,6 @@ interface UpdateEdit {
 }
 
 interface UpdateError {
-  ubid: boolean;
   name: boolean;
   date: boolean;
   time: boolean;
@@ -44,6 +49,7 @@ interface UpdateAction {
 }
 
 export {
+  Meeting,
   UpdateValue,
   UpdateEdit,
   UpdateError,

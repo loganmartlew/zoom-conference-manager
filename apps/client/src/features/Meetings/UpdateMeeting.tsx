@@ -1,45 +1,43 @@
 import { FC, ChangeEvent, useReducer } from 'react';
 import { Stack, Button } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
-import UpdateMeetingState from './MeetingTypes/UpdateMeetingState';
 import {
+  Meeting,
   UpdateState,
   UpdateMeetingType,
   UpdateAction,
 } from './MeetingTypes/UpdateMeetingTypes';
 
 interface Props {
-  getMeeting: (id: number) => UpdateMeetingState;
+  getMeeting: (id: number) => Meeting;
   meetingID: number;
+  editOnRender: boolean;
 }
-
-const getEditValue = (state: UpdateState, name: string): boolean => {
-  const editObj = state.edit;
-  // eslint-disable-next-line no-restricted-syntax
-  for (const [editKey, editValue] of Object.entries(editObj)) {
-    if (editKey.toString() === name) {
-      return editValue;
-    }
-  }
-  throw Error('No key represents input name');
-};
+// TODO: add some form of error handeling on submit...
 
 const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
   switch (action.type) {
-    // change so less reused code
     case UpdateMeetingType.SET:
       return {
         ...state,
         value: { ...state.value, [action.name]: action.payload },
       };
-    case UpdateMeetingType.EDIT:
+    case UpdateMeetingType.EDIT: {
+      let updatedEdit;
+      if (action.payload === 'false') {
+        updatedEdit = true;
+      } else if (action.payload === 'true') {
+        updatedEdit = false;
+      }
+
       return {
         ...state,
         edit: {
           ...state.edit,
-          [action.name]: getEditValue(state, action.name),
+          [action.name]: updatedEdit,
         },
       };
+    }
     case UpdateMeetingType.ERR:
       return {
         ...state,
@@ -51,20 +49,18 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
 };
 
 const UpdateMeeting: FC<Props> = (props: Props) => {
-  const { getMeeting, meetingID } = props;
+  const { getMeeting, meetingID, editOnRender } = props;
 
   const [meetingState, meetingDispatch] = useReducer(updateMeetingReducer, {
     value: getMeeting(meetingID),
     edit: {
-      ubid: false,
-      name: false,
-      date: false,
-      duration: false,
-      event: false,
-      time: false,
+      name: editOnRender,
+      date: editOnRender,
+      duration: editOnRender,
+      event: editOnRender,
+      time: editOnRender,
     },
     error: {
-      ubid: false,
       name: false,
       date: false,
       duration: false,
@@ -165,11 +161,11 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
 
   // method used as argument to UpdateMeetingField component in order
   // to dispatch allow for editing different fields.
-  const editField = (fieldName: string) => {
+  const editField = (fieldName: string, value: string) => {
     // note payload is blank is it is just toggling the current edit boolean value
     meetingDispatch({
       type: UpdateMeetingType.EDIT,
-      payload: '',
+      payload: value,
       name: fieldName,
     });
   };
@@ -177,24 +173,10 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
   return (
     <Stack direction='column' spacing='2rem'>
       <UpdateMeetingField
-        value={meetingState.value.ubid}
-        editField={editField}
-        isEditable={meetingState.edit.ubid}
-        handleChange={(e: ChangeEvent<HTMLInputElement>) => {
-          const { value } = e.target;
-          meetingDispatch({
-            type: UpdateMeetingType.SET,
-            payload: value,
-            name: 'ubid',
-          });
-        }}
-        name='ubid'
-        error={meetingState.error.ubid}
-        errorText=''
-      />
-      <UpdateMeetingField
         value={meetingState.value.date}
-        editField={editField}
+        editField={() => {
+          editField('date', meetingState.edit.date ? 'true' : 'false');
+        }}
         isEditable={meetingState.edit.date}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
@@ -212,7 +194,9 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       />
       <UpdateMeetingField
         value={meetingState.value.time}
-        editField={editField}
+        editField={() => {
+          editField('time', meetingState.edit.time ? 'true' : 'false');
+        }}
         isEditable={meetingState.edit.time}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
@@ -230,7 +214,9 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       />
       <UpdateMeetingField
         value={meetingState.value.name}
-        editField={editField}
+        editField={() => {
+          editField('name', meetingState.edit.name ? 'true' : 'false');
+        }}
         isEditable={meetingState.edit.name}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
@@ -243,10 +229,13 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         name='name'
         error={meetingState.error.name}
         errorText=''
+        data-testid='update--meeting--name'
       />
       <UpdateMeetingField
         value={meetingState.value.duration}
-        editField={editField}
+        editField={() => {
+          editField('duration', meetingState.edit.duration ? 'true' : 'false');
+        }}
         isEditable={meetingState.edit.duration}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
@@ -264,7 +253,9 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       />
       <UpdateMeetingField
         value={meetingState.value.event}
-        editField={editField}
+        editField={() => {
+          editField('event', meetingState.edit.event ? 'true' : 'false');
+        }}
         isEditable={meetingState.edit.event}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
