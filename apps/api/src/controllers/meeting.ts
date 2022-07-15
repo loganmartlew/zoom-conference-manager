@@ -1,18 +1,52 @@
-import { Request, Response } from 'express';
+import {
+  CreateMeeting,
+  DeleteMeeting,
+  GetAllMeetings,
+  GetMeeting,
+  UpdateMeeting,
+} from '@zoom-conference-manager/api-interfaces';
+import { Request } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import MeetingService from '../services/MeetingService';
 
+export const createMeeting: CreateMeeting = async (req: Request) => {
+  const { meetingData } = req.body;
 
-export const createMeeting = async (req: Request, res: Response) => {
-    return res.json({ message:'Create Meeting'});
-}
+  try {
+    const newMeeting = await MeetingService.create(meetingData);
+    return {
+      status: StatusCodes.CREATED,
+      message: 'Create Meeting',
+      data: newMeeting,
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Fail to create Meeting',
+      error,
+    };
+  }
+};
 
-export const getMeeting = async (req: Request, res: Response) => {
-    return res.json({ message:'Get Meeting'});
-}
+export const getAllMeeting: GetAllMeetings = async () => {
+  const meetings = await MeetingService.getAll();
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved all meetings',
+    data: meetings,
+  };
+};
 
-export const updateMeeting = async (req: Request, res: Response) => {
-    return res.json({ message:'Update Meeting'});
-}
+export const getMeeting: GetMeeting = async (req: Request) => {
+  const { id } = req.params;
+  const meeting = await MeetingService.getOne(id);
+  return { status: StatusCodes.OK, message: 'Get Meeting', data: meeting };
+};
 
-export const deleteMeeting = async (req: Request, res: Response) => {
-    return res.json({ message:'Delete Meeting'});
-}
+export const updateMeeting: UpdateMeeting = async () => {
+  return { status: StatusCodes.OK, message: 'Update Meeting' };
+};
+
+export const deleteMeeting: DeleteMeeting = async () => {
+  return { status: StatusCodes.OK, message: 'Delete Meeting' };
+};

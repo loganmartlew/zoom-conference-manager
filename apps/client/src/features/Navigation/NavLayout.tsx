@@ -1,6 +1,6 @@
 import { useState, FC } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { Home, Dashboard, Event, AddBox, PersonAdd } from '@mui/icons-material';
 import TopBar from './TopBar';
 import SideNavigation, { DrawerHeader } from './SideNavigation';
@@ -12,6 +12,7 @@ const items: NavItem[] = [
   { text: 'Dashboard', path: '/dashboard', icon: <Dashboard /> },
   { text: 'Events', path: '/events', icon: <Event /> },
   { text: 'New Event', path: '/new-event', icon: <AddBox /> },
+  { text: 'New Meeting', path: '/new-meeting', icon: <AddBox /> },
   { text: 'Add Account', path: '/add-account', icon: <PersonAdd /> },
 ];
 
@@ -32,7 +33,7 @@ const NavLayout: FC<Props> = ({ collapsable }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <TopBar
         collapsable={collapsable}
         open={open}
@@ -47,7 +48,9 @@ const NavLayout: FC<Props> = ({ collapsable }) => {
       </SideNavigation>
       <Box sx={{ flexGrow: 1 }}>
         <DrawerHeader />
-        <Outlet />
+        <Container sx={{ minHeight: 'calc(100vh - 4em)', py: 3 }}>
+          <Outlet />
+        </Container>
       </Box>
     </Box>
   );

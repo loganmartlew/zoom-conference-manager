@@ -8,14 +8,15 @@ import {
   deleteEvent,
   uploadFile,
 } from '../controllers/event';
+import response from '../util/response';
 
 const router = express.Router();
 
-router.get('/', getAllEvents);
-router.post('/', createEvent);
-router.get('/:id', getEvent);
-router.patch('/:id', updateEvent);
-router.delete('/:id', deleteEvent);
-router.post('/:id/upload', uploadFile);
+router.get('/', response(getAllEvents));
+router.post('/', response(createEvent));
+router.get('/:id', response(getEvent));
+router.put('/:id', response(updateEvent));
+router.delete('/:id', response(deleteEvent));
+router.post('/:id/upload', response(uploadFile));
 
 export default router;

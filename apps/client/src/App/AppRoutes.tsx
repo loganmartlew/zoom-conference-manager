@@ -2,20 +2,23 @@ import { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavLayout from '../features/Navigation/NavLayout';
 
-import HomePage from '../pages/HomePage';
-// import NewEventPage from '../pages/NewEventPage';
-import AddAccount from "../pages/AddAccount";
-// import Confirmed from "../pages/confirm";
+import EventsPage from '../pages/EventsPage';
+import EventDetailsPage from '../pages/EventDetailsPage';
+import NewEventPage from '../pages/NewEventPage';
+import NewMeetingPage from '../pages/NewMeetingPage';
+import AddAccount from '../pages/AddAccount';
 
 const AppRoutes: FC = () => {
   return (
     <Router>
       <Routes>
         <Route element={<NavLayout />}>
-          <Route path='/' element={<HomePage />} />
+          <Route path='/' element={<h1>Home</h1>} />
           <Route path='/dashboard' element={<h1>Dashboard</h1>} />
-          <Route path='/events' element={<h1>Events</h1>} />
-          {/* <Route path='/new-event' element={<Confirmed />} /> */}
+          <Route path='/events' element={<EventsPage />} />
+          <Route path='/events/:id' element={<EventDetailsPage />} />
+          <Route path='/new-event' element={<NewEventPage />} />
+          <Route path='/new-meeting' element={<NewMeetingPage />} />
           <Route path='/add-account' element={<AddAccount />} />
         </Route>
       </Routes>

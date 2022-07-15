@@ -27,7 +27,7 @@ jobs:
         run: cp package.json dist/apps/api/package.json
 
       - name: Commit Procfile
-        run: git add -A && git commit -m "Added Procfile and package.json"
+        run: git add -A && git commit -m "Added Procfile and package.json" --no-verify
 
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
