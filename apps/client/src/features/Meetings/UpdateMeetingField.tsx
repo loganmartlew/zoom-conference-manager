@@ -1,7 +1,6 @@
 import { FC, ChangeEvent } from 'react';
 import { Box, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { string } from 'yup/lib/locale';
 
 interface Props {
   value: string | number;
@@ -60,6 +59,7 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
         onClick={() => {
           editField(name);
         }}
+        data-testid={`update--meeting--icon--${name}`}
       />
     </Box>
   );

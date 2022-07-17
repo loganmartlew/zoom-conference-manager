@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-boolean-value */
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, queries } from '@testing-library/react';
 import { Meeting } from './MeetingTypes/UpdateMeetingTypes';
 import UpdateMeeting from './UpdateMeeting';
 
@@ -25,6 +25,51 @@ const mockGetMeeting = (id: number) => {
   return state;
 };
 
+/**
+ * this method takes a testId (data-testid) for a text field mui component
+ * and returns its value.
+ * @param testId the input testId
+ * @returns a string representing the input text in the text field
+ */
+const getTextFieldValue = (testId: string): string | undefined => {
+  return screen.getByTestId(testId).querySelector('input')?.value;
+};
+
+/**
+ * this method takes a testIdInput (data-testid) a testIdField (data-testid)
+ * a value to change the text field to, and an errorMsg to display an error
+ * if something went wrong in the test case. It updates the input text field
+ * with the input value and returns the resulting value.
+ * @param testIdInput
+ * @param testIdField
+ * @param value
+ * @param errorMsg
+ * @returns
+ */
+const changeTextFieldValue = (
+  testIdInput: string,
+  testIdField: string,
+  value: string,
+  errorMsg: string
+): string | undefined => {
+  const input = screen.getByTestId(testIdInput);
+  if (!input) {
+    throw Error(errorMsg);
+  }
+
+  fireEvent.change(input, { target: { value } });
+  return screen.getByTestId(testIdField).querySelector('input')?.value;
+};
+
+/**
+ * this method takes a testIdIcon (data-testid) and clicks
+ * the mui icon
+ * @param testIdIcon
+ */
+const clickEditIcon = (testIdIcon: string): void => {
+  fireEvent.click(screen.getByTestId(testIdIcon));
+};
+
 describe('UpdateMeeting testing', () => {
   test('Checks that all fields are rendered when not editable', () => {
     render(
@@ -35,29 +80,23 @@ describe('UpdateMeeting testing', () => {
       />
     );
 
-    const name = screen
-      .getByTestId('update--meeting--name')
-      .querySelector('input')?.value;
+    // test the name field input
+    const name = getTextFieldValue('update--meeting--name');
     expect(name).toBe('Test 1');
 
-    const date = screen
-      .getByTestId('update--meeting--date')
-      .querySelector('input')?.value;
+    // test the date field input
+    const date = getTextFieldValue('update--meeting--date');
     expect(date).toBe('23/06/22');
 
-    const time = screen
-      .getByTestId('update--meeting--time')
-      .querySelector('input')?.value;
+    // test the time field input
+    const time = getTextFieldValue('update--meeting--time');
     expect(time).toBe('1400');
 
-    const duration = screen
-      .getByTestId('update--meeting--duration')
-      .querySelector('input')?.value;
+    // test the duration field input
+    const duration = getTextFieldValue('update--meeting--duration');
     expect(duration).toBe('1');
 
-    const event = screen
-      .getByTestId('update--meeting--event')
-      .querySelector('input')?.value;
+    const event = getTextFieldValue('update--meeting--event');
     expect(event).toBe('hello');
   });
 
@@ -71,60 +110,97 @@ describe('UpdateMeeting testing', () => {
     );
 
     // test the name field
-    const nameInput = screen.getByTestId('update--meeting--textfield--name');
-    if (!nameInput) {
-      throw Error('name field is undefined');
-    }
-    fireEvent.change(nameInput, { target: { value: 'New Test' } });
-    const nameText = screen
-      .getByTestId('update--meeting--name')
-      .querySelector('input')?.value;
+    const nameText = changeTextFieldValue(
+      'update--meeting--textfield--name',
+      'update--meeting--name',
+      'New Test',
+      'name field is undefined'
+    );
     expect(nameText).toBe('New Test');
 
     // test the date field
-    const dateInput = screen.getByTestId('update--meeting--textfield--date');
-    if (!dateInput) {
-      throw Error('date field is undefined');
-    }
-    fireEvent.change(dateInput, { target: { value: '15/07/22' } });
-    const dateText = screen
-      .getByTestId('update--meeting--date')
-      .querySelector('input')?.value;
+    const dateText = changeTextFieldValue(
+      'update--meeting--textfield--date',
+      'update--meeting--date',
+      '15/07/22',
+      'date field is undefined'
+    );
     expect(dateText).toBe('15/07/22');
 
     // test the time field
-    const timeInput = screen.getByTestId('update--meeting--textfield--time');
-    if (!timeInput) {
-      throw Error('time field is undefined');
-    }
-    fireEvent.change(timeInput, { target: { value: '0000' } });
-    const timeText = screen
-      .getByTestId('update--meeting--time')
-      .querySelector('input')?.value;
+    const timeText = changeTextFieldValue(
+      'update--meeting--textfield--time',
+      'update--meeting--time',
+      '0000',
+      'time field is undefined'
+    );
     expect(timeText).toBe('0000');
 
     // test the duration field
-    const durationInput = screen.getByTestId(
-      'update--meeting--textfield--duration'
+    const durationText = changeTextFieldValue(
+      'update--meeting--textfield--duration',
+      'update--meeting--duration',
+      '3',
+      'duration field is undefined'
     );
-    if (!durationInput) {
-      throw Error('duration field is undefined');
-    }
-    fireEvent.change(durationInput, { target: { value: '3' } });
-    const durationText = screen
-      .getByTestId('update--meeting--duration')
-      .querySelector('input')?.value;
     expect(durationText).toBe('3');
 
     // test the event field
-    const eventInput = screen.getByTestId('update--meeting--textfield--event');
-    if (!eventInput) {
-      throw Error('event field is undefined');
-    }
-    fireEvent.change(eventInput, { target: { value: 'Test Event!' } });
+    const eventText = changeTextFieldValue(
+      'update--meeting--textfield--event',
+      'update--meeting--event',
+      'Test Event!',
+      'event field is undefined'
+    );
+    expect(eventText).toBe('Test Event!');
+  });
+
+  test('Checks that when the edit icon is clicked changes the relative field from disabled to enabled', () => {
+    // note that the editing of fields is initially set to false hence nothing
+    // can be edited until the edit icons are clicked.
+    render(
+      <UpdateMeeting
+        getMeeting={mockGetMeeting}
+        meetingID={1}
+        editOnRender={false}
+      />
+    );
+
+    // test name field icon
+    const nameField = screen
+      .getByTestId('update--meeting--name')
+      .querySelector('input');
+    expect(nameField).toHaveProperty('disabled', true);
+    clickEditIcon('update--meeting--icon--name');
+    expect(nameField).toHaveProperty('disabled', false);
+
+    // test date field icon
+    const dateField = screen
+      .getByTestId('update--meeting--date')
+      .querySelector('input');
+    expect(dateField).toHaveProperty('disabled', true);
+    clickEditIcon('update--meeting--icon--date');
+    expect(dateField).toHaveProperty('disabled', false);
+
+    const timeField = screen
+      .getByTestId('update--meeting--time')
+      .querySelector('input');
+    expect(timeField).toHaveProperty('disabled', true);
+    clickEditIcon('update--meeting--icon--time');
+    expect(timeField).toHaveProperty('disabled', false);
+
+    const durationText = screen
+      .getByTestId('update--meeting--duration')
+      .querySelector('input');
+    expect(durationText).toHaveProperty('disabled', true);
+    clickEditIcon('update--meeting--icon--duration');
+    expect(durationText).toHaveProperty('disabled', false);
+
     const eventText = screen
       .getByTestId('update--meeting--event')
-      .querySelector('input')?.value;
-    expect(eventText).toBe('Test Event!');
+      .querySelector('input');
+    expect(eventText).toHaveProperty('disabled', true);
+    clickEditIcon('update--meeting--icon--event');
+    expect(eventText).toHaveProperty('disabled', false);
   });
 });

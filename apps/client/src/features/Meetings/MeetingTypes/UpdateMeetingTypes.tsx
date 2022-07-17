@@ -45,7 +45,7 @@ enum UpdateMeetingType {
 interface UpdateAction {
   type: UpdateMeetingType;
   payload: string;
-  name: string;
+  name: keyof Meeting;
 }
 
 export {

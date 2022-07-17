@@ -1,5 +1,5 @@
-import { FC, ChangeEvent, useReducer } from 'react';
-import { Stack, Button } from '@mui/material';
+import { FC, ChangeEvent, useReducer, useState } from 'react';
+import { Stack, Button, Alert } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
 import {
   Meeting,
@@ -13,8 +13,9 @@ interface Props {
   meetingID: number;
   editOnRender: boolean;
 }
-// TODO: add some form of error handeling on submit...
 
+// TODO: update the alert so that it shows success, and only displays the error version when
+// an error is thrown
 const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
   switch (action.type) {
     case UpdateMeetingType.SET:
@@ -68,6 +69,8 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       time: false,
     },
   });
+
+  const [updateMeetingAlert, setUpdateMeetingAlert] = useState(false);
 
   const validateDurationChange = (value: string): boolean => {
     const pattern = /[A-Za-z]/;
@@ -161,7 +164,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
 
   // method used as argument to UpdateMeetingField component in order
   // to dispatch allow for editing different fields.
-  const editField = (fieldName: string, value: string) => {
+  const editField = (fieldName: keyof Meeting, value: string) => {
     // note payload is blank is it is just toggling the current edit boolean value
     meetingDispatch({
       type: UpdateMeetingType.EDIT,
@@ -269,9 +272,26 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         error={meetingState.error.event}
         errorText=''
       />
-      <Button variant='contained' sx={{ width: '5rem' }}>
+      <Button
+        onClick={() => {
+          setUpdateMeetingAlert(!updateMeetingAlert);
+        }}
+        variant='contained'
+        sx={{ width: '5rem' }}
+      >
         Update
       </Button>
+
+      {updateMeetingAlert && (
+        <Alert
+          onClose={() => {
+            setUpdateMeetingAlert(false);
+          }}
+          severity='error'
+        >
+          Error updating meeting!
+        </Alert>
+      )}
     </Stack>
   );
 };
