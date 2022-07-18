@@ -54,6 +54,10 @@ export interface IZoomUser {
   email: string;
 }
 
+export interface MulterRequest extends Request {
+  file: any;
+}
+
 export type Controller<T> = (req: Request) => Promise<ApiResponse<T>>;
 export type ExtractControllerData<T> = T extends Controller<infer U>
   ? U

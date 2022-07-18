@@ -1,3 +1,4 @@
+import XLSX from 'xlsx';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
 
@@ -68,6 +69,36 @@ export default class EventService {
       return updatedEvent;
     } catch (error) {
       throw new Error('Unable to update Event');
+    }
+  }
+
+  /*
+  [file] parameter :
+
+  File:  {
+    fieldname: 'excelFile',
+    originalname: 'agenda_export_auotm_202203_2.xls',
+    encoding: '7bit',
+    mimetype: 'application/vnd.ms-excel',
+    destination: 'uploads/',
+    filename: 'b60b92b4e5dad1dedf95fb02a6f5cb31',
+    path: 'uploads/b60b92b4e5dad1dedf95fb02a6f5cb31',
+    size: 104448
+  }
+  */
+
+  static async uploadFile(file: any): Promise<void> {
+    try {
+      // Get Root directory, then combine it into excel location
+      const rootDir = __dirname.split('dist/apps/api')[0];
+      const excelFileLocation = rootDir + file.path;
+
+      const workBook = XLSX.readFile(excelFileLocation);
+      // console.log("Read Datas: ", workBook);
+
+      // TODO : Option1 : Get datas from the [workBook]
+    } catch (error) {
+      throw new Error('Unable to read the Excel File');
     }
   }
 }

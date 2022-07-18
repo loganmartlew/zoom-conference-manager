@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from './routerLoaders/multer';
 
 import {
   createEvent,
@@ -17,6 +18,6 @@ router.post('/', response(createEvent));
 router.get('/:id', response(getEvent));
 router.put('/:id', response(updateEvent));
 router.delete('/:id', response(deleteEvent));
-router.post('/:id/upload', response(uploadFile));
+router.post('/:id/upload', multer.single('excelFile'), response(uploadFile));
 
 export default router;
