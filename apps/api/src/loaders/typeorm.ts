@@ -21,7 +21,7 @@ export default async () => {
     await dataSource.initialize();
     Logger.info('Connected to database');
   } catch (error) {
-    Logger.crit(error);
+    Logger.error(error);
     throw new Error('Unable to connect to database');
   }
 };
