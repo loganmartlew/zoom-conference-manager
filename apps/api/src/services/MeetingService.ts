@@ -47,17 +47,18 @@ export default class MeetingService {
   }
 
   static async update(id: string, meetingData: MeetingDTO): Promise<Meeting> {
-    try {
-      const meeting = await this.getOne(id);
+    const event = await EventService.getOne(meetingData.eventId);
 
+    const meeting = await this.getOne(id);
+
+    try {
       meeting.name = meetingData.name;
       meeting.startDateTime = dayjs(
         meetingData.startDateTime,
         formats.dateTime
       ).toDate();
       meeting.duration = meetingData.duration;
-
-      // TODO : Update meeting.event prop?
+      meeting.event = event;
 
       const updatedMeeting = await meeting.save();
 
