@@ -10,12 +10,16 @@ const Add: FC = () => {
 
   const send = () => {
     const formData = new FormData();
-    formData.append('file', files[0]);
-    axios.post('/event/e38951d4-affb-4822-81a1-3737315a9590/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    formData.append('excelFile', files[0]);
+    axios.post(
+      '/events/e38951d4-affb-4822-81a1-3737315a9590/upload',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
   };
 
   return (

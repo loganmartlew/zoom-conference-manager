@@ -1,6 +1,7 @@
 import XLSX from 'xlsx';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
+import extractExcelData from '../util/extractExcel';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -94,9 +95,13 @@ export default class EventService {
       const excelFileLocation = rootDir + file.path;
 
       const workBook = XLSX.readFile(excelFileLocation);
-      // console.log("Read Datas: ", workBook);
 
-      // TODO : Option1 : Get datas from the [workBook]
+      // Create List of meeting from excel file
+      const meetingList = extractExcelData(workBook);
+
+      console.log('Meeting List: ', meetingList);
+
+      // TODO : Schedule Meeting from the [meetingList]
     } catch (error) {
       throw new Error('Unable to read the Excel File');
     }
