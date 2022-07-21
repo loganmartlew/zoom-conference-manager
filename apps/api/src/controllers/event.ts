@@ -94,7 +94,7 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
 };
 
 export const uploadFile: UploadFile = async (req: Request) => {
-  /// Adjust the [req] Request obj in Runtime
+  /// Add [file] into [req], happens in Runtime
   // eslint-disable-next-line prefer-destructuring
   const file = (req as MulterRequest).file;
 
