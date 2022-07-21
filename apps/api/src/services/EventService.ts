@@ -1,4 +1,5 @@
 import XLSX from 'xlsx';
+import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
 import extractExcelData from '../util/extractExcel';
@@ -100,6 +101,9 @@ export default class EventService {
       const meetingList = extractExcelData(workBook);
 
       console.log('Meeting List: ', meetingList);
+
+      // Remove the excel file from system
+      fs.unlinkSync(excelFileLocation);
 
       // TODO : Schedule Meeting from the [meetingList]
     } catch (error) {
