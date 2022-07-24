@@ -8,6 +8,24 @@ import {
   UpdateAction,
 } from './MeetingTypes/UpdateMeetingTypes';
 
+import { testMeeting } from './api/getMeeting';
+import { testUpdateMeeting } from './api/updateMeeting';
+
+const testMeetingAPI = async () => {
+  const data = await testMeeting('11111');
+  console.log(data);
+  console.log('test 1=====');
+
+  const res = await testUpdateMeeting('11111', {
+    ubid: '11111',
+    name: 'new name',
+    startDateTime: '2022-07-24',
+    duration: 1,
+    eventId: 'cc16d739-4eaf-40d9-95da-95ee07b253d3',
+  });
+  console.log(res);
+};
+
 interface Props {
   getMeeting: (id: number) => Meeting;
   meetingID: number;
@@ -50,6 +68,8 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
 };
 
 const UpdateMeeting: FC<Props> = (props: Props) => {
+  testMeetingAPI();
+
   const { getMeeting, meetingID, editOnRender } = props;
 
   const [meetingState, meetingDispatch] = useReducer(updateMeetingReducer, {

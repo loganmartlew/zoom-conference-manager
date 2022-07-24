@@ -20,7 +20,9 @@ export const getAllMeeting = async (req: Request, res: Response) => {
 };
 
 export const getMeeting = async (req: Request, res: Response) => {
-  return res.json({ message: 'Get Meeting' });
+  const { id } = req.params;
+  const meeting = await MeetingService.getOne(id);
+  return res.status(200).json(meeting);
 };
 
 export const updateMeeting = async (req: Request, res: Response) => {
