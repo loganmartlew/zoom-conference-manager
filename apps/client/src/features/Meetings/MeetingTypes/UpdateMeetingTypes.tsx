@@ -40,12 +40,13 @@ enum UpdateMeetingType {
   SET = 'SET',
   EDIT = 'EDIT',
   ERR = 'ERR',
+  INITIALIZE = 'INITIALIZE',
 }
 
 interface UpdateAction {
   type: UpdateMeetingType;
   payload: string;
-  name: keyof Meeting;
+  name: keyof Meeting | null;
 }
 
 export {

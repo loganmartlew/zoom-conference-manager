@@ -1,7 +1,7 @@
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { axios } from '../../../config/axios';
 
-export const testUpdateMeeting = (
+export const updateMeetingData = (
   ubid: string,
   meetingData: MeetingDTO
 ): Promise<MeetingDTO> => {

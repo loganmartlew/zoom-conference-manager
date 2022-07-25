@@ -1,28 +1,49 @@
 /* eslint-disable react/jsx-boolean-value */
-import { render, screen, fireEvent, queries } from '@testing-library/react';
-import { Meeting } from './MeetingTypes/UpdateMeetingTypes';
+import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import { render, screen, fireEvent } from '@testing-library/react';
 import UpdateMeeting from './UpdateMeeting';
 
-const mockGetMeeting = (id: number) => {
-  let state: Meeting;
-  if (id === 1) {
+// TODO: need to refacor in terms of new input methods for backend
+
+const mockGetMeeting = (id: string): Promise<MeetingDTO> => {
+  let state: MeetingDTO;
+  if (id === '1') {
     state = {
+      ubid: '1',
       name: 'Test 1',
-      date: '23/06/22',
-      time: '1400',
-      duration: '1',
-      event: 'hello',
+      startDateTime: '23/06/22',
+      duration: 1,
+      eventId: 'hello',
     };
   } else {
     state = {
+      ubid: '2',
       name: 'Test 2',
-      date: '24/06/22',
-      time: '2400',
-      duration: '2',
-      event: 'world',
+      startDateTime: '24/06/22',
+      duration: 2,
+      eventId: 'world',
     };
   }
-  return state;
+  return Promise.resolve(state);
+};
+
+// note we can disable the typscript warnings
+// for unused variables as it is a mock function and the input
+// parameters (variables) are not required to be used in this case.
+const mockUpdateMeeting = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ubid: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  meetingData: MeetingDTO
+): Promise<MeetingDTO> => {
+  const meeting: MeetingDTO = {
+    ubid: '',
+    name: '',
+    startDateTime: '',
+    duration: 0,
+    eventId: '',
+  };
+  return Promise.resolve(meeting);
 };
 
 /**
@@ -74,8 +95,10 @@ describe('UpdateMeeting testing', () => {
   test('Checks that all fields are rendered when not editable', () => {
     render(
       <UpdateMeeting
-        getMeeting={mockGetMeeting}
-        meetingID={1}
+        getMeetingData={mockGetMeeting}
+        updateMeetingData={mockUpdateMeeting}
+        ubid='1'
+        eventId='1'
         editOnRender={false}
       />
     );
@@ -103,8 +126,10 @@ describe('UpdateMeeting testing', () => {
   test('Checks that all fields are rendered when editable, and that they can be edited', () => {
     render(
       <UpdateMeeting
-        getMeeting={mockGetMeeting}
-        meetingID={1}
+        getMeetingData={mockGetMeeting}
+        updateMeetingData={mockUpdateMeeting}
+        ubid='1'
+        eventId='1'
         editOnRender={true}
       />
     );
@@ -160,8 +185,10 @@ describe('UpdateMeeting testing', () => {
     // can be edited until the edit icons are clicked.
     render(
       <UpdateMeeting
-        getMeeting={mockGetMeeting}
-        meetingID={1}
+        getMeetingData={mockGetMeeting}
+        updateMeetingData={mockUpdateMeeting}
+        ubid='1'
+        eventId='1'
         editOnRender={false}
       />
     );

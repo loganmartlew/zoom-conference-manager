@@ -1,4 +1,5 @@
-import { FC, ChangeEvent, useReducer, useState } from 'react';
+import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import { FC, ChangeEvent, useReducer, useState, useEffect } from 'react';
 import { Stack, Button, Alert } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
 import {
@@ -8,33 +9,25 @@ import {
   UpdateAction,
 } from './MeetingTypes/UpdateMeetingTypes';
 
-import { testMeeting } from './api/getMeeting';
-import { testUpdateMeeting } from './api/updateMeeting';
-
-const testMeetingAPI = async () => {
-  const data = await testMeeting('11111');
-  console.log(data);
-  console.log('test 1=====');
-
-  const res = await testUpdateMeeting('11111', {
-    ubid: '11111',
-    name: 'new name',
-    startDateTime: '2022-07-24',
-    duration: 1,
-    eventId: 'cc16d739-4eaf-40d9-95da-95ee07b253d3',
-  });
-  console.log(res);
-};
-
 interface Props {
-  getMeeting: (id: number) => Meeting;
-  meetingID: number;
+  getMeetingData: (ubid: string) => Promise<MeetingDTO>;
+  updateMeetingData: (
+    ubid: string,
+    meetingData: MeetingDTO
+  ) => Promise<MeetingDTO>;
+  ubid: string;
+  eventId: string;
   editOnRender: boolean;
 }
 
 // TODO: update the alert so that it shows success, and only displays the error version when
 // an error is thrown
 const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
+  if (action.name === null) {
+    const [duration, eventId, date, name] = action.payload.split(',');
+    return { ...state, name, date, duration, event: eventId, time: '' };
+  }
+
   switch (action.type) {
     case UpdateMeetingType.SET:
       return {
@@ -68,12 +61,17 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
 };
 
 const UpdateMeeting: FC<Props> = (props: Props) => {
-  testMeetingAPI();
-
-  const { getMeeting, meetingID, editOnRender } = props;
+  const { ubid, eventId, editOnRender, getMeetingData, updateMeetingData } =
+    props;
 
   const [meetingState, meetingDispatch] = useReducer(updateMeetingReducer, {
-    value: getMeeting(meetingID),
+    value: {
+      name: '',
+      date: '',
+      duration: '',
+      event: '',
+      time: '',
+    },
     edit: {
       name: editOnRender,
       date: editOnRender,
@@ -90,7 +88,52 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     },
   });
 
-  const [updateMeetingAlert, setUpdateMeetingAlert] = useState(false);
+  const [updateMeetingAlert, setUpdateMeetingAlert] = useState({
+    active: false,
+    alertText: '',
+  });
+
+  const getMeetingInfo = async () => {
+    try {
+      const data = await getMeetingData(ubid);
+      meetingDispatch({
+        type: UpdateMeetingType.INITIALIZE,
+        payload: `${data.duration},${data.eventId},${data.startDateTime},${data.name}`,
+        name: null,
+      });
+    } catch (e) {
+      console.log(e);
+      setUpdateMeetingAlert({
+        active: true,
+        alertText: 'Error Fetching Meeting Information',
+      });
+    }
+  };
+
+  const sendMeetingUpdate = async (
+    meetingUbid: string,
+    meetingData: MeetingDTO
+  ) => {
+    try {
+      const data = await updateMeetingData(meetingUbid, meetingData);
+      meetingDispatch({
+        type: UpdateMeetingType.INITIALIZE,
+        payload: `${data.duration},${data.eventId},${data.startDateTime},${data.name}`,
+        name: null,
+      });
+    } catch (e) {
+      console.log(e);
+      setUpdateMeetingAlert({
+        active: true,
+        alertText: 'Error Updating Meeting',
+      });
+    }
+  };
+
+  useEffect(() => {
+    getMeetingInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const validateDurationChange = (value: string): boolean => {
     const pattern = /[A-Za-z]/;
@@ -294,7 +337,15 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       />
       <Button
         onClick={() => {
-          setUpdateMeetingAlert(!updateMeetingAlert);
+          // note this date format is required for backend processing
+          const [day, month, year] = meetingState.value.date.split('/');
+          sendMeetingUpdate(ubid, {
+            ubid,
+            name: meetingState.value.name,
+            startDateTime: `${year}-${month}-${day}`,
+            duration: parseFloat(meetingState.value.duration),
+            eventId,
+          });
         }}
         variant='contained'
         sx={{ width: '5rem' }}
@@ -305,7 +356,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       {updateMeetingAlert && (
         <Alert
           onClose={() => {
-            setUpdateMeetingAlert(false);
+            setUpdateMeetingAlert({ ...updateMeetingAlert, active: false });
           }}
           severity='error'
         >
