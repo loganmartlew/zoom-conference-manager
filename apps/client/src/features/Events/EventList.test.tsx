@@ -1,6 +1,6 @@
 // import { BrowserRouter } from 'react-router-dom';
 // import { QueryClientProvider, QueryClient } from 'react-query';
-import { render, screen } from '@testing-library/react';
+import { renderWithRouter, screen } from '../../test-utils';
 // import EventList from './EventsList';
 import EventCard from './EventCard';
 
@@ -26,14 +26,16 @@ describe('Test EventList', () => {
 
   // checking individual cards can be rendered
   test('A card can be made with specified props', async () => {
-    render(
+    renderWithRouter(
       <EventCard
         key={0}
+        id='0'
         name='test'
         desc='epic'
         start='2022-05-18'
         end='2022-05-20'
-      />
+      />,
+      {}
     );
 
     const cardName = screen.getByText(/test/i);

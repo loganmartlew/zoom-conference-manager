@@ -8,8 +8,6 @@ const EventsList: FC = () => {
   const [showError, setShowError] = useState(true);
   const [showNoEvents, setShowNoEvents] = useState(true);
 
-  console.log(events);
-
   if (isError) {
     return (
       <Collapse in={showError}>
@@ -47,12 +45,30 @@ const EventsList: FC = () => {
     );
   }
 
+  if (!events) {
+    return (
+      <Collapse in={showNoEvents}>
+        <Alert
+          onClose={() => {
+            setShowNoEvents(false);
+          }}
+          severity='success'
+          variant='outlined'
+        >
+          <AlertTitle>No Events</AlertTitle>
+          No events found...
+        </Alert>
+      </Collapse>
+    );
+  }
+
   return (
     <>
-      {events?.map((event) => {
+      {events.map((event) => {
         return (
           <EventCard
             key={event.id}
+            id={event.id}
             name={event.name}
             desc={event.description}
             start={event.startDate}
