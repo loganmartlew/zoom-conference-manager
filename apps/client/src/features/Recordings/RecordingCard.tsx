@@ -38,14 +38,24 @@ const RecordingCard: FC<RecordingCardProps> = (props) => {
         >
           {`${start} - ${end}`}
         </Typography>
-        <Button
-          variant='outlined'
-          sx={{
-            width: 'max-content',
-          }}
-        >
-          View Details
-        </Button>
+        <Stack direction='row' spacing={2}>
+          <Button
+            variant='outlined'
+            sx={{
+              width: 'max-content',
+            }}
+          >
+            View Details
+          </Button>
+          <Button
+            variant='contained'
+            sx={{
+              width: 'max-content',
+            }}
+          >
+            Get Recordings
+          </Button>
+        </Stack>
       </Stack>
     </Paper>
   );
