@@ -1,11 +1,11 @@
 import { FC } from 'react';
-import EventsList from '../features/Events/EventsList';
+import RecordingsList from '../features/Recordings/RecordingsList';
 
 const RecordingsPage: FC = () => {
   return (
     <>
       <h1>Recent Events</h1>
-      <EventsList />
+      <RecordingsList />
     </>
   );
 };
