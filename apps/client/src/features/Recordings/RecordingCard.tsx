@@ -30,12 +30,12 @@ const RecordingCard: FC<RecordingCardProps> = (props) => {
             <Typography>O Meetings</Typography>
           </Stack>
         </Stack>
-        <Typography>
-          sx=
-          {{
+        <Typography
+          sx={{
             width: 'max-content',
             whiteSpace: 'noWrap',
           }}
+        >
           {`${start} - ${end}`}
         </Typography>
         <Button
