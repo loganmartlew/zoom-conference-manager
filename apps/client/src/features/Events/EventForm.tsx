@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { FieldError, SubmitHandler } from 'react-hook-form';
@@ -9,10 +9,13 @@ import TextArea from '../../components/forms/TextArea';
 import DatePicker from '../../components/forms/DatePicker';
 import { usePostEvent } from './api/postEvent';
 import { IFormInput, useEventForm } from './useEventForm';
+import ConfirmDialog from './ConfirmDetails';
 
 const Form = styled('form')({});
 
 const EventForm: FC = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -48,7 +51,6 @@ const EventForm: FC = () => {
   return (
     <Form
       autoComplete='off'
-      onSubmit={handleSubmit(onSubmit)}
       sx={{
         width: {
           xs: '100%',
@@ -63,6 +65,7 @@ const EventForm: FC = () => {
           control={control}
           error={errors.name}
         />
+
         <TextArea
           name='description'
           label='Description'
@@ -70,6 +73,7 @@ const EventForm: FC = () => {
           error={errors.description}
           minRows={3}
         />
+
         <DatePicker
           name='startDate'
           label='Start Date'
@@ -83,7 +87,7 @@ const EventForm: FC = () => {
           error={errors.endDate as FieldError | void}
         />
         <Button
-          type='submit'
+          onClick={() => setDialogOpen(true)}
           variant='contained'
           disabled={isLoading}
           startIcon={
@@ -92,6 +96,12 @@ const EventForm: FC = () => {
         >
           {isLoading ? 'Submitting' : 'Create Event'}
         </Button>
+
+        <ConfirmDialog
+          open={dialogOpen}
+          handleClose={() => setDialogOpen(false)}
+          onConfirm={handleSubmit(onSubmit)}
+        />
       </Stack>
     </Form>
   );
