@@ -1,5 +1,6 @@
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { FC, ChangeEvent, useReducer, useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import { Stack, Button, Alert } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
 import {
@@ -8,6 +9,9 @@ import {
   UpdateMeetingType,
   UpdateAction,
 } from './MeetingTypes/UpdateMeetingTypes';
+
+// TODO: check with team that error handeling can be done on the backend,
+// and just helper text on backend is fine.
 
 interface Props {
   getMeetingData: (ubid: string) => Promise<MeetingDTO>;
@@ -20,10 +24,17 @@ interface Props {
   editOnRender: boolean;
 }
 
-// TODO: update the alert so that it shows success, and only displays the error version when
-// an error is thrown
 const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
-  if (action.name === null) {
+  if (action.type === UpdateMeetingType.INITIALIZE && action.name === null) {
+    const [duration, eventId, startDateTime, name] = action.payload.split(',');
+    const date = dayjs(startDateTime).format('DD/MM/YYYY');
+    const time = dayjs(startDateTime).format('HHmm');
+    return {
+      ...state,
+      value: { ...state.value, duration, name, date, time, event: eventId },
+    };
+    // eslint-disable-next-line no-else-return
+  } else if (action.name === null) {
     const [duration, eventId, date, name] = action.payload.split(',');
     return { ...state, name, date, duration, event: eventId, time: '' };
   }
@@ -50,11 +61,20 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
         },
       };
     }
-    case UpdateMeetingType.ERR:
+    case UpdateMeetingType.ERR: {
+      console.log(`Err_date_reducer: ${state.error.date}`);
+      let updatedErr;
+      if (action.payload === 'true') {
+        updatedErr = true;
+      } else {
+        updatedErr = false;
+      }
+
       return {
         ...state,
-        error: { ...state.error, [action.name]: action.payload },
+        error: { ...state.error, [action.name]: updatedErr },
       };
+    }
     default:
       return { ...state };
   }
@@ -98,7 +118,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       const data = await getMeetingData(ubid);
       meetingDispatch({
         type: UpdateMeetingType.INITIALIZE,
-        payload: `${data.duration},${data.eventId},${data.startDateTime},${data.name}`,
+        payload: `${data.duration},${eventId},${data.startDateTime},${data.name}`,
         name: null,
       });
     } catch (e) {
@@ -115,12 +135,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     meetingData: MeetingDTO
   ) => {
     try {
-      const data = await updateMeetingData(meetingUbid, meetingData);
-      meetingDispatch({
-        type: UpdateMeetingType.INITIALIZE,
-        payload: `${data.duration},${data.eventId},${data.startDateTime},${data.name}`,
-        name: null,
-      });
+      await updateMeetingData(meetingUbid, meetingData);
     } catch (e) {
       console.log(e);
       setUpdateMeetingAlert({
@@ -135,7 +150,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const validateDurationChange = (value: string): boolean => {
+  const validateDurationChange = (value: string) => {
     const pattern = /[A-Za-z]/;
 
     // note is in base 10
@@ -147,14 +162,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         payload: 'false',
         name: 'duration',
       });
-      return false;
     }
     meetingDispatch({
       type: UpdateMeetingType.ERR,
       payload: 'true',
       name: 'duration',
     });
-    return true;
   };
 
   const validateTimeChange = (value: string): boolean => {
@@ -208,21 +221,18 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isValid = true;
       }
     }
-
     if (!isValid) {
       meetingDispatch({
         type: UpdateMeetingType.ERR,
         payload: 'false',
         name: 'date',
       });
-      return false;
     }
     meetingDispatch({
       type: UpdateMeetingType.ERR,
       payload: 'true',
       name: 'date',
     });
-    return true;
   };
 
   // method used as argument to UpdateMeetingField component in order
@@ -246,13 +256,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.date}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          if (validateDateChange(value)) {
-            meetingDispatch({
-              type: UpdateMeetingType.SET,
-              payload: value,
-              name: 'date',
-            });
-          }
+          validateDateChange(value);
+          meetingDispatch({
+            type: UpdateMeetingType.SET,
+            payload: value,
+            name: 'date',
+          });
         }}
         name='date'
         error={meetingState.error.date}
@@ -266,13 +275,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.time}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          if (validateTimeChange(value)) {
-            meetingDispatch({
-              type: UpdateMeetingType.SET,
-              payload: value,
-              name: 'time',
-            });
-          }
+          validateTimeChange(value);
+          meetingDispatch({
+            type: UpdateMeetingType.SET,
+            payload: value,
+            name: 'time',
+          });
         }}
         name='time'
         error={meetingState.error.time}
@@ -305,13 +313,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.duration}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          if (validateDurationChange(value)) {
-            meetingDispatch({
-              type: UpdateMeetingType.SET,
-              payload: value,
-              name: 'duration',
-            });
-          }
+          validateDurationChange(value);
+          meetingDispatch({
+            type: UpdateMeetingType.SET,
+            payload: value,
+            name: 'duration',
+          });
         }}
         name='duration'
         error={meetingState.error.duration}
@@ -339,10 +346,13 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         onClick={() => {
           // note this date format is required for backend processing
           const [day, month, year] = meetingState.value.date.split('/');
+          const hours = meetingState.value.time.substring(0, 2);
+          const mins = meetingState.value.time.substring(2);
+          const secs = '00'; // the start time doesn't require a specific second to start
           sendMeetingUpdate(ubid, {
             ubid,
             name: meetingState.value.name,
-            startDateTime: `${year}-${month}-${day}`,
+            startDateTime: `${year}-${month}-${day} ${hours}:${mins}:${secs}`,
             duration: parseFloat(meetingState.value.duration),
             eventId,
           });
@@ -353,7 +363,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         Update
       </Button>
 
-      {updateMeetingAlert && (
+      {updateMeetingAlert.active && (
         <Alert
           onClose={() => {
             setUpdateMeetingAlert({ ...updateMeetingAlert, active: false });

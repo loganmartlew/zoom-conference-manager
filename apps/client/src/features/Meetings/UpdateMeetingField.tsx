@@ -16,10 +16,11 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
   const { value, editField, isEditable, handleChange, name, error, errorText } =
     props;
 
-  const getEditableField = (isError: boolean) => {
-    return !isError ? (
+  const getEditableField = () => {
+    console.log(`isError: ${error}`);
+    return !error ? (
       <TextField
-        defaultValue={value}
+        value={value}
         label={name}
         name={name}
         onChange={handleChange}
@@ -28,7 +29,7 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
       />
     ) : (
       <TextField
-        defaultValue={value}
+        value={value}
         label={name}
         name={name}
         onChange={handleChange}
@@ -43,11 +44,11 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
   return (
     <Box>
       {isEditable ? (
-        getEditableField(error)
+        getEditableField()
       ) : (
         <TextField
           disabled
-          defaultValue={value}
+          value={value}
           label={name}
           name={name}
           data-testid={`update--meeting--${name}`}
