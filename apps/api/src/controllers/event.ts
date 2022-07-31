@@ -7,6 +7,8 @@ import {
   DeleteEvent,
   PublishEvent,
   UnpublishEvent,
+  UploadFile,
+  MulterRequest,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -129,4 +131,14 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
     };
   }
   return { status: StatusCodes.OK, message: 'Event deleted' };
+};
+
+export const uploadFile: UploadFile = async (req: Request) => {
+  /// Add [file] into [req], happens in Runtime
+  // eslint-disable-next-line prefer-destructuring
+  const file = (req as MulterRequest).file;
+
+  EventService.uploadFile(file);
+
+  return { status: StatusCodes.OK, message: 'File uploaded' };
 };

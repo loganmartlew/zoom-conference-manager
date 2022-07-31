@@ -1,7 +1,10 @@
+import XLSX from 'xlsx';
+import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
 import Event from '../entities/Event';
 import ZoomService from './ZoomService';
+import extractExcelData from '../util/extractExcel';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -106,6 +109,42 @@ export default class EventService {
       return updatedEvent;
     } catch (error) {
       throw new Error('Unable to unpublish event');
+    }
+  }
+  /*
+  [file] parameter :
+
+  File:  {
+    fieldname: 'excelFile',
+    originalname: 'agenda_export_auotm_202203_2.xls',
+    encoding: '7bit',
+    mimetype: 'application/vnd.ms-excel',
+    destination: 'uploads/',
+    filename: 'b60b92b4e5dad1dedf95fb02a6f5cb31',
+    path: 'uploads/b60b92b4e5dad1dedf95fb02a6f5cb31',
+    size: 104448
+  }
+  */
+
+  static async uploadFile(file: any): Promise<void> {
+    try {
+      // Get Root directory, then combine it into excel location
+      const rootDir = __dirname.split('dist/apps/api')[0];
+      const excelFileLocation = rootDir + file.path;
+
+      const workBook = XLSX.readFile(excelFileLocation);
+
+      // Create List of meeting from excel file
+      const meetingList = extractExcelData(workBook);
+
+      console.log('Meeting List: ', meetingList);
+
+      // Remove the excel file from system
+      fs.unlinkSync(excelFileLocation);
+
+      // TODO : Schedule Meeting from the [meetingList]
+    } catch (error) {
+      throw new Error('Unable to read the Excel File');
     }
   }
 }
