@@ -6,6 +6,8 @@ import EventsPage from '../pages/EventsPage';
 import EventDetailsPage from '../pages/EventDetailsPage';
 import NewEventPage from '../pages/NewEventPage';
 import NewMeetingPage from '../pages/NewMeetingPage';
+import AddAccount from '../pages/AddAccount';
+import ZoomUsersPage from '../pages/ZoomUsersPage';
 
 const AppRoutes: FC = () => {
   return (
@@ -18,6 +20,8 @@ const AppRoutes: FC = () => {
           <Route path='/events/:id' element={<EventDetailsPage />} />
           <Route path='/new-event' element={<NewEventPage />} />
           <Route path='/new-meeting' element={<NewMeetingPage />} />
+          <Route path='/add-account' element={<AddAccount />} />
+          <Route path='/zoom-users' element={<ZoomUsersPage />} />
         </Route>
       </Routes>
     </Router>
