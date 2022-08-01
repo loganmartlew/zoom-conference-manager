@@ -26,9 +26,11 @@ const ConfirmDialog: FC<Props> = ({ open, handleClose, onConfirm }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Confirm event details</DialogTitle>
+      <DialogTitle>Publish Event</DialogTitle>
       <DialogContent>
-        <DialogContentText>Are the details entered correct?</DialogContentText>
+        <DialogContentText>
+          Are you sure you want to publish the event?
+        </DialogContentText>
       </DialogContent>
 
       <DialogActions>

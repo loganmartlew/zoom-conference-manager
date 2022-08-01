@@ -1,5 +1,7 @@
 // import { BrowserRouter } from 'react-router-dom';
 // import { QueryClientProvider, QueryClient } from 'react-query';
+import { IEvent } from '@zoom-conference-manager/api-interfaces';
+import { EventStatus } from '@zoom-conference-manager/types';
 import { renderWithRouter, screen } from '../../test-utils';
 // import EventList from './EventsList';
 import EventCard from './EventCard';
@@ -26,22 +28,22 @@ describe('Test EventList', () => {
 
   // checking individual cards can be rendered
   test('A card can be made with specified props', async () => {
-    renderWithRouter(
-      <EventCard
-        key={0}
-        id='0'
-        name='test'
-        desc='epic'
-        start='2022-05-18'
-        end='2022-05-20'
-      />,
-      {}
-    );
+    const event: IEvent = {
+      id: '1',
+      name: 'Test Event',
+      description: 'Test Event Description',
+      startDate: '2020-01-01',
+      endDate: '2020-01-02',
+      status: EventStatus.DRAFT,
+      meetings: [],
+    };
 
-    const cardName = screen.getByText(/test/i);
-    const cardDesc = screen.getByText(/epic/i);
-    const startDt = screen.getByText(/2022-05-18/i);
-    const endDt = screen.getByText(/2022-05-20/i);
+    renderWithRouter(<EventCard key={0} event={event} />, {});
+
+    const cardName = screen.getByText(/^Test Event$/i);
+    const cardDesc = screen.getByText(/Test Event Description/i);
+    const startDt = screen.getByText(/2020-01-01/i);
+    const endDt = screen.getByText(/2020-01-02/i);
 
     expect(cardName).toBeTruthy();
     expect(cardDesc).toBeTruthy();

@@ -65,16 +65,7 @@ const EventsList: FC = () => {
   return (
     <>
       {events.map((event) => {
-        return (
-          <EventCard
-            key={event.id}
-            id={event.id}
-            name={event.name}
-            desc={event.description}
-            start={event.startDate}
-            end={event.endDate}
-          />
-        );
+        return <EventCard key={event.id} event={event} />;
       })}
     </>
   );

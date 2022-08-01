@@ -1,11 +1,13 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
+import { EventStatus } from '@zoom-conference-manager/types';
 import { Stack, Typography, Button } from '@mui/material';
 import { Add, Delete, Upload } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
 import ConfirmDialog from './ConfirmDialog';
+import { usePublishEvent } from './api/publishEvent';
 
 interface Props {
   event: IEvent | undefined;
@@ -14,6 +16,22 @@ interface Props {
 
 const EventDetails: FC<Props> = ({ event, isLoading }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const onPublishSuccess = () => {
+    setDialogOpen(false);
+  };
+
+  const onPublishError = () => {
+    setDialogOpen(false);
+    console.log('Error');
+  };
+
+  const { mutate } = usePublishEvent(onPublishSuccess, onPublishError);
+
+  const publishEvent = () => {
+    if (!event) return;
+    mutate(event.id);
+  };
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -28,7 +46,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
       <Stack spacing={1}>
         <Typography variant='h5'>Status</Typography>
         <Stack direction='row' spacing={1} alignItems='center'>
-          <EventStatusBadge status='draft' />
+          <EventStatusBadge status={event.status} />
           <Typography variant='body2'>
             Event has not yet been published
           </Typography>
@@ -37,6 +55,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
           onClick={() => setDialogOpen(true)}
           variant='contained'
           size='small'
+          disabled={event.status !== EventStatus.DRAFT}
           sx={{ width: 'max-content' }}
         >
           Publish
@@ -44,7 +63,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
         <ConfirmDialog
           open={dialogOpen}
           handleClose={() => setDialogOpen(false)}
-          onConfirm={() => console.log('Published')}
+          onConfirm={() => publishEvent()}
         />
       </Stack>
 
