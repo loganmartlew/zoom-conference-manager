@@ -1,8 +1,10 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { Paper, Stack, Typography, Chip, Button } from '@mui/material';
 import { Groups } from '@mui/icons-material';
 
 interface RecordingCardProps {
+  id: string;
   name: string;
   desc: string;
   start: string;
@@ -10,7 +12,7 @@ interface RecordingCardProps {
 }
 
 const RecordingCard: FC<RecordingCardProps> = (props) => {
-  const { name, desc, start, end } = props;
+  const { id, name, desc, start, end } = props;
 
   return (
     <Paper
@@ -49,6 +51,8 @@ const RecordingCard: FC<RecordingCardProps> = (props) => {
           </Button>
           <Button
             variant='contained'
+            component={Link}
+            to={`/recordings/${id}`}
             sx={{
               width: 'max-content',
             }}

@@ -7,6 +7,7 @@ import EventDetailsPage from '../pages/EventDetailsPage';
 import NewEventPage from '../pages/NewEventPage';
 import NewMeetingPage from '../pages/NewMeetingPage';
 import RecordingsPage from '../pages/RecordingsPage';
+import RecordingsDetailsPage from '../pages/RecordingsDetailsPage';
 
 const AppRoutes: FC = () => {
   return (
@@ -20,6 +21,7 @@ const AppRoutes: FC = () => {
           <Route path='/new-event' element={<NewEventPage />} />
           <Route path='/new-meeting' element={<NewMeetingPage />} />
           <Route path='/recordings' element={<RecordingsPage />} />
+          <Route path='/recoridngs/:id' element={<RecordingsDetailsPage />} />
         </Route>
       </Routes>
     </Router>
