@@ -41,14 +41,6 @@ const RecordingCard: FC<RecordingCardProps> = (props) => {
         </Typography>
         <Stack direction='row' spacing={2}>
           <Button
-            variant='outlined'
-            sx={{
-              width: 'max-content',
-            }}
-          >
-            View Details
-          </Button>
-          <Button
             variant='contained'
             component={Link}
             to={`/recordings/${id}`}
