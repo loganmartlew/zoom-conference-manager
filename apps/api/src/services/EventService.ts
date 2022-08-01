@@ -1,4 +1,4 @@
-import XLSX from 'xlsx';
+/* eslint-disable import/no-cycle */ import XLSX from 'xlsx';
 import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
@@ -126,6 +126,7 @@ export default class EventService {
   }
   */
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async uploadFile(file: any): Promise<void> {
     try {
       // Get Root directory, then combine it into excel location

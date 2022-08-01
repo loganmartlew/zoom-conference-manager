@@ -1,9 +1,11 @@
+/* eslint-disable import/no-cycle */
 import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
 import { assignUserMeetingBlocks } from '../util/publish/assignUserMeetingBlocks';
 import { formatUserMeetings } from '../util/publish/formatUserMeetings';
+import MeetingService from './MeetingService';
 
 export default class ZoomService {
   static async assignMeetings(meetings: Meeting[]) {
@@ -33,8 +35,13 @@ export default class ZoomService {
       type: 2,
     };
 
-    const res = await axios.post(`/users/${userEmail}/meetings`, meetingData);
+    const res = await axios.post<{ id: number }>(
+      `/users/${userEmail}/meetings`,
+      meetingData
+    );
 
-    return res;
+    const zoomId = res.data.id;
+
+    await MeetingService.setZoomId(meeting.ubid, zoomId);
   }
 }

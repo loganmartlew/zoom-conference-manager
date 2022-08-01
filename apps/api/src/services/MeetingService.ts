@@ -45,4 +45,19 @@ export default class MeetingService {
       throw new Error('Unable to save Meeting');
     }
   }
+
+  static async setZoomId(ubid: string, id: number) {
+    const meeting = await Meeting.findOneBy({ ubid });
+    if (!meeting) {
+      throw new Error('Meeting not found');
+    }
+
+    try {
+      meeting.zoomId = id;
+      await meeting.save();
+      return meeting;
+    } catch (error) {
+      throw new Error('Unable to set Meetings Zoom id');
+    }
+  }
 }
