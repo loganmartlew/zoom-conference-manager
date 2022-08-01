@@ -52,9 +52,8 @@ const EventsList: FC = () => {
       {events?.map((event) => {
         return (
           <RecordingCard
-            key={event.id}
+            id={event.id}
             name={event.name}
-            desc={event.description}
             start={event.startDate}
             end={event.endDate}
           />
