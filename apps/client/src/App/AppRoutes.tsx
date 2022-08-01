@@ -21,7 +21,7 @@ const AppRoutes: FC = () => {
           <Route path='/new-event' element={<NewEventPage />} />
           <Route path='/new-meeting' element={<NewMeetingPage />} />
           <Route path='/recordings' element={<RecordingsPage />} />
-          <Route path='/recoridngs/:id' element={<RecordingsDetailsPage />} />
+          <Route path='/recordings/:id' element={<RecordingsDetailsPage />} />
         </Route>
       </Routes>
     </Router>
