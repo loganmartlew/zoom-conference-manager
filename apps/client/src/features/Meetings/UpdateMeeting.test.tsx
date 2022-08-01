@@ -3,8 +3,6 @@ import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { render, screen, fireEvent } from '@testing-library/react';
 import UpdateMeeting from './UpdateMeeting';
 
-// TODO: need to refacor in terms of new input methods for backend
-
 const mockGetMeeting = (id: string): Promise<MeetingDTO> => {
   let state: MeetingDTO;
   if (id === '1') {
@@ -47,16 +45,6 @@ const mockUpdateMeeting = (
 };
 
 /**
- * this method takes a testId (data-testid) for a text field mui component
- * and returns its value.
- * @param testId the input testId
- * @returns a string representing the input text in the text field
- */
-const getTextFieldValue = (testId: string): string | undefined => {
-  return screen.getByTestId(testId).querySelector('input')?.value;
-};
-
-/**
  * this method takes a testIdInput (data-testid) a testIdField (data-testid)
  * a value to change the text field to, and an errorMsg to display an error
  * if something went wrong in the test case. It updates the input text field
@@ -91,38 +79,22 @@ const clickEditIcon = (testIdIcon: string): void => {
   fireEvent.click(screen.getByTestId(testIdIcon));
 };
 
+/**
+ * Note this method assumes the fields are initialised as disabled.
+ * Tests a fields disabled property before the edit icon has been clicked,
+ * is set to true i.e. disabled = true... then proceeds clicks the edit icon,
+ * and checks that the disabled property is now set to false i.e. disabled = false.
+ * @param testIdField
+ * @param testIdIcon
+ */
+const testIconClick = (testIdField: string, testIdIcon: string): void => {
+  const field = screen.getByTestId(testIdField).querySelector('input');
+  expect(field).toHaveProperty('disabled', true);
+  clickEditIcon(testIdIcon);
+  expect(field).toHaveProperty('disabled', false);
+};
+
 describe('UpdateMeeting testing', () => {
-  test('Checks that all fields are rendered when not editable', () => {
-    render(
-      <UpdateMeeting
-        getMeetingData={mockGetMeeting}
-        updateMeetingData={mockUpdateMeeting}
-        ubid='1'
-        eventId='1'
-        editOnRender={false}
-      />
-    );
-
-    // test the name field input
-    const name = getTextFieldValue('update--meeting--name');
-    expect(name).toBe('Test 1');
-
-    // test the date field input
-    const date = getTextFieldValue('update--meeting--date');
-    expect(date).toBe('23/06/22');
-
-    // test the time field input
-    const time = getTextFieldValue('update--meeting--time');
-    expect(time).toBe('1400');
-
-    // test the duration field input
-    const duration = getTextFieldValue('update--meeting--duration');
-    expect(duration).toBe('1');
-
-    const event = getTextFieldValue('update--meeting--event');
-    expect(event).toBe('hello');
-  });
-
   test('Checks that all fields are rendered when editable, and that they can be edited', () => {
     render(
       <UpdateMeeting
@@ -194,28 +166,15 @@ describe('UpdateMeeting testing', () => {
     );
 
     // test name field icon
-    const nameField = screen
-      .getByTestId('update--meeting--name')
-      .querySelector('input');
-    expect(nameField).toHaveProperty('disabled', true);
-    clickEditIcon('update--meeting--icon--name');
-    expect(nameField).toHaveProperty('disabled', false);
+    testIconClick('update--meeting--name', 'update--meeting--icon--name');
 
     // test date field icon
-    const dateField = screen
-      .getByTestId('update--meeting--date')
-      .querySelector('input');
-    expect(dateField).toHaveProperty('disabled', true);
-    clickEditIcon('update--meeting--icon--date');
-    expect(dateField).toHaveProperty('disabled', false);
+    testIconClick('update--meeting--date', 'update--meeting--icon--date');
 
-    const timeField = screen
-      .getByTestId('update--meeting--time')
-      .querySelector('input');
-    expect(timeField).toHaveProperty('disabled', true);
-    clickEditIcon('update--meeting--icon--time');
-    expect(timeField).toHaveProperty('disabled', false);
+    // test time field icon
+    testIconClick('update--meeting--time', 'update--meeting--icon--time');
 
+    // test duration field icon
     const durationText = screen
       .getByTestId('update--meeting--duration')
       .querySelector('input');

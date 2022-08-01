@@ -10,9 +10,6 @@ import {
   UpdateAction,
 } from './MeetingTypes/UpdateMeetingTypes';
 
-// TODO: check with team that error handeling can be done on the backend,
-// and just helper text on backend is fine.
-
 interface Props {
   getMeetingData: (ubid: string) => Promise<MeetingDTO>;
   updateMeetingData: (
@@ -52,27 +49,12 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
       } else if (action.payload === 'true') {
         updatedEdit = false;
       }
-
       return {
         ...state,
         edit: {
           ...state.edit,
           [action.name]: updatedEdit,
         },
-      };
-    }
-    case UpdateMeetingType.ERR: {
-      console.log(`Err_date_reducer: ${state.error.date}`);
-      let updatedErr;
-      if (action.payload === 'true') {
-        updatedErr = true;
-      } else {
-        updatedErr = false;
-      }
-
-      return {
-        ...state,
-        error: { ...state.error, [action.name]: updatedErr },
       };
     }
     default:
@@ -98,13 +80,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       duration: editOnRender,
       event: editOnRender,
       time: editOnRender,
-    },
-    error: {
-      name: false,
-      date: false,
-      duration: false,
-      event: false,
-      time: false,
     },
   });
 
@@ -150,91 +125,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const validateDurationChange = (value: string) => {
-    const pattern = /[A-Za-z]/;
-
-    // note is in base 10
-    if (parseInt(value, 10) && value >= '0' && !pattern.test(value)) {
-      // return at end
-    } else {
-      meetingDispatch({
-        type: UpdateMeetingType.ERR,
-        payload: 'false',
-        name: 'duration',
-      });
-    }
-    meetingDispatch({
-      type: UpdateMeetingType.ERR,
-      payload: 'true',
-      name: 'duration',
-    });
-  };
-
-  const validateTimeChange = (value: string): boolean => {
-    // note input param is 10 in parseInt represents base 10
-    if (parseInt(value, 10)) {
-      if (
-        value.length === 4 &&
-        value.charAt(0) >= '0' &&
-        value.charAt(0) <= '2'
-      ) {
-        // calls meetingDispatch and returns at end
-      } else {
-        meetingDispatch({
-          type: UpdateMeetingType.ERR,
-          payload: 'false',
-          name: 'time',
-        });
-        return false;
-      }
-    }
-    meetingDispatch({
-      type: UpdateMeetingType.ERR,
-      payload: 'true',
-      name: 'time',
-    });
-    return true;
-  };
-
-  const validateDateChange = (value: string) => {
-    const [day, month, year] = value.split('/');
-    let isValid = false;
-
-    const pattern = /[A-Za-z]/;
-
-    if (pattern.test(day) || pattern.test(month) || pattern.test(year)) {
-      // test fails, is valid is false so move on to dispatch and return
-      // note that for parseInt the second parameter represents base 10
-    } else if (parseInt(day, 10) && parseInt(month, 10) && parseInt(year, 10)) {
-      const intDay = parseInt(day, 10);
-      const intMonth = parseInt(month, 10);
-      const intYear = parseInt(year, 10);
-
-      // dont check for an upper limit on year since year theorically has no upperbound
-      if (
-        intDay >= 1 &&
-        intDay <= 31 &&
-        intMonth >= 1 &&
-        intMonth <= 12 &&
-        intYear >= 1
-      ) {
-        isValid = true;
-      }
-    }
-    if (!isValid) {
-      meetingDispatch({
-        type: UpdateMeetingType.ERR,
-        payload: 'false',
-        name: 'date',
-      });
-    }
-    meetingDispatch({
-      type: UpdateMeetingType.ERR,
-      payload: 'true',
-      name: 'date',
-    });
-  };
-
   // method used as argument to UpdateMeetingField component in order
   // to dispatch allow for editing different fields.
   const editField = (fieldName: keyof Meeting, value: string) => {
@@ -256,7 +146,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.date}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          validateDateChange(value);
           meetingDispatch({
             type: UpdateMeetingType.SET,
             payload: value,
@@ -264,7 +153,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           });
         }}
         name='date'
-        error={meetingState.error.date}
         errorText='date format dd/mm/yyyy'
       />
       <UpdateMeetingField
@@ -275,7 +163,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.time}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          validateTimeChange(value);
           meetingDispatch({
             type: UpdateMeetingType.SET,
             payload: value,
@@ -283,7 +170,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           });
         }}
         name='time'
-        error={meetingState.error.time}
         errorText='time format 0000 - 2400 where 2400 represents 24:00'
       />
       <UpdateMeetingField
@@ -301,7 +187,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           });
         }}
         name='name'
-        error={meetingState.error.name}
         errorText=''
         data-testid='update--meeting--name'
       />
@@ -313,7 +198,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         isEditable={meetingState.edit.duration}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
-          validateDurationChange(value);
           meetingDispatch({
             type: UpdateMeetingType.SET,
             payload: value,
@@ -321,7 +205,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           });
         }}
         name='duration'
-        error={meetingState.error.duration}
         errorText='duration must be a postive number'
       />
       <UpdateMeetingField
@@ -339,7 +222,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           });
         }}
         name='event'
-        error={meetingState.error.event}
         errorText=''
       />
       <Button
@@ -356,6 +238,23 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
             duration: parseFloat(meetingState.value.duration),
             eventId,
           });
+
+          // reset all of the fields to disabled (require to click edit, in order to edit again)
+          const fieldNames: Array<keyof Meeting> = [
+            'date',
+            'time',
+            'name',
+            'duration',
+            'event',
+          ];
+          fieldNames.forEach((name) => {
+            meetingDispatch({
+              type: UpdateMeetingType.EDIT,
+              payload: 'true',
+              name,
+            });
+          });
+          // meetingDispatch({type: UpdateMeetingType.EDIT, payload: 'false'})
         }}
         variant='contained'
         sx={{ width: '5rem' }}
@@ -370,7 +269,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           }}
           severity='error'
         >
-          Error updating meeting!
+          {updateMeetingAlert.alertText}
         </Alert>
       )}
     </Stack>
