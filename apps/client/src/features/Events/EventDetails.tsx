@@ -1,10 +1,11 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { Stack, Typography, Button } from '@mui/material';
 import { Add, Delete, Upload } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
+import ConfirmDialog from './ConfirmDialog';
 
 interface Props {
   event: IEvent | undefined;
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const EventDetails: FC<Props> = ({ event, isLoading }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   if (isLoading) {
     return <Typography>Loading...</Typography>;
   }
@@ -30,9 +33,19 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
             Event has not yet been published
           </Typography>
         </Stack>
-        <Button variant='contained' size='small' sx={{ width: 'max-content' }}>
+        <Button
+          onClick={() => setDialogOpen(true)}
+          variant='contained'
+          size='small'
+          sx={{ width: 'max-content' }}
+        >
           Publish
         </Button>
+        <ConfirmDialog
+          open={dialogOpen}
+          handleClose={() => setDialogOpen(false)}
+          onConfirm={() => console.log('Published')}
+        />
       </Stack>
 
       <Stack spacing={1}>
