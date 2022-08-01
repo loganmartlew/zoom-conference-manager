@@ -48,7 +48,9 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
         <Stack direction='row' spacing={1} alignItems='center'>
           <EventStatusBadge status={event.status} />
           <Typography variant='body2'>
-            Event has not yet been published
+            Event has
+            {event.status === EventStatus.DRAFT ? ' not yet ' : ' '}
+            been published
           </Typography>
         </Stack>
         <Button
