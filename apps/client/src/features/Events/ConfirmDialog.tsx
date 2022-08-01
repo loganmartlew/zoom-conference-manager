@@ -15,27 +15,26 @@ interface Props {
 }
 
 const ConfirmDialog: FC<Props> = ({ open, handleClose, onConfirm }) => {
+  const close = () => {
+    handleClose();
+  };
+
   const confirm = () => {
     onConfirm();
-    handleClose();
+    close();
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Confirm event details</DialogTitle>
       <DialogContent>
-        {/* <DialogContentText> Name:  </DialogContentText>
-        <DialogContentText>Description:  </DialogContentText>
-        <DialogContentText> Start Date: </DialogContentText>
-        <DialogContentText> End Date: </DialogContentText> */}
-        <DialogContentText>
-          {' '}
-          Are the details entered correct?{' '}
-        </DialogContentText>
+        <DialogContentText>Are the details entered correct?</DialogContentText>
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button type='button' onClick={close}>
+          Cancel
+        </Button>
         <Button onClick={confirm}>Confirm</Button>
       </DialogActions>
     </Dialog>
