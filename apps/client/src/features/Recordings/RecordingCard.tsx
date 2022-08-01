@@ -6,13 +6,12 @@ import { Groups } from '@mui/icons-material';
 interface RecordingCardProps {
   id: string;
   name: string;
-  desc: string;
   start: string;
   end: string;
 }
 
 const RecordingCard: FC<RecordingCardProps> = (props) => {
-  const { id, name, desc, start, end } = props;
+  const { id, name, start, end } = props;
 
   return (
     <Paper
