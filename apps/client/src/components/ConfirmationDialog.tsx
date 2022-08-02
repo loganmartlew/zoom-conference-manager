@@ -16,7 +16,7 @@ interface Props {
   text: string;
 }
 
-const ConfirmDialog: FC<Props> = ({
+const ConfirmationDialog: FC<Props> = ({
   open,
   handleClose,
   onConfirm,
@@ -49,4 +49,4 @@ const ConfirmDialog: FC<Props> = ({
   );
 };
 
-export default ConfirmDialog;
+export default ConfirmationDialog;

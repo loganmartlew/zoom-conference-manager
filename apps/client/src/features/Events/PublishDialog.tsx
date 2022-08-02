@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 import { Button } from '@mui/material';
-import ConfirmDialog from './ConfirmDialog';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 interface Props {
   type: 'publish' | 'unpublish';
@@ -42,7 +42,7 @@ const PublishDialog: FC<Props> = ({ type, onConfirm }) => {
       >
         {type === 'publish' ? 'Publish' : 'Unpublish'}
       </Button>
-      <ConfirmDialog
+      <ConfirmationDialog
         open={dialogOpen}
         handleClose={() => setDialogOpen(false)}
         onConfirm={() => confirm()}
