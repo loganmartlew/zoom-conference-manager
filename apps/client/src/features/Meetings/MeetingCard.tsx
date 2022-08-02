@@ -57,7 +57,9 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
               }}
             >
               Start Time:
-              <Typography variant='body2'>{dateTime.format('HHmm')}</Typography>
+              <Typography variant='body2'>
+                {dateTime.format('HH:mm')}
+              </Typography>
             </Typography>
           </Stack>
 
@@ -86,7 +88,7 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             >
               End Time:
               <Typography variant='body2'>
-                {dateTime.add(meeting.duration, 'minute').format('HHmm')}
+                {dateTime.add(meeting.duration, 'minute').format('HH:mm')}
               </Typography>
             </Typography>
           </Stack>

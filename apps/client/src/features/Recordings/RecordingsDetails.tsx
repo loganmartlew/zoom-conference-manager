@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { Typography, Stack } from '@mui/material';
+import RecordingsMeetingsList from './RecordingsMeetingsList';
 
 interface Props {
   event: IEvent | undefined;
@@ -29,6 +30,7 @@ const RecordingsDetails: FC<Props> = ({ event, isLoading }) => {
 
       <Stack spacing={1}>
         <Typography variant='h5'>Meetings</Typography>
+        <RecordingsMeetingsList meetings={event.meetings} />
       </Stack>
     </Stack>
   );
