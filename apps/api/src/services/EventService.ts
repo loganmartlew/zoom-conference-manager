@@ -90,11 +90,11 @@ export default class EventService {
   */
 
   static async uploadFile(file: any): Promise<void> {
-    try {
-      // Get Root directory, then combine it into excel location
-      const rootDir = __dirname.split('dist/apps/api')[0];
-      const excelFileLocation = rootDir + file.path;
+    // Get Root directory, then combine it into excel location
+    const rootDir = __dirname.split('dist/apps/api')[0];
+    const excelFileLocation = rootDir + file.path;
 
+    try {
       const workBook = XLSX.readFile(excelFileLocation);
 
       // Create List of meeting from excel file
@@ -104,9 +104,8 @@ export default class EventService {
 
       // Remove the excel file from system
       fs.unlinkSync(excelFileLocation);
-
-      // TODO : Schedule Meeting from the [meetingList]
     } catch (error) {
+      fs.unlinkSync(excelFileLocation);
       throw new Error('Unable to read the Excel File');
     }
   }
