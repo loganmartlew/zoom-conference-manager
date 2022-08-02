@@ -1,24 +1,61 @@
-import { Duration } from '../../types/Duration';
-import { MeetingBlock } from '../../types/MeetingBlock';
+import dayjs from 'dayjs';
+import Meeting from '../../entities/Meeting';
+import { MeetingDuration } from '../../types/MeetingDuration';
+
+const getDurationFromMeeting = (meeting: Meeting): MeetingDuration => {
+  return {
+    meeting,
+    duration: {
+      start: dayjs(meeting.startDateTime),
+      end: dayjs(meeting.startDateTime)
+        .add(meeting.duration, 'minutes')
+        .add(30, 'minutes'),
+    },
+  };
+};
+
+const isOverlap = (
+  meetingA: MeetingDuration,
+  meetingB: MeetingDuration
+): boolean => {
+  const aStart = meetingA.duration.start;
+  const aEnd = meetingA.duration.end;
+  const bStart = meetingB.duration.start;
+  const bEnd = meetingB.duration.end;
+
+  if (aEnd.isSame(bStart) || aEnd.isBefore(bStart)) {
+    return false;
+  }
+
+  if (aStart.isSame(bEnd) || aStart.isAfter(bEnd)) {
+    return false;
+  }
+
+  return true;
+};
 
 // Determines if a user can take a meeting
 export const userCanTakeMeeting = (
-  userBlocks: MeetingBlock[],
-  duration: Duration
+  meetings: Meeting[],
+  meeting: Meeting,
+  overlapLimit = 2
 ) => {
-  const canTakeMeeting = userBlocks.reduce((prev, currBlock) => {
-    const [, { start: currStart, end: currEnd }] = currBlock;
+  const meetingDuration = getDurationFromMeeting(meeting);
+  const meetingDurations: MeetingDuration[] = meetings.map((m) =>
+    getDurationFromMeeting(m)
+  );
 
-    if (duration.end.isSame(currStart) || duration.end.isBefore(currStart)) {
-      return prev;
-    }
+  const overlappingMeetings = meetingDurations.reduce(
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    (count, md) => {
+      if (isOverlap(md, meetingDuration)) {
+        return count + 1;
+      }
 
-    if (duration.start.isSame(currEnd) || duration.start.isAfter(currEnd)) {
-      return prev;
-    }
+      return count;
+    },
+    0
+  );
 
-    return false;
-  }, true);
-
-  return canTakeMeeting;
+  return overlappingMeetings < overlapLimit;
 };
