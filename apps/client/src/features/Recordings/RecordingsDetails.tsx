@@ -18,9 +18,10 @@ const RecordingsDetails: FC<Props> = ({ event, isLoading }) => {
   }
   return (
     <Stack spacing={2}>
+      <Typography variant='h5'>Dates</Typography>
       <Stack spacing={1}>
-        <Typography variant='h5'>Dates</Typography>
-        <Typography>{`${event.startDate} - ${event.endDate}`}</Typography>
+        <Typography>{`Start: ${event.startDate}`}</Typography>
+        <Typography>{`End: ${event.endDate}`}</Typography>
       </Stack>
 
       <Stack spacing={1}>

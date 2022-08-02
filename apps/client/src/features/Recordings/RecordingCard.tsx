@@ -37,7 +37,7 @@ const RecordingCard: FC<RecordingCardProps> = (props) => {
             whiteSpace: 'noWrap',
           }}
         >
-          {`${start} - ${end}`}
+          {`${start}  until  ${end}`}
         </Typography>
         <Stack direction='row' spacing={2}>
           <Button
