@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
-import { Paper, Stack, Typography } from '@mui/material';
+import { Paper, Stack, Typography, Button } from '@mui/material';
 
 interface Props {
   meeting: IMeeting;
@@ -74,6 +74,7 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
               </Typography>
             </Typography>
           </Stack>
+          <Button variant='outlined'>Get Recording</Button>
         </Stack>
       </Stack>
     </Paper>
