@@ -55,8 +55,16 @@ function createMeetingList(agenda: XLSX.WorkSheet, keys: string[]) {
 function extractExcelData(workBook: WorkBook) {
   const agenda = workBook.Sheets.Agenda;
 
+  if (!agenda) {
+    throw Error('Excel not includes Agenda sheet');
+  }
+
   // [keys] : [ A1, B1, C1 ... Jn Kn Ln ]
   const keys = Object.keys(agenda);
+
+  if (keys.includes('START YOUR AGENDA BELOW')) {
+    throw Error('Wrong excel format');
+  }
 
   const startIndex = keys.indexOf('A25');
   const endIndex = keys.indexOf('!ref') - 1;

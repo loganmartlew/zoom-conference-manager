@@ -104,7 +104,7 @@ export const uploadFile: UploadFile = async (req: Request) => {
   } catch (error) {
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Fail to extract datas from excel',
+      message: `Fail to extract datas from excel; ${error}`,
     };
   }
 };

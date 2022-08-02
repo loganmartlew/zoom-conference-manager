@@ -75,7 +75,7 @@ export default class EventService {
   }
 
   /*
-  [file] parameter :
+  [file] obj structure :
 
   File:  {
     fieldname: 'excelFile',
@@ -106,7 +106,7 @@ export default class EventService {
       fs.unlinkSync(excelFileLocation);
     } catch (error) {
       fs.unlinkSync(excelFileLocation);
-      throw new Error('Unable to read the Excel File');
+      throw error;
     }
   }
 }
