@@ -36,17 +36,14 @@ export default class MeetingService {
       formats.dateTime
     ).toDate();
     meetingStub.duration = meetingData.duration;
+    meetingStub.zoomId = '';
     meetingStub.event = event;
 
-    try {
-      const meeting = await meetingStub.save();
-      return meeting;
-    } catch (error) {
-      throw new Error('Unable to save Meeting');
-    }
+    const meeting = await meetingStub.save();
+    return meeting;
   }
 
-  static async setZoomId(ubid: string, id: number) {
+  static async setZoomId(ubid: string, id: string) {
     const meeting = await Meeting.findOneBy({ ubid });
     if (!meeting) {
       throw new Error('Meeting not found');

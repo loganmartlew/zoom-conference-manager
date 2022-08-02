@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
@@ -6,8 +6,8 @@ import { Stack, Typography, Button } from '@mui/material';
 import { Add, Delete, Upload } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
-import ConfirmDialog from './ConfirmDialog';
-import { usePublishEvent } from './api/publishEvent';
+import { usePublish } from './usePublish';
+import PublishDialog from './PublishDialog';
 
 interface Props {
   event: IEvent | undefined;
@@ -15,22 +15,16 @@ interface Props {
 }
 
 const EventDetails: FC<Props> = ({ event, isLoading }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const onPublishSuccess = () => {
-    setDialogOpen(false);
-  };
-
-  const onPublishError = () => {
-    setDialogOpen(false);
-    console.log('Error');
-  };
-
-  const { mutate } = usePublishEvent(onPublishSuccess, onPublishError);
+  const { publish, unpublish } = usePublish(() => {});
 
   const publishEvent = () => {
     if (!event) return;
-    mutate(event.id);
+    publish(event.id);
+  };
+
+  const unpublishEvent = () => {
+    if (!event) return;
+    unpublish(event.id);
   };
 
   if (isLoading) {
@@ -53,20 +47,13 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
             been published
           </Typography>
         </Stack>
-        <Button
-          onClick={() => setDialogOpen(true)}
-          variant='contained'
-          size='small'
-          disabled={event.status !== EventStatus.DRAFT}
-          sx={{ width: 'max-content' }}
-        >
-          Publish
-        </Button>
-        <ConfirmDialog
-          open={dialogOpen}
-          handleClose={() => setDialogOpen(false)}
-          onConfirm={() => publishEvent()}
-        />
+
+        {event.status === EventStatus.DRAFT && (
+          <PublishDialog type='publish' onConfirm={publishEvent} />
+        )}
+        {event.status === EventStatus.PUBLISHED && (
+          <PublishDialog type='unpublish' onConfirm={unpublishEvent} />
+        )}
       </Stack>
 
       <Stack spacing={1}>

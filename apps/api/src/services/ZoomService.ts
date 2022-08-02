@@ -24,15 +24,20 @@ export default class ZoomService {
     Logger.info(`Assigned meetings`);
     Logger.info(JSON.stringify(userMeetings, null, 2));
 
-    await Promise.all(
-      userMeetings.map(async (userMeeting) => {
-        await Promise.all(
-          userMeeting.meetings.map(async (meeting) => {
-            await ZoomService.scheduleMeeting(meeting, userMeeting.email);
-          })
-        );
-      })
-    );
+    try {
+      await Promise.all(
+        userMeetings.map(async (userMeeting) => {
+          await Promise.all(
+            userMeeting.meetings.map(async (meeting) => {
+              await ZoomService.scheduleMeeting(meeting, userMeeting.email);
+            })
+          );
+        })
+      );
+    } catch (e) {
+      Logger.error(`Unable to publish event`);
+      Logger.error(e);
+    }
   }
 
   static async unpublishEvent(event: Event) {
@@ -59,7 +64,7 @@ export default class ZoomService {
 
     const zoomId = res.data.id;
 
-    await MeetingService.setZoomId(meeting.ubid, zoomId);
+    await MeetingService.setZoomId(meeting.ubid, `${zoomId}`);
   }
 
   static async deleteMeeting(meeting: Meeting) {

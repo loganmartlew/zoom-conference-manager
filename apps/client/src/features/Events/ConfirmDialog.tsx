@@ -12,9 +12,17 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   onConfirm: () => void;
+  title: string;
+  text: string;
 }
 
-const ConfirmDialog: FC<Props> = ({ open, handleClose, onConfirm }) => {
+const ConfirmDialog: FC<Props> = ({
+  open,
+  handleClose,
+  onConfirm,
+  title,
+  text,
+}) => {
   const close = () => {
     handleClose();
   };
@@ -26,11 +34,9 @@ const ConfirmDialog: FC<Props> = ({ open, handleClose, onConfirm }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Publish Event</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Are you sure you want to publish the event?
-        </DialogContentText>
+        <DialogContentText>{text}</DialogContentText>
       </DialogContent>
 
       <DialogActions>

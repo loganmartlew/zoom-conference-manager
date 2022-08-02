@@ -10,7 +10,7 @@ export const publishEvent = async (eventId: string) => {
   );
 };
 
-export const usePublishEvent = (
+export const useUnpublishEvent = (
   onSuccess: () => void,
   onError: (error: unknown, variables: string) => void
 ) => {
