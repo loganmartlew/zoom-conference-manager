@@ -106,6 +106,8 @@ export default class EventService {
       event.status = EventStatus.DRAFT;
       const updatedEvent = await event.save();
 
+      await ZoomService.unpublishEvent(event);
+
       return updatedEvent;
     } catch (error) {
       throw new Error('Unable to unpublish event');

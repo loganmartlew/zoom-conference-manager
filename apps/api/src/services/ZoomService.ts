@@ -35,6 +35,12 @@ export default class ZoomService {
     );
   }
 
+  static async unpublishEvent(event: Event) {
+    await Promise.all(
+      event.meetings.map((meeting) => this.deleteMeeting(meeting))
+    );
+  }
+
   static async scheduleMeeting(meeting: Meeting, userEmail: string) {
     const SCHEDULED_MEETING = 2;
 
@@ -54,5 +60,18 @@ export default class ZoomService {
     const zoomId = res.data.id;
 
     await MeetingService.setZoomId(meeting.ubid, zoomId);
+  }
+
+  static async deleteMeeting(meeting: Meeting) {
+    if (!meeting.zoomId) {
+      Logger.error(`Unable to delete meeting ${meeting.name}`);
+      return;
+    }
+
+    try {
+      await axios.delete(`/meetings/${meeting.zoomId}`);
+    } catch (e) {
+      Logger.error(`Unable to delete meeting ${meeting.name}`);
+    }
   }
 }
