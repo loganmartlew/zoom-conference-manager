@@ -58,25 +58,21 @@ export default class MeetingService {
     }
   }
 
-  static async update(id: string, meetingData: MeetingDTO): Promise<Meeting> {
+  static async update(id: string, meetingData: MeetingDTO) {
+    const meeting = await this.getOne(id);
     const event = await EventService.getOne(meetingData.eventId);
 
-    const meeting = await this.getOne(id);
+    meeting.name = meetingData.name;
+    meeting.startDateTime = dayjs(
+      meetingData.startDateTime,
+      formats.dateTime
+    ).toDate();
+    meeting.duration = meetingData.duration;
 
-    try {
-      meeting.name = meetingData.name;
-      meeting.startDateTime = dayjs(
-        meetingData.startDateTime,
-        formats.dateTime
-      ).toDate();
-      meeting.duration = meetingData.duration;
-      meeting.event = event;
+    // TODO : Update ZoomID ?
+    meeting.event = event;
 
-      const updatedMeeting = await meeting.save();
-
-      return updatedMeeting;
-    } catch (error) {
-      throw new Error('Unable to update Meeting');
-    }
+    const updatedMeeting = await meeting.save();
+    return updatedMeeting;
   }
 }
