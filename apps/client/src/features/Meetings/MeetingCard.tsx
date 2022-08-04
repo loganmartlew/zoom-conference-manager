@@ -9,7 +9,6 @@ interface Props {
 }
 
 const MeetingCard: FC<Props> = ({ meeting }) => {
-  const dateTime = dayjs(meeting.startDateTime);
   return (
     <Paper
       sx={{
@@ -57,7 +56,9 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
               }}
             >
               Start Time:
-              <Typography variant='body2'>{dateTime.format('HHmm')}</Typography>
+              <Typography variant='body2'>
+                {dayjs(meeting.startDateTime).format('HHmm')}
+              </Typography>
             </Typography>
           </Stack>
 
@@ -72,7 +73,7 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             >
               Date:
               <Typography variant='body2'>
-                {dateTime.format('YYYY-MM-DD')}
+                {dayjs(meeting.startDateTime).format('YYYY-MM-DD')}
               </Typography>
             </Typography>
 
@@ -85,7 +86,9 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
               }}
             >
               End Time:
-              <Typography variant='body2'>{dateTime.format('HHmm')}</Typography>
+              <Typography variant='body2'>
+                {dayjs(meeting.endDateTime).format('HHmm')}
+              </Typography>
             </Typography>
           </Stack>
         </Stack>

@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import DatePicker from '../../components/forms/DatePicker';
+import TimePicker from '../../components/forms/TimePicker';
 import TextInput from '../../components/forms/TextInput';
 import Select from '../../components/forms/Select';
 import { IFormInput, useMeetingForm } from './useMeetingForm';
@@ -53,9 +54,7 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
     const meetingData: MeetingDTO = {
       ...data,
       startDateTime: dayjs(data.startDate).format('DD/MM/YYYY'),
-      endDateTime: dayjs(data.startDate)
-        .add(data.duration, 'minutes')
-        .format('DD/MM/YYYY'),
+      endDateTime: dayjs(data.endTime).format('DD/MM/YYYY'),
     };
 
     mutate(meetingData);
@@ -91,17 +90,17 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
           control={control}
           error={errors.startDate as FieldError | void}
         />
-        <TextInput
+        <TimePicker
           name='startTime'
-          label='Start Time (24hr NZST)'
+          label='Start Time'
           control={control}
           error={errors.startTime}
         />
-        <TextInput
-          name='duration'
-          label='Meeting Duration (minutes)'
+        <TimePicker
+          name='endTime'
+          label='End Time'
           control={control}
-          error={errors.duration}
+          error={errors.endTime}
         />
         <Select
           name='eventId'

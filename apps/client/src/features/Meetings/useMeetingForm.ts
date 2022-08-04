@@ -9,7 +9,7 @@ export interface IFormInput {
   name: string;
   startDate: Date;
   startTime: string;
-  duration: number;
+  endTime: string;
   eventId: string;
 }
 
@@ -20,7 +20,7 @@ export const useMeetingForm = (eventId: string | null) => {
       name: '',
       startDate: dayjs().toDate(),
       startTime: '00:00',
-      duration: 0,
+      endTime: '00:00',
       eventId: eventId || '',
     },
     resolver: yupResolver(meetingSchema),
