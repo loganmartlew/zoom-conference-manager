@@ -47,8 +47,8 @@ const EventForm: FC = () => {
 
   return (
     <Form
-      autoComplete='off'
       onSubmit={handleSubmit(onSubmit)}
+      autoComplete='off'
       sx={{
         width: {
           xs: '100%',
@@ -63,6 +63,7 @@ const EventForm: FC = () => {
           control={control}
           error={errors.name}
         />
+
         <TextArea
           name='description'
           label='Description'
@@ -70,6 +71,7 @@ const EventForm: FC = () => {
           error={errors.description}
           minRows={3}
         />
+
         <DatePicker
           name='startDate'
           label='Start Date'
