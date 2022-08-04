@@ -1,9 +1,10 @@
 /* eslint-disable import/no-cycle */
+import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import { Entity, BaseEntity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
 import Event from './Event';
 
 @Entity()
-export default class Meeting extends BaseEntity {
+export default class Meeting extends BaseEntity implements IMeeting {
   @PrimaryColumn()
   ubid: string;
 
