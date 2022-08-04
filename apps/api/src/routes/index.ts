@@ -1,14 +1,14 @@
 import express from 'express';
 
-import meetingRoute from './meeting';
 import eventRoute from './event';
-import userRoute from './user';
+import meetingRoute from './meeting';
+import zoomUserRoute from './zoomUser';
 
 const router = express.Router();
 
 /// All routes here :
-router.use('/meeting', meetingRoute);
-router.use('/event', eventRoute);
-router.use('/user', userRoute);
+router.use('/events', eventRoute);
+router.use('/meetings', meetingRoute);
+router.use('/zoom-users', zoomUserRoute);
 
 export default router;

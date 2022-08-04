@@ -1,33 +1,28 @@
 import { FC } from 'react';
+import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { Link } from 'react-router-dom';
 import { Paper, Stack, Typography, Button } from '@mui/material';
 import { Groups } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 
 interface Props {
-  id: string;
-  name: string;
-  desc: string;
-  start: string;
-  end: string;
+  event: IEvent;
 }
 
-const EventCard: FC<Props> = (props) => {
-  const { id, name, desc, start, end } = props;
+const EventCard: FC<Props> = ({ event }) => {
   return (
     <Paper
       sx={{
         padding: '1.5em',
-        // maxWidth: '100ch',
       }}
       elevation={3}
     >
       <Stack spacing={2}>
         <Typography variant='h5' fontWeight={500} mr={3}>
-          {name}
+          {event.name}
         </Typography>
         <Stack direction='row' spacing={2}>
-          <EventStatusBadge status='draft' />
+          <EventStatusBadge status={event.status} />
           <Stack direction='row' spacing={1}>
             <Groups />
             <Typography>0 Meetings</Typography>
@@ -35,11 +30,11 @@ const EventCard: FC<Props> = (props) => {
         </Stack>
         <Typography
           sx={{ width: 'max-content', whiteSpace: 'noWrap' }}
-        >{`${start} - ${end}`}</Typography>
-        <Typography variant='body1'>{desc}</Typography>
+        >{`${event.startDate} - ${event.endDate}`}</Typography>
+        <Typography variant='body1'>{event.description}</Typography>
         <Button
           component={Link}
-          to={`/events/${id}`}
+          to={`/events/${event.id}`}
           variant='outlined'
           sx={{ width: 'max-content' }}
         >

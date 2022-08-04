@@ -1,7 +1,14 @@
 import { useState, FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
-import { Home, Dashboard, Event, AddBox } from '@mui/icons-material';
+import {
+  Home,
+  Dashboard,
+  Event,
+  AddBox,
+  PersonAdd,
+  People,
+} from '@mui/icons-material';
 import TopBar from './TopBar';
 import SideNavigation, { DrawerHeader } from './SideNavigation';
 import { NavItem } from './NavItem';
@@ -13,6 +20,8 @@ const items: NavItem[] = [
   { text: 'Events', path: '/events', icon: <Event /> },
   { text: 'New Event', path: '/new-event', icon: <AddBox /> },
   { text: 'New Meeting', path: '/new-meeting', icon: <AddBox /> },
+  { text: 'Add Account', path: '/add-account', icon: <PersonAdd /> },
+  { text: 'Zoom Users', path: '/zoom-users', icon: <People /> },
 ];
 
 interface Props {

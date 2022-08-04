@@ -1,22 +1,11 @@
-export interface IEvent {
-  id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  meetings: IMeeting[];
+export enum EventStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
 }
 
-export interface IEventName {
-  id: string;
-  name: string;
-}
-
-export interface IMeeting {
-  ubid: string;
-  name: string;
-  description: string;
-  meetingDate: Date;
-  meetingDuration: number;
-  event: IEvent;
+export interface ZoomTokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
 }
