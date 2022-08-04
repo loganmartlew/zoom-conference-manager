@@ -8,6 +8,9 @@ export default class Meeting extends BaseEntity {
   ubid: string;
 
   @Column()
+  zoomId: string;
+
+  @Column()
   name: string;
 
   @Column()

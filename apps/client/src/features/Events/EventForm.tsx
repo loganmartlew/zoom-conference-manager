@@ -12,7 +12,7 @@ import { IFormInput, useEventForm } from './useEventForm';
 
 const Form = styled('form')({});
 
-const EventInput: FC = () => {
+const EventForm: FC = () => {
   const {
     control,
     handleSubmit,
@@ -47,8 +47,8 @@ const EventInput: FC = () => {
 
   return (
     <Form
-      autoComplete='off'
       onSubmit={handleSubmit(onSubmit)}
+      autoComplete='off'
       sx={{
         width: {
           xs: '100%',
@@ -63,6 +63,7 @@ const EventInput: FC = () => {
           control={control}
           error={errors.name}
         />
+
         <TextArea
           name='description'
           label='Description'
@@ -70,6 +71,7 @@ const EventInput: FC = () => {
           error={errors.description}
           minRows={3}
         />
+
         <DatePicker
           name='startDate'
           label='Start Date'
@@ -97,4 +99,4 @@ const EventInput: FC = () => {
   );
 };
 
-export default EventInput;
+export default EventForm;

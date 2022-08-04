@@ -5,6 +5,10 @@ import {
   GetEventNames,
   UpdateEvent,
   DeleteEvent,
+  PublishEvent,
+  UnpublishEvent,
+  UploadFile,
+  MulterRequest,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -73,6 +77,44 @@ export const updateEvent: UpdateEvent = async (req: Request) => {
   }
 };
 
+export const publishEvent: PublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const publishedEvent = await EventService.publish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Published Event',
+      data: publishedEvent,
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to publish Event ',
+      error,
+    };
+  }
+};
+
+export const unpublishEvent: UnpublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const unpublishedEvent = await EventService.unpublish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Unpublished Event',
+      data: unpublishedEvent,
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to unpublish Event ',
+      error,
+    };
+  }
+};
+
 export const deleteEvent: DeleteEvent = async (req: Request) => {
   const { id } = req.params;
 
@@ -89,4 +131,14 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
     };
   }
   return { status: StatusCodes.OK, message: 'Event deleted' };
+};
+
+export const uploadFile: UploadFile = async (req: Request) => {
+  /// Add [file] into [req], happens in Runtime
+  // eslint-disable-next-line prefer-destructuring
+  const file = (req as MulterRequest).file;
+
+  EventService.uploadFile(file);
+
+  return { status: StatusCodes.OK, message: 'File uploaded' };
 };
