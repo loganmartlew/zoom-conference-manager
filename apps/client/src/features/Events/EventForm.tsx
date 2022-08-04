@@ -62,6 +62,7 @@ const EventForm: FC = () => {
           label='Name'
           control={control}
           error={errors.name}
+          autoFocus
         />
 
         <TextArea

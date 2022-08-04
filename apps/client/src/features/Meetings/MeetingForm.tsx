@@ -77,6 +77,7 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
           label='UBID'
           control={control}
           error={errors.ubid}
+          autoFocus
         />
         <TextInput
           name='name'
