@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import dayjs from 'dayjs';
 import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
@@ -53,7 +54,10 @@ export default class ZoomService {
       topic: meeting.name,
       schedule_for: userEmail,
       start_time: meeting.startDateTime.toISOString(),
-      duration: meeting.duration + 30,
+      duration: dayjs(meeting.startDateTime).diff(
+        dayjs(meeting.endDateTime).add(30, 'minutes'),
+        'minute'
+      ),
       type: SCHEDULED_MEETING,
     };
 

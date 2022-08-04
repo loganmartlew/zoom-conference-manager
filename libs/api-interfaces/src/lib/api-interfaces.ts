@@ -19,7 +19,7 @@ export interface MeetingDTO {
   ubid: string;
   name: string;
   startDateTime: string;
-  duration: number;
+  endDateTime: string;
   eventId: string;
 }
 
@@ -47,7 +47,7 @@ export interface IMeeting {
   ubid: string;
   name: string;
   startDateTime: Date;
-  duration: number;
+  endDateTime: Date;
 }
 
 export interface IZoomUser {

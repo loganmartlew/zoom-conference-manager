@@ -52,10 +52,12 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const meetingData: MeetingDTO = {
       ...data,
-      startDate: dayjs(data.startDate).format('DD/MM/YYYY'),
+      startDateTime: dayjs(data.startDate).format('DD/MM/YYYY'),
+      endDateTime: dayjs(data.startDate)
+        .add(data.duration, 'minutes')
+        .format('DD/MM/YYYY'),
     };
 
-    // console.log(meetingData);
     mutate(meetingData);
   };
 

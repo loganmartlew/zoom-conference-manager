@@ -35,7 +35,10 @@ export default class MeetingService {
       meetingData.startDateTime,
       formats.dateTime
     ).toDate();
-    meetingStub.duration = meetingData.duration;
+    meetingStub.endDateTime = dayjs(
+      meetingData.endDateTime,
+      formats.dateTime
+    ).toDate();
     meetingStub.zoomId = '';
     meetingStub.event = event;
 

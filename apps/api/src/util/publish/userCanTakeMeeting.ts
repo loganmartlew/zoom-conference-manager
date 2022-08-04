@@ -7,9 +7,7 @@ const getDurationFromMeeting = (meeting: Meeting): MeetingDuration => {
     meeting,
     duration: {
       start: dayjs(meeting.startDateTime),
-      end: dayjs(meeting.startDateTime)
-        .add(meeting.duration, 'minutes')
-        .add(30, 'minutes'),
+      end: dayjs(meeting.startDateTime).add(30, 'minutes'),
     },
   };
 };
@@ -45,17 +43,13 @@ export const userCanTakeMeeting = (
     getDurationFromMeeting(m)
   );
 
-  const overlappingMeetings = meetingDurations.reduce(
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    (count, md) => {
-      if (isOverlap(md, meetingDuration)) {
-        return count + 1;
-      }
+  const overlappingMeetings = meetingDurations.reduce((count, md) => {
+    if (isOverlap(md, meetingDuration)) {
+      return count + 1;
+    }
 
-      return count;
-    },
-    0
-  );
+    return count;
+  }, 0);
 
   return overlappingMeetings < overlapLimit;
 };

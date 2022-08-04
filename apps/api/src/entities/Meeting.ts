@@ -17,7 +17,7 @@ export default class Meeting extends BaseEntity {
   startDateTime: Date;
 
   @Column()
-  duration: number;
+  endDateTime: Date;
 
   @ManyToOne(() => Event, (event) => event.meetings, { onDelete: 'CASCADE' })
   event: Event;
