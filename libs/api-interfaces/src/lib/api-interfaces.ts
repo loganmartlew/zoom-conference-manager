@@ -1,60 +1,11 @@
 import { Request } from 'express';
-import { EventStatus } from '@zoom-conference-manager/types';
+import { IEvent, IEventName, IMeeting, IZoomUser } from './entity-types';
 
 export interface ApiResponse<T> {
   status: number;
   message: string;
   data?: T;
   error?: unknown;
-}
-
-export interface EventDTO {
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-}
-
-export interface MeetingDTO {
-  ubid: string;
-  name: string;
-  startDateTime: string;
-  endDateTime: string;
-  eventId: string;
-}
-
-export interface ZoomUserDTO {
-  name: string;
-  email: string;
-}
-
-export interface IEvent {
-  id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  status: EventStatus;
-  meetings: IMeeting[];
-}
-
-export interface IEventName {
-  id: string;
-  name: string;
-}
-
-export interface IMeeting {
-  ubid: string;
-  name: string;
-  startDateTime: Date;
-  endDateTime: Date;
-  zoomId: string;
-}
-
-export interface IZoomUser {
-  id: string;
-  name: string;
-  email: string;
 }
 
 export interface MulterRequest extends Request {
