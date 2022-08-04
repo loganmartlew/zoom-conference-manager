@@ -48,6 +48,7 @@ export interface IMeeting {
   name: string;
   startDateTime: Date;
   endDateTime: Date;
+  zoomId: string;
 }
 
 export interface IZoomUser {
