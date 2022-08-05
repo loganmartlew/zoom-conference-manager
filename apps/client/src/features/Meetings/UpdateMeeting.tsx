@@ -71,14 +71,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       name: '',
       date: '',
       duration: '',
-      event: '',
       time: '',
     },
     edit: {
       name: editOnRender,
       date: editOnRender,
       duration: editOnRender,
-      event: editOnRender,
       time: editOnRender,
     },
   });
@@ -206,23 +204,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
         }}
         name='duration'
         errorText='duration must be a postive number'
-      />
-      <UpdateMeetingField
-        value={meetingState.value.event}
-        editField={() => {
-          editField('event', meetingState.edit.event ? 'true' : 'false');
-        }}
-        isEditable={meetingState.edit.event}
-        handleChange={(e: ChangeEvent<HTMLInputElement>) => {
-          const { value } = e.target;
-          meetingDispatch({
-            type: UpdateMeetingType.SET,
-            payload: value,
-            name: 'event',
-          });
-        }}
-        name='event'
-        errorText=''
       />
       <Button
         onClick={() => {

@@ -141,15 +141,6 @@ describe('UpdateMeeting testing', () => {
       'duration field is undefined'
     );
     expect(durationText).toBe('3');
-
-    // test the event field
-    const eventText = changeTextFieldValue(
-      'update--meeting--textfield--event',
-      'update--meeting--event',
-      'Test Event!',
-      'event field is undefined'
-    );
-    expect(eventText).toBe('Test Event!');
   });
 
   test('Checks that when the edit icon is clicked changes the relative field from disabled to enabled', () => {
@@ -175,18 +166,9 @@ describe('UpdateMeeting testing', () => {
     testIconClick('update--meeting--time', 'update--meeting--icon--time');
 
     // test duration field icon
-    const durationText = screen
-      .getByTestId('update--meeting--duration')
-      .querySelector('input');
-    expect(durationText).toHaveProperty('disabled', true);
-    clickEditIcon('update--meeting--icon--duration');
-    expect(durationText).toHaveProperty('disabled', false);
-
-    const eventText = screen
-      .getByTestId('update--meeting--event')
-      .querySelector('input');
-    expect(eventText).toHaveProperty('disabled', true);
-    clickEditIcon('update--meeting--icon--event');
-    expect(eventText).toHaveProperty('disabled', false);
+    testIconClick(
+      'update--meeting--duration',
+      'update--meeting--icon--duration'
+    );
   });
 });

@@ -11,7 +11,6 @@ interface UpdateValue {
   date: string;
   time: string;
   duration: string;
-  event: string;
 }
 
 interface UpdateEdit {
@@ -19,7 +18,6 @@ interface UpdateEdit {
   date: boolean;
   time: boolean;
   duration: boolean;
-  event: boolean;
 }
 
 interface UpdateState {
