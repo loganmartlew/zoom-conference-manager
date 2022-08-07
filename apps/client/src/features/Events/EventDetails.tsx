@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { Stack, Typography, Button } from '@mui/material';
 import { Add, Delete, Upload } from '@mui/icons-material';
+
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
+// eslint-disable-next-line import/extensions
+import Process from './ProcessFile';
 
 interface Props {
   event: IEvent | undefined;
@@ -60,9 +63,9 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
           >
             Add Meeting
           </Button>
-          <Button variant='outlined' size='small' startIcon={<Upload />}>
-            Upload Meetings
-          </Button>
+
+          <Process />
+
           <Button
             variant='contained'
             size='small'
