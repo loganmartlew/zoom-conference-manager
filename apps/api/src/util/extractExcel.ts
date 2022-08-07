@@ -1,5 +1,14 @@
 /* eslint-disable no-plusplus */
 import XLSX, { WorkBook } from 'xlsx';
+import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+
+interface RawExtractData {
+  date: string; // Formate : MM/DD/YYYY (US style)
+  starttime: string;
+  endtime: string;
+  title: string;
+  isOnline: boolean;
+}
 
 /*
 - Meeting info starts from Row 24
@@ -20,33 +29,49 @@ import XLSX, { WorkBook } from 'xlsx';
     - L : Session or Sub-Session (Sub)
 */
 
-function createMeetingList(agenda: XLSX.WorkSheet, keys: string[]) {
+function createMeetingObjList(agenda: XLSX.WorkSheet, keys: string[]) {
   const meetingList = [];
-  let meeting = [];
 
-  let dateKey = '';
-  let startTimeKey = '';
-  let endTimeKey = '';
-  let sessionTitleKey = '';
+  let isCreateMeeting = false;
+  let rawData: RawExtractData = {
+    date: '',
+    starttime: '',
+    endtime: '',
+    title: '',
+    isOnline: false,
+  };
 
-  for (let row = 0; row < keys.length; row++) {
-    if (keys[row].at(0) === 'A') {
-      dateKey = keys[row];
-      meeting.push(agenda[dateKey].v);
-    } else if (keys[row].at(0) === 'B') {
-      startTimeKey = keys[row];
-      meeting.push(agenda[startTimeKey].v);
-    } else if (keys[row].at(0) === 'C') {
-      endTimeKey = keys[row];
-      meeting.push(agenda[endTimeKey].v);
-    } else if (keys[row].at(0) === 'E') {
-      sessionTitleKey = keys[row];
-      meeting.push(agenda[sessionTitleKey].v);
+  for (let column = 0; column < keys.length; column++) {
+    if (
+      keys[column].at(0) === 'A' &&
+      keys[column + 5].at(0) === 'F' &&
+      agenda[keys[column + 5]].v.includes('Online')
+    ) {
+      /// Only starting building Meeting obj, if the Row is online meeting
+      isCreateMeeting = true;
+      rawData.date = agenda[keys[column]].v;
+    }
+    if (isCreateMeeting) {
+      if (keys[column].at(0) === 'B') {
+        rawData.starttime = agenda[keys[column]].v;
+      } else if (keys[column].at(0) === 'C') {
+        rawData.endtime = agenda[keys[column]].v;
+      } else if (keys[column].at(0) === 'E') {
+        rawData.title = agenda[keys[column]].v;
+        isCreateMeeting = false;
 
-      // TODO : add duration field to meeting
+        // TODO : Build Meeting Obj from [rawData]
 
-      meetingList.push(meeting);
-      meeting = [];
+        meetingList.push(rawData);
+
+        rawData = {
+          date: '',
+          starttime: '',
+          endtime: '',
+          title: '',
+          isOnline: false,
+        };
+      }
     }
   }
   return meetingList;
@@ -72,7 +97,7 @@ function extractExcelData(workBook: WorkBook) {
   // Slice [keys] to get only meeting informations
   const slicedKeys = keys.slice(startIndex, endIndex);
 
-  const meetingList = createMeetingList(agenda, slicedKeys);
+  const meetingList = createMeetingObjList(agenda, slicedKeys);
 
   return meetingList;
 }
