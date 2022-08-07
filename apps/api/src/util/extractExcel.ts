@@ -1,13 +1,11 @@
 /* eslint-disable no-plusplus */
 import XLSX, { WorkBook } from 'xlsx';
-import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 
 interface RawExtractData {
   date: string; // Formate : MM/DD/YYYY (US style)
   starttime: string;
   endtime: string;
   title: string;
-  isOnline: boolean;
 }
 
 /*
@@ -29,48 +27,75 @@ interface RawExtractData {
     - L : Session or Sub-Session (Sub)
 */
 
+function formatHourAMPM(time: string): string {
+  const [hhmm, meridiem] = time.split(' ');
+  const [hh, mm] = hhmm.split(':');
+  const fmthh = (
+    parseInt(hh, 10) +
+    ((meridiem === 'PM' && hh !== '12') || (meridiem === 'AM' && hh === '12')
+      ? 12
+      : 0)
+  ).toString();
+  return `${fmthh}:${mm}`;
+}
+
+function convertHHMMtoMinutes(time: string): number {
+  const [hh, mm] = time.split(':');
+  return parseInt(hh, 10) * 60 + parseInt(mm, 10);
+}
+
+function calculateDuration(start: string, end: string): number {
+  return convertHHMMtoMinutes(end) - convertHHMMtoMinutes(start);
+}
+
+function createOneMeetingObj(datas: RawExtractData) {
+  // Construct Meeting Obj [startDateTime] field
+  const mmddyyyyFormat = datas.date.split('/');
+  const fmtDate = `${mmddyyyyFormat[2]}/${mmddyyyyFormat[0]}/${mmddyyyyFormat[1]}`;
+  const fmtStarthhmm = formatHourAMPM(datas.starttime);
+  const startDateTime = `${fmtDate} ${fmtStarthhmm}:00`;
+
+  // Construct Meeting Obj [duration] field
+  const duration = calculateDuration(
+    fmtStarthhmm,
+    formatHourAMPM(datas.endtime)
+  );
+
+  // TODO : [ubid] field
+  return { ubid: '', name: datas.title, startDateTime, duration };
+}
+
 function createMeetingObjList(agenda: XLSX.WorkSheet, keys: string[]) {
   const meetingList = [];
 
-  let isCreateMeeting = false;
-  let rawData: RawExtractData = {
+  let isOnlineMeeting = false;
+  const rawData: RawExtractData = {
     date: '',
     starttime: '',
     endtime: '',
     title: '',
-    isOnline: false,
   };
 
   for (let column = 0; column < keys.length; column++) {
     if (
       keys[column].at(0) === 'A' &&
       keys[column + 5].at(0) === 'F' &&
-      agenda[keys[column + 5]].v.includes('Online')
+      agenda[keys[column + 5]].v.trim().includes('Online')
     ) {
-      /// Only starting building Meeting obj, if the Row is online meeting
-      isCreateMeeting = true;
+      /// Only starting building Meeting obj, if the Row is specified online meeting
+      isOnlineMeeting = true;
       rawData.date = agenda[keys[column]].v;
     }
-    if (isCreateMeeting) {
+    if (isOnlineMeeting) {
       if (keys[column].at(0) === 'B') {
         rawData.starttime = agenda[keys[column]].v;
       } else if (keys[column].at(0) === 'C') {
         rawData.endtime = agenda[keys[column]].v;
       } else if (keys[column].at(0) === 'E') {
         rawData.title = agenda[keys[column]].v;
-        isCreateMeeting = false;
+        isOnlineMeeting = false;
 
-        // TODO : Build Meeting Obj from [rawData]
-
-        meetingList.push(rawData);
-
-        rawData = {
-          date: '',
-          starttime: '',
-          endtime: '',
-          title: '',
-          isOnline: false,
-        };
+        meetingList.push(createOneMeetingObj(rawData));
       }
     }
   }
