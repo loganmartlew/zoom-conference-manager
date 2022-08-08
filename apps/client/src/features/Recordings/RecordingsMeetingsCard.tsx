@@ -11,7 +11,10 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 
 interface Props {
   meeting: IMeeting;
@@ -105,12 +108,19 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
           >
             <DialogTitle>Copy Recording Link</DialogTitle>
             <DialogContent>
-              <TextField
-                disabled
-                name='recordingLink'
-                label='Recording Link'
-                defaultValue='Link goes here :)'
-              />
+              <Stack direction='row' spacing={2}>
+                <TextField
+                  disabled
+                  name='recordingLink'
+                  label='Recording Link'
+                  defaultValue='Link goes here :)'
+                />
+                <Tooltip title='Copy to Clipboard'>
+                  <IconButton size='small' color='primary'>
+                    <ContentPasteGoIcon fontSize='small' />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Close</Button>
