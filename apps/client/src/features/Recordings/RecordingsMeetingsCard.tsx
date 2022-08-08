@@ -1,7 +1,17 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
-import { Paper, Stack, Typography, Button } from '@mui/material';
+import {
+  Paper,
+  Stack,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from '@mui/material';
 
 interface Props {
   meeting: IMeeting;
@@ -9,6 +19,16 @@ interface Props {
 
 const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
   const dateTime = dayjs(meeting.startDateTime);
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Paper
@@ -74,7 +94,28 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
               </Typography>
             </Typography>
           </Stack>
-          <Button variant='outlined'>Get Recording</Button>
+          <Button variant='outlined' onClick={handleClickOpen}>
+            Get Recording
+          </Button>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle>Copy Recording Link</DialogTitle>
+            <DialogContent>
+              <TextField
+                disabled
+                name='recordingLink'
+                label='Recording Link'
+                defaultValue='Link goes here :)'
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Close</Button>
+            </DialogActions>
+          </Dialog>
         </Stack>
       </Stack>
     </Paper>
