@@ -1,11 +1,15 @@
 /* eslint-disable import/no-cycle */
+import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import { Entity, BaseEntity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
 import Event from './Event';
 
 @Entity()
-export default class Meeting extends BaseEntity {
+export default class Meeting extends BaseEntity implements IMeeting {
   @PrimaryColumn()
   ubid: string;
+
+  @Column()
+  zoomId: string;
 
   @Column()
   name: string;
@@ -14,7 +18,7 @@ export default class Meeting extends BaseEntity {
   startDateTime: Date;
 
   @Column()
-  duration: number;
+  endDateTime: Date;
 
   @ManyToOne(() => Event, (event) => event.meetings, { onDelete: 'CASCADE' })
   event: Event;

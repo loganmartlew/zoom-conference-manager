@@ -35,14 +35,29 @@ export default class MeetingService {
       meetingData.startDateTime,
       formats.dateTime
     ).toDate();
-    meetingStub.duration = meetingData.duration;
+    meetingStub.endDateTime = dayjs(
+      meetingData.endDateTime,
+      formats.dateTime
+    ).toDate();
+    meetingStub.zoomId = '';
     meetingStub.event = event;
 
+    const meeting = await meetingStub.save();
+    return meeting;
+  }
+
+  static async setZoomId(ubid: string, id: string) {
+    const meeting = await Meeting.findOneBy({ ubid });
+    if (!meeting) {
+      throw new Error('Meeting not found');
+    }
+
     try {
-      const meeting = await meetingStub.save();
+      meeting.zoomId = id;
+      await meeting.save();
       return meeting;
     } catch (error) {
-      throw new Error('Unable to save Meeting');
+      throw new Error('Unable to set Meetings Zoom id');
     }
   }
 }
