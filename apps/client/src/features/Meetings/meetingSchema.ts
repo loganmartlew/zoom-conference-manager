@@ -6,14 +6,8 @@ const meetingSchema = object({
   startDate: date()
     .typeError('Invalid date.')
     .required('Start date is required.'),
-  startTime: string()
-    .required('Start time is required.')
-    .length(5, 'Must be in format XX:XX.')
-    .matches(/[0-9]{2}:[0-9]{2}/, 'Must be in format XX:XX.'),
-  duration: number()
-    .required('Meeting duration is required.')
-    .positive('Number must be positive.')
-    .min(1, 'Meeting duration cannot be less than 1 minute.'),
+  startTime: string().required('Start time is required.'),
+  endTime: string().required('End time is required'),
   eventId: string().required('Must select an Event.'),
 });
 

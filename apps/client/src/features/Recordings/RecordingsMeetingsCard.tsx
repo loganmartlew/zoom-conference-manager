@@ -22,6 +22,7 @@ interface Props {
 
 const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
   const dateTime = dayjs(meeting.startDateTime);
+  const dateTimeEnd = dayjs(meeting.endDateTime);
 
   // handlers for dialog
   const [open, setOpen] = useState(false);
@@ -94,7 +95,7 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
             >
               End Time:
               <Typography variant='body2'>
-                {dateTime.add(meeting.duration, 'minute').format('HH:mm')}
+                {dateTimeEnd.format('HH:mm')};
               </Typography>
             </Typography>
           </Stack>
