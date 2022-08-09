@@ -23,6 +23,7 @@ interface Props {
 const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
   const dateTime = dayjs(meeting.startDateTime);
 
+  // handlers for dialog
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -112,8 +113,8 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
                 <TextField
                   disabled
                   name='recordingLink'
-                  label='Recording Link'
                   defaultValue='Link goes here :)'
+                  InputLabelProps={{ shrink: false }}
                 />
                 <Tooltip title='Copy to Clipboard'>
                   <IconButton size='small' color='primary'>
