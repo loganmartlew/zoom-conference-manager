@@ -1,12 +1,14 @@
 import { FC, useState } from 'react';
 import { CircularProgress, Collapse, Alert, AlertTitle } from '@mui/material';
-import { useAllEvents } from './api/getEvents';
-import EventCard from './EventCard';
+import { useAllEvents } from '../Events/api/getEvents';
+import RecordingCard from './RecordingCard';
 
 const EventsList: FC = () => {
   const { data: events, isLoading, isError } = useAllEvents();
   const [showError, setShowError] = useState(true);
   const [showNoEvents, setShowNoEvents] = useState(true);
+
+  console.log(events);
 
   if (isError) {
     return (
@@ -45,32 +47,13 @@ const EventsList: FC = () => {
     );
   }
 
-  if (!events) {
-    return (
-      <Collapse in={showNoEvents}>
-        <Alert
-          onClose={() => {
-            setShowNoEvents(false);
-          }}
-          severity='success'
-          variant='outlined'
-        >
-          <AlertTitle>No Events</AlertTitle>
-          No events found...
-        </Alert>
-      </Collapse>
-    );
-  }
-
   return (
     <>
-      {events.map((event) => {
+      {events?.map((event) => {
         return (
-          <EventCard
-            key={event.id}
+          <RecordingCard
             id={event.id}
             name={event.name}
-            desc={event.description}
             start={event.startDate}
             end={event.endDate}
           />

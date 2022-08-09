@@ -18,20 +18,26 @@ import { usePostMeeting } from './api/postMeeting';
 
 const Form = styled('form')({});
 
-const MeetingInput: FC = () => {
+interface Props {
+  eventId: string | null;
+}
+
+const MeetingForm: FC<Props> = ({ eventId }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    getValues,
     eventNames,
-  } = useMeetingForm();
+  } = useMeetingForm(eventId);
 
   const navigate = useNavigate();
 
   const onPostSuccess = () => {
     // Notification, meeting added
     // Should navigate to /events/:eventId
-    navigate('/events');
+    const { eventId: finalEventId } = getValues();
+    navigate(`/events/${finalEventId}`);
   };
 
   const onPostError = (error: unknown, variables: MeetingDTO) => {
@@ -97,7 +103,7 @@ const MeetingInput: FC = () => {
         />
         <Select
           name='eventId'
-          label='Event'
+          label=''
           control={control}
           error={errors.eventId}
           helperText={errors.eventId?.message}
@@ -127,4 +133,4 @@ const MeetingInput: FC = () => {
   );
 };
 
-export default MeetingInput;
+export default MeetingForm;
