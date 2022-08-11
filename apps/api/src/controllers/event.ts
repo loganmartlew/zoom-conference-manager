@@ -97,9 +97,10 @@ export const uploadFile: UploadFile = async (req: Request) => {
   /// Add [file] into [req], happens in Runtime
   // eslint-disable-next-line prefer-destructuring
   const file = (req as MulterRequest).file;
+  const { id } = req.params;
 
   try {
-    await EventService.uploadFile(file);
+    await EventService.uploadFile(id, file);
     return { status: StatusCodes.OK, message: 'File uploaded' };
   } catch (error) {
     return {

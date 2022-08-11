@@ -1,4 +1,5 @@
 /* eslint-disable no-plusplus */
+import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import XLSX, { WorkBook } from 'xlsx';
 
 interface RawExtractData {
@@ -48,7 +49,10 @@ function calculateDuration(start: string, end: string): number {
   return convertHHMMtoMinutes(end) - convertHHMMtoMinutes(start);
 }
 
-function createOneMeetingObj(datas: RawExtractData) {
+function createOneMeetingObj(
+  eventID: string,
+  datas: RawExtractData
+): MeetingDTO {
   // Construct Meeting Obj [startDateTime] field
   const mmddyyyyFormat = datas.date.split('/');
   const fmtDate = `${mmddyyyyFormat[2]}/${mmddyyyyFormat[0]}/${mmddyyyyFormat[1]}`;
@@ -62,10 +66,20 @@ function createOneMeetingObj(datas: RawExtractData) {
   );
 
   // TODO : [ubid] field
-  return { ubid: '', name: datas.title, startDateTime, duration };
+  return {
+    ubid: `${Math.random()}`,
+    name: datas.title,
+    startDateTime,
+    duration,
+    eventId: eventID,
+  };
 }
 
-function createMeetingObjList(agenda: XLSX.WorkSheet, keys: string[]) {
+function createMeetingObjList(
+  eventID: string,
+  agenda: XLSX.WorkSheet,
+  keys: string[]
+): MeetingDTO[] {
   const meetingList = [];
 
   let isOnlineMeeting = false;
@@ -95,14 +109,14 @@ function createMeetingObjList(agenda: XLSX.WorkSheet, keys: string[]) {
         rawData.title = agenda[keys[column]].v;
         isOnlineMeeting = false;
 
-        meetingList.push(createOneMeetingObj(rawData));
+        meetingList.push(createOneMeetingObj(eventID, rawData));
       }
     }
   }
   return meetingList;
 }
 
-function extractExcelData(workBook: WorkBook) {
+function extractExcelData(eventID: string, workBook: WorkBook) {
   const agenda = workBook.Sheets.Agenda;
 
   if (!agenda) {
@@ -112,9 +126,9 @@ function extractExcelData(workBook: WorkBook) {
   // [keys] : [ A1, B1, C1 ... Jn Kn Ln ]
   const keys = Object.keys(agenda);
 
-  if (keys.includes('START YOUR AGENDA BELOW')) {
-    throw Error('Wrong excel format');
-  }
+  // if (!Object.values(agenda).includes('START YOUR AGENDA BELOW')) {
+  //   throw Error('Wrong excel format');
+  // }
 
   const startIndex = keys.indexOf('A25');
   const endIndex = keys.indexOf('!ref') - 1;
@@ -122,7 +136,7 @@ function extractExcelData(workBook: WorkBook) {
   // Slice [keys] to get only meeting informations
   const slicedKeys = keys.slice(startIndex, endIndex);
 
-  const meetingList = createMeetingObjList(agenda, slicedKeys);
+  const meetingList = createMeetingObjList(eventID, agenda, slicedKeys);
 
   return meetingList;
 }

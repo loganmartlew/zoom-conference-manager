@@ -1,8 +1,10 @@
+/* eslint-disable import/no-cycle */
 import XLSX from 'xlsx';
 import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
 import extractExcelData from '../util/extractExcel';
+import MeetingService from './MeetingService';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -89,7 +91,7 @@ export default class EventService {
   }
   */
 
-  static async uploadFile(file: any): Promise<void> {
+  static async uploadFile(id: string, file: any): Promise<void> {
     // Get Root directory, then combine it into excel location
     const rootDir = __dirname.split('dist/apps/api')[0];
     const excelFileLocation = rootDir + file.path;
@@ -98,7 +100,13 @@ export default class EventService {
       const workBook = XLSX.readFile(excelFileLocation);
 
       // Create List of meeting from excel file
-      const meetingList = extractExcelData(workBook);
+      const meetingList = extractExcelData(id, workBook);
+
+      await Promise.all(
+        await meetingList.map((meetingDto) => {
+          return MeetingService.create(meetingDto);
+        })
+      );
 
       console.log('Meeting List: ', meetingList);
 
