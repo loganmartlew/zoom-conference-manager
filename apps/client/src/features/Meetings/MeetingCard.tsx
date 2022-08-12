@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
-import { Paper, Stack, Typography, IconButton } from '@mui/material';
+import { Paper, Stack, Typography, IconButton, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import UpdateMeeting from './UpdateMeeting';
 import { getMeetingData } from './api/getMeetingData';
@@ -14,6 +14,13 @@ interface Props {
 const MeetingCard: FC<Props> = ({ meeting }) => {
   const [showEditMeeting, setEditMeeting] = useState(false);
   const dateTime = dayjs(meeting.startDateTime);
+
+  // TODO: need to clarify if ubid in meeting prop
+  // is the meeting id, and if so need to ask if
+  // event ubid can be passed down, and if this
+  // is desireble as well.
+  console.log(meeting);
+
   return (
     <Paper
       sx={{
@@ -112,17 +119,29 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
                 {dateTime.add(meeting.duration, 'minute').format('HHmm')}
               </Typography>
             </Typography>
-            {showEditMeeting && (
-              <UpdateMeeting
-                getMeetingData={getMeetingData}
-                updateMeetingData={updateMeetingData}
-                ubid={meeting.ubid}
-                editOnRender={false}
-                eventId='hard coded requires editing'
-              />
-            )}
           </Stack>
         </Stack>
+        <Box padding='1.5rem'>
+          <Stack alignItems='flex-start' spacing={2}>
+            {showEditMeeting && (
+              <Box>
+                <UpdateMeeting
+                  getMeetingData={getMeetingData}
+                  updateMeetingData={updateMeetingData}
+                  meetingId={meeting.ubid}
+                  editOnRender={false}
+                  // this event Ubid may stay or get removed dependent on the todo
+                  // as below
+                  // TODO: need to clarify if ubid in meeting prop
+                  // is the meeting id, and if so need to ask if
+                  // event ubid can be passed down, and if this
+                  // is desireble as well.
+                  eventUbid='hard coded requires editing'
+                />
+              </Box>
+            )}
+          </Stack>
+        </Box>
       </Stack>
     </Paper>
   );

@@ -1,7 +1,7 @@
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { FC, ChangeEvent, useReducer, useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import { Stack, Button, Alert } from '@mui/material';
+import { Stack, Typography, Button, Alert } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
 import {
   Meeting,
@@ -16,8 +16,8 @@ interface Props {
     ubid: string,
     meetingData: MeetingDTO
   ) => Promise<MeetingDTO>;
-  ubid: string;
-  eventId: string;
+  meetingId: string;
+  eventUbid: string;
   editOnRender: boolean;
 }
 
@@ -63,8 +63,13 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
 };
 
 const UpdateMeeting: FC<Props> = (props: Props) => {
-  const { ubid, eventId, editOnRender, getMeetingData, updateMeetingData } =
-    props;
+  const {
+    meetingId,
+    eventUbid,
+    editOnRender,
+    getMeetingData,
+    updateMeetingData,
+  } = props;
 
   const [meetingState, meetingDispatch] = useReducer(updateMeetingReducer, {
     value: {
@@ -88,10 +93,10 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
 
   const getMeetingInfo = async () => {
     try {
-      const data = await getMeetingData(ubid);
+      const data = await getMeetingData(meetingId);
       meetingDispatch({
         type: UpdateMeetingType.INITIALIZE,
-        payload: `${data.duration},${eventId},${data.startDateTime},${data.name}`,
+        payload: `${data.duration},${eventUbid},${data.startDateTime},${data.name}`,
         name: null,
       });
     } catch (e) {
@@ -110,7 +115,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     try {
       await updateMeetingData(meetingUbid, meetingData);
     } catch (e) {
-      console.log(e);
       setUpdateMeetingAlert({
         active: true,
         alertText: 'Error Updating Meeting',
@@ -136,6 +140,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
 
   return (
     <Stack direction='column' spacing='2rem'>
+      <Typography variant='h5'>Event UBID: {eventUbid}</Typography>
       <UpdateMeetingField
         value={meetingState.value.date}
         editField={() => {
@@ -212,12 +217,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           const hours = meetingState.value.time.substring(0, 2);
           const mins = meetingState.value.time.substring(2);
           const secs = '00'; // the start time doesn't require a specific second to start
-          sendMeetingUpdate(ubid, {
-            ubid,
+          sendMeetingUpdate(meetingId, {
+            ubid: meetingId,
             name: meetingState.value.name,
             startDateTime: `${year}-${month}-${day} ${hours}:${mins}:${secs}`,
             duration: parseFloat(meetingState.value.duration),
-            eventId,
+            eventId: eventUbid,
           });
 
           // reset all of the fields to disabled (require to click edit, in order to edit again)
