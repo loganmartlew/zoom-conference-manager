@@ -3,8 +3,8 @@ import XLSX from 'xlsx';
 import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
-import extractExcelData from '../util/extractExcel';
 import MeetingService from './MeetingService';
+import { MeetingBuilder } from '../util/MeetingBuilder';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -31,6 +31,17 @@ export default class EventService {
     if (!event) {
       throw new Error('Event not found');
     }
+
+    event.meetings.sort((a, b) => {
+      if (a.startDateTime < b.startDateTime) {
+        return -1;
+      }
+      if (a.startDateTime > b.startDateTime) {
+        return 1;
+      }
+
+      return 0;
+    });
 
     return event;
   }
@@ -99,8 +110,10 @@ export default class EventService {
     try {
       const workBook = XLSX.readFile(excelFileLocation);
 
-      // Create List of meeting from excel file
-      const meetingList = extractExcelData(id, workBook);
+      const agenda = workBook.Sheets.Agenda;
+      const builder = new MeetingBuilder(id, agenda);
+
+      const meetingList = builder.getMeetings();
 
       await Promise.all(
         await meetingList.map((meetingDto) => {
