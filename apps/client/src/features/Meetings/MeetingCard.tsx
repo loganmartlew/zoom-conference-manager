@@ -3,6 +3,7 @@ import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
 import { Paper, Stack, Typography, IconButton, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { MeetingData } from './MeetingTypes/UpdateMeetingTypes';
 import UpdateMeeting from './UpdateMeeting';
 import { getMeetingData } from './api/getMeetingData';
 import { updateMeetingData } from './api/updateMeetingData';
@@ -15,11 +16,20 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
   const [showEditMeeting, setEditMeeting] = useState(false);
   const dateTime = dayjs(meeting.startDateTime);
 
-  // TODO: need to clarify if ubid in meeting prop
-  // is the meeting id, and if so need to ask if
-  // event ubid can be passed down, and if this
-  // is desireble as well.
-  console.log(meeting);
+  // This method converts the IMeeting type to MeetingData type
+  // as required for the below component UpdateMeeting prop inputs.
+  const convertToMeetingType = (currentMeeting: IMeeting): MeetingData => {
+    const tempDate = dateTime.format('DD/mm/YYYY');
+    const tempTime = dateTime.format('HHmm');
+    const date = `${tempDate} ${tempTime}`;
+    const convertedMeeting: MeetingData = {
+      id: currentMeeting.ubid,
+      name: currentMeeting.name,
+      startDateTime: date,
+      duration: meeting.duration,
+    };
+    return convertedMeeting;
+  };
 
   return (
     <Paper
@@ -126,17 +136,10 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             {showEditMeeting && (
               <Box>
                 <UpdateMeeting
-                  getMeetingData={getMeetingData}
+                  meetingData={convertToMeetingType(meeting)}
                   updateMeetingData={updateMeetingData}
                   meetingId={meeting.ubid}
                   editOnRender={false}
-                  // this event Ubid may stay or get removed dependent on the todo
-                  // as below
-                  // TODO: need to clarify if ubid in meeting prop
-                  // is the meeting id, and if so need to ask if
-                  // event ubid can be passed down, and if this
-                  // is desireble as well.
-                  eventUbid='hard coded requires editing'
                 />
               </Box>
             )}

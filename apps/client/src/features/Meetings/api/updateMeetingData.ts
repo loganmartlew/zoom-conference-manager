@@ -1,9 +1,9 @@
-import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import { MeetingData } from '../MeetingTypes/UpdateMeetingTypes';
 import { axios } from '../../../config/axios';
 
 export const updateMeetingData = (
-  ubid: string,
-  meetingData: MeetingDTO
-): Promise<MeetingDTO> => {
-  return axios.patch(`/meeting/${ubid}`, { meetingData });
+  id: string,
+  meetingData: MeetingData
+): Promise<MeetingData> => {
+  return axios.patch(`/meetings/${id}`, { meetingData });
 };

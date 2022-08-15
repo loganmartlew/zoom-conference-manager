@@ -1,39 +1,38 @@
-import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { FC, ChangeEvent, useReducer, useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import { Stack, Typography, Button, Alert } from '@mui/material';
+import { Stack, Button, Alert } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
 import {
   Meeting,
+  MeetingData,
   UpdateState,
   UpdateMeetingType,
   UpdateAction,
 } from './MeetingTypes/UpdateMeetingTypes';
 
 interface Props {
-  getMeetingData: (ubid: string) => Promise<MeetingDTO>;
+  meetingData: MeetingData;
   updateMeetingData: (
-    ubid: string,
-    meetingData: MeetingDTO
-  ) => Promise<MeetingDTO>;
+    id: string,
+    meetingData: MeetingData
+  ) => Promise<MeetingData>;
   meetingId: string;
-  eventUbid: string;
   editOnRender: boolean;
 }
 
 const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
   if (action.type === UpdateMeetingType.INITIALIZE && action.name === null) {
-    const [duration, eventId, startDateTime, name] = action.payload.split(',');
+    const [duration, startDateTime, name] = action.payload.split(',');
     const date = dayjs(startDateTime).format('DD/MM/YYYY');
     const time = dayjs(startDateTime).format('HHmm');
     return {
       ...state,
-      value: { ...state.value, duration, name, date, time, event: eventId },
+      value: { ...state.value, duration, name, date, time },
     };
     // eslint-disable-next-line no-else-return
   } else if (action.name === null) {
-    const [duration, eventId, date, name] = action.payload.split(',');
-    return { ...state, name, date, duration, event: eventId, time: '' };
+    const [duration, date, name] = action.payload.split(',');
+    return { ...state, name, date, duration, time: '' };
   }
 
   switch (action.type) {
@@ -63,20 +62,18 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
 };
 
 const UpdateMeeting: FC<Props> = (props: Props) => {
-  const {
-    meetingId,
-    eventUbid,
-    editOnRender,
-    getMeetingData,
-    updateMeetingData,
-  } = props;
+  const { meetingId, editOnRender, meetingData, updateMeetingData } = props;
+
+  const formatDateTime = () => {
+    return meetingData.startDateTime.split(' ');
+  };
 
   const [meetingState, meetingDispatch] = useReducer(updateMeetingReducer, {
     value: {
-      name: '',
-      date: '',
-      duration: '',
-      time: '',
+      name: meetingData.name,
+      date: formatDateTime()[0],
+      duration: meetingData.duration.toString(),
+      time: formatDateTime()[1],
     },
     edit: {
       name: editOnRender,
@@ -91,29 +88,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     alertText: '',
   });
 
-  const getMeetingInfo = async () => {
-    try {
-      const data = await getMeetingData(meetingId);
-      meetingDispatch({
-        type: UpdateMeetingType.INITIALIZE,
-        payload: `${data.duration},${eventUbid},${data.startDateTime},${data.name}`,
-        name: null,
-      });
-    } catch (e) {
-      console.log(e);
-      setUpdateMeetingAlert({
-        active: true,
-        alertText: 'Error Fetching Meeting Information',
-      });
-    }
-  };
-
   const sendMeetingUpdate = async (
     meetingUbid: string,
-    meetingData: MeetingDTO
+    meetingDataToSend: MeetingData
   ) => {
     try {
-      await updateMeetingData(meetingUbid, meetingData);
+      await updateMeetingData(meetingUbid, meetingDataToSend);
     } catch (e) {
       setUpdateMeetingAlert({
         active: true,
@@ -123,7 +103,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    getMeetingInfo();
+    // getMeetingInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -140,7 +120,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
 
   return (
     <Stack direction='column' spacing='2rem'>
-      <Typography variant='h5'>Event UBID: {eventUbid}</Typography>
       <UpdateMeetingField
         value={meetingState.value.date}
         editField={() => {
@@ -218,11 +197,10 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           const mins = meetingState.value.time.substring(2);
           const secs = '00'; // the start time doesn't require a specific second to start
           sendMeetingUpdate(meetingId, {
-            ubid: meetingId,
+            id: meetingId,
             name: meetingState.value.name,
             startDateTime: `${year}-${month}-${day} ${hours}:${mins}:${secs}`,
             duration: parseFloat(meetingState.value.duration),
-            eventId: eventUbid,
           });
 
           // reset all of the fields to disabled (require to click edit, in order to edit again)
@@ -240,7 +218,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
               name,
             });
           });
-          // meetingDispatch({type: UpdateMeetingType.EDIT, payload: 'false'})
         }}
         variant='contained'
         sx={{ width: '5rem' }}

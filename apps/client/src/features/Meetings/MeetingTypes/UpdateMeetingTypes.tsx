@@ -6,6 +6,15 @@ interface Meeting {
   event: string;
 }
 
+// Note this adheres more to sending the meeting
+// data to the backend.
+interface MeetingData {
+  id: string;
+  name: string;
+  startDateTime: string;
+  duration: number;
+}
+
 interface UpdateValue {
   name: string;
   date: string;
@@ -39,6 +48,7 @@ interface UpdateAction {
 
 export {
   Meeting,
+  MeetingData,
   UpdateValue,
   UpdateEdit,
   UpdateState,
