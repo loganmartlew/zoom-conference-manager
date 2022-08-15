@@ -1,0 +1,25 @@
+public class Solution {
+    public int[] TwoSum(int[] nums, int target) 
+    {
+       
+          for (int i = 0; i<nums.Length; i++)
+          
+          {
+              for(int j = i+1; i<nums.Length; j++)
+              {
+                  if(nums[i]+nums[j]==target)
+                  {
+                      return new int[] {i,j};
+                  }
+            
+              }
+                              
+              }throw new Exception("Not found");
+                              
+           }
+            
+       }
+
+
+Unit testing for react component.. using jest?
+check if rendered and onclick/submit works for data - need to connect to front end first..

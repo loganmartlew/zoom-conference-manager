@@ -52,6 +52,7 @@ export default function addAccount() {
                 fullWidth
                 id='firstName'
                 label='First Name'
+                inputProps={{ 'data-testid': 'first-name' }}
                 autoFocus
               />
             </Grid>
