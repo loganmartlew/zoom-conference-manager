@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { FieldError, SubmitHandler } from 'react-hook-form';
@@ -8,6 +8,7 @@ import {
   MenuItem,
   CircularProgress,
   styled,
+  TextField,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import DatePicker from '../../components/forms/DatePicker';
@@ -73,17 +74,11 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
     >
       <Stack spacing={2}>
         <TextInput
-          name='ubid'
-          label='UBID'
-          control={control}
-          error={errors.ubid}
-          autoFocus
-        />
-        <TextInput
           name='name'
           label='Name'
           control={control}
           error={errors.name}
+          autoFocus
         />
         <DatePicker
           name='startDate'

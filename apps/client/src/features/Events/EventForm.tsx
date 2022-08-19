@@ -58,11 +58,17 @@ const EventForm: FC = () => {
     >
       <Stack spacing={2}>
         <TextInput
+          name='ubid'
+          label='UBID'
+          control={control}
+          error={errors.name}
+          autoFocus
+        />
+        <TextInput
           name='name'
           label='Name'
           control={control}
           error={errors.name}
-          autoFocus
         />
 
         <TextArea

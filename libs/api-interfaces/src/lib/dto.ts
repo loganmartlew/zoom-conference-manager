@@ -1,4 +1,5 @@
 export interface EventDTO {
+  ubid: string;
   name: string;
   description: string;
   startDate: string;

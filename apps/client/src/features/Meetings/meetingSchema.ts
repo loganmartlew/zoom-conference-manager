@@ -1,7 +1,6 @@
-import { object, string, date, number } from 'yup';
+import { object, string, date } from 'yup';
 
 const meetingSchema = object({
-  ubid: string().required('UBID is required.'),
   name: string().required('Name is required.'),
   startDate: date()
     .typeError('Invalid date.')
