@@ -102,11 +102,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     }
   };
 
-  useEffect(() => {
-    // getMeetingInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // method used as argument to UpdateMeetingField component in order
   // to dispatch allow for editing different fields.
   const editField = (fieldName: keyof Meeting, value: string) => {
