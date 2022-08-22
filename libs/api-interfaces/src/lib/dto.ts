@@ -7,7 +7,6 @@ export interface EventDTO {
 }
 
 export interface MeetingDTO {
-  ubid: string;
   name: string;
   startDateTime: string;
   endDateTime: string;

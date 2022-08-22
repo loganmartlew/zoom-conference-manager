@@ -2,6 +2,7 @@ import { EventStatus } from '@zoom-conference-manager/types';
 
 export interface IEvent {
   id: string;
+  ubid: string;
   name: string;
   description: string;
   startDate: string;
@@ -16,7 +17,7 @@ export interface IEventName {
 }
 
 export interface IMeeting {
-  ubid: string;
+  id: string;
   name: string;
   startDateTime: Date;
   endDateTime: Date;
