@@ -8,7 +8,7 @@ import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
 import { usePublish } from './usePublish';
 import PublishDialog from './PublishDialog';
-import Process from './ProcessFile';
+import UploadDialog from './UploadDialog';
 
 interface Props {
   event: IEvent | undefined;
@@ -83,7 +83,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
             Add Meeting
           </Button>
 
-          <Process id={event.id} />
+          <UploadDialog id={event.id} />
 
           <Button
             variant='contained'
