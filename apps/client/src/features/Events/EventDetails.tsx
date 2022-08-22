@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { Stack, Typography, Button } from '@mui/material';
-import { Add, Delete, Upload } from '@mui/icons-material';
+import { Add, Delete } from '@mui/icons-material';
 
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
@@ -64,7 +64,7 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
             Add Meeting
           </Button>
 
-          <Process />
+          <Process id={event.id} />
 
           <Button
             variant='contained'
