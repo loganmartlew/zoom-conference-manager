@@ -1,6 +1,7 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import { formats } from '@zoom-conference-manager/dates';
 import { FieldError, SubmitHandler } from 'react-hook-form';
 import {
   Button,
@@ -8,7 +9,6 @@ import {
   MenuItem,
   CircularProgress,
   styled,
-  TextField,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import DatePicker from '../../components/forms/DatePicker';
@@ -52,10 +52,24 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
   const { mutate, isLoading } = usePostMeeting(onPostSuccess, onPostError);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    const [startHours, startMinutes] = data.startTime.split(':');
+    const [endHours, endMinutes] = data.endTime.split(':');
+
+    const start = dayjs(data.startDate)
+      .set('hours', +startHours)
+      .set('minutes', +startMinutes);
+    const end = dayjs(data.startDate)
+      .set('hours', +endHours)
+      .set('minutes', +endMinutes);
+
+    if (start.isAfter(end)) {
+      end.add(1, 'day');
+    }
+
     const meetingData: MeetingDTO = {
       ...data,
-      startDateTime: dayjs(data.startDate).format('DD/MM/YYYY'),
-      endDateTime: dayjs(data.endTime).format('DD/MM/YYYY'),
+      startDateTime: dayjs(start).format(formats.dateTime),
+      endDateTime: dayjs(end).format(formats.dateTime),
     };
 
     mutate(meetingData);

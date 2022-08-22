@@ -5,8 +5,12 @@ const meetingSchema = object({
   startDate: date()
     .typeError('Invalid date.')
     .required('Start date is required.'),
-  startTime: string().required('Start time is required.'),
-  endTime: string().required('End time is required'),
+  startTime: string()
+    .required('Start time is required.')
+    .matches(/^\d\d:\d\d$/),
+  endTime: string()
+    .required('End time is required')
+    .matches(/^\d\d:\d\d$/),
   eventId: string().required('Must select an Event.'),
 });
 
