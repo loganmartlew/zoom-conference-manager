@@ -94,6 +94,8 @@ export class MeetingBuilder {
 
     const endDate = dayjs(`${date} ${endTime}`, 'MM/DD/YYYY hh:mm A');
 
+    const endDateTime = endDate.format(formats.dateTime);
+
     if (endDate.isBefore(startDate)) {
       endDate.add(1, 'day');
 
@@ -102,16 +104,11 @@ export class MeetingBuilder {
       }
     }
 
-    // const endDateTime = endDate.format(formats.dateTime)
-
-    const duration = endDate.diff(startDate, 'minute');
-
     const meetingDto: MeetingDTO = {
       eventId: this.eventId,
       name: title,
       startDateTime,
-      duration,
-      ubid: `${Math.random()}`,
+      endDateTime,
     };
 
     return [meetingDto, session];
