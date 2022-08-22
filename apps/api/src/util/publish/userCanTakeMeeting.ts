@@ -7,7 +7,7 @@ const getDurationFromMeeting = (meeting: Meeting): MeetingDuration => {
     meeting,
     duration: {
       start: dayjs(meeting.startDateTime),
-      end: dayjs(meeting.startDateTime).add(30, 'minutes'),
+      end: dayjs(meeting.endDateTime).add(30, 'minutes'),
     },
   };
 };

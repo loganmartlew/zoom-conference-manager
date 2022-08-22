@@ -29,3 +29,7 @@
 //     expect(getMeeting).toBeTruthy();
 //   });
 // });
+
+test('placeholder', () => {
+  expect(1).toBe(1);
+});
