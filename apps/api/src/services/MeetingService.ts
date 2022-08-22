@@ -11,8 +11,8 @@ export default class MeetingService {
     return meetings;
   }
 
-  static async getOne(ubid: string) {
-    const meeting = await Meeting.findOneBy({ ubid });
+  static async getOne(id: string) {
+    const meeting = await Meeting.findOneBy({ id });
     if (!meeting) {
       throw new Error('Meeting not found');
     }
@@ -29,20 +29,34 @@ export default class MeetingService {
       throw new Error('Unable to create Meeting');
     }
 
-    meetingStub.ubid = meetingData.ubid;
     meetingStub.name = meetingData.name;
     meetingStub.startDateTime = dayjs(
       meetingData.startDateTime,
       formats.dateTime
     ).toDate();
-    meetingStub.duration = meetingData.duration;
+    meetingStub.endDateTime = dayjs(
+      meetingData.endDateTime,
+      formats.dateTime
+    ).toDate();
+    meetingStub.zoomId = '';
     meetingStub.event = event;
 
+    const meeting = await meetingStub.save();
+    return meeting;
+  }
+
+  static async setZoomId(meetingId: string, zoomId: string) {
+    const meeting = await Meeting.findOneBy({ id: meetingId });
+    if (!meeting) {
+      throw new Error('Meeting not found');
+    }
+
     try {
-      const meeting = await meetingStub.save();
+      meeting.zoomId = zoomId;
+      await meeting.save();
       return meeting;
     } catch (error) {
-      throw new Error('Unable to save Meeting');
+      throw new Error('Unable to set Meetings Zoom id');
     }
   }
 }

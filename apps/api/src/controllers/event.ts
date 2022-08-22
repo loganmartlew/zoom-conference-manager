@@ -5,6 +5,8 @@ import {
   GetEventNames,
   UpdateEvent,
   DeleteEvent,
+  PublishEvent,
+  UnpublishEvent,
   UploadFile,
   MulterRequest,
 } from '@zoom-conference-manager/api-interfaces';
@@ -70,6 +72,44 @@ export const updateEvent: UpdateEvent = async (req: Request) => {
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to update Event ',
+      error,
+    };
+  }
+};
+
+export const publishEvent: PublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const publishedEvent = await EventService.publish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Published Event',
+      data: publishedEvent,
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to publish Event ',
+      error,
+    };
+  }
+};
+
+export const unpublishEvent: UnpublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const unpublishedEvent = await EventService.unpublish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Unpublished Event',
+      data: unpublishedEvent,
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to unpublish Event ',
       error,
     };
   }

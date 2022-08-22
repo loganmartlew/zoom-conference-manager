@@ -6,6 +6,8 @@ import {
   getEvent,
   getAllEvents,
   updateEvent,
+  publishEvent,
+  unpublishEvent,
   deleteEvent,
   uploadFile,
 } from '../controllers/event';
@@ -17,6 +19,8 @@ router.get('/', response(getAllEvents));
 router.post('/', response(createEvent));
 router.get('/:id', response(getEvent));
 router.put('/:id', response(updateEvent));
+router.patch('/:id/publish', response(publishEvent));
+router.patch('/:id/unpublish', response(unpublishEvent));
 router.delete('/:id', response(deleteEvent));
 router.post('/:id/upload', multer.single('excelFile'), response(uploadFile));
 

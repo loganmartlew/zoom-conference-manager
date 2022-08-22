@@ -2,7 +2,9 @@
 import XLSX from 'xlsx';
 import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
+import { EventStatus } from '@zoom-conference-manager/types';
 import Event from '../entities/Event';
+import ZoomService from './ZoomService';
 import MeetingService from './MeetingService';
 import { MeetingBuilder } from '../util/MeetingBuilder';
 
@@ -51,6 +53,7 @@ export default class EventService {
 
     if (!eventStub) throw new Error('Unable to create event');
 
+    eventStub.ubid = eventData.ubid;
     eventStub.name = eventData.name;
     eventStub.description = eventData.description;
     eventStub.startDate = eventData.startDate;
@@ -87,6 +90,43 @@ export default class EventService {
     }
   }
 
+  static async publish(id: string): Promise<Event> {
+    try {
+      const event = await this.getOne(id);
+
+      if (event.status === EventStatus.PUBLISHED) {
+        throw new Error('Event is already published');
+      }
+
+      event.status = EventStatus.PUBLISHED;
+      const updatedEvent = await event.save();
+
+      await ZoomService.publishEvent(updatedEvent);
+
+      return updatedEvent;
+    } catch (error) {
+      throw new Error('Unable to publish event');
+    }
+  }
+
+  static async unpublish(id: string): Promise<Event> {
+    try {
+      const event = await this.getOne(id);
+
+      if (event.status === EventStatus.DRAFT) {
+        throw new Error('Event is not published');
+      }
+
+      event.status = EventStatus.DRAFT;
+      const updatedEvent = await event.save();
+
+      await ZoomService.unpublishEvent(event);
+
+      return updatedEvent;
+    } catch (error) {
+      throw new Error('Unable to unpublish event');
+    }
+  }
   /*
   [file] obj structure :
 
@@ -102,6 +142,7 @@ export default class EventService {
   }
   */
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async uploadFile(id: string, file: any): Promise<void> {
     // Get Root directory, then combine it into excel location
     const rootDir = __dirname.split('dist/apps/api')[0];

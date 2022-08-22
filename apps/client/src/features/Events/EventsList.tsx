@@ -1,5 +1,11 @@
 import { FC, useState } from 'react';
-import { CircularProgress, Collapse, Alert, AlertTitle } from '@mui/material';
+import {
+  CircularProgress,
+  Collapse,
+  Alert,
+  AlertTitle,
+  Stack,
+} from '@mui/material';
 import { useAllEvents } from './api/getEvents';
 import EventCard from './EventCard';
 
@@ -63,20 +69,11 @@ const EventsList: FC = () => {
   }
 
   return (
-    <>
+    <Stack spacing={3}>
       {events.map((event) => {
-        return (
-          <EventCard
-            key={event.id}
-            id={event.id}
-            name={event.name}
-            desc={event.description}
-            start={event.startDate}
-            end={event.endDate}
-          />
-        );
+        return <EventCard key={event.id} event={event} />;
       })}
-    </>
+    </Stack>
   );
 };
 

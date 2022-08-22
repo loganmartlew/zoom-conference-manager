@@ -5,3 +5,9 @@ export const db = () => ({
   password: process.env.PG_PASS || '',
   database: process.env.PG_DBNM || '',
 });
+
+export const zoom = () => ({
+  accountId: process.env.ZOOM_ACCOUNT_ID || '',
+  clientId: process.env.ZOOM_CLIENT_ID || '',
+  clientSecret: process.env.ZOOM_CLIENT_SECRET || '',
+});

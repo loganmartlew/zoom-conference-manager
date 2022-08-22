@@ -10,8 +10,9 @@ const EventDetailsPage: FC = () => {
 
   return (
     <>
-      <Typography variant='h3' sx={{ mb: 3 }}>
-        {data?.name || 'Event Details'}
+      <Typography variant='h3'>{data?.name || 'Event Details'}</Typography>
+      <Typography variant='subtitle1' sx={{ mb: 2 }}>
+        UBID: {data?.ubid || 'N/A'}
       </Typography>
       <EventDetails event={data} isLoading={isLoading} />
     </>

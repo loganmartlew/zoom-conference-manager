@@ -34,7 +34,7 @@ function CustomDatetimePicker<T>({
         <DateTimePicker
           {...field}
           views={['day', 'month', 'year', 'hours', 'minutes']}
-          inputFormat='DD/MM/YYYY hh:mm a'
+          inputFormat='DD/MM/YYYY hh:mm'
           ampm
           renderInput={(params) => (
             <TextField

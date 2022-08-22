@@ -1,17 +1,15 @@
-import { object, string, date, number } from 'yup';
+import { object, string, date } from 'yup';
 
 const meetingSchema = object({
-  ubid: string().required('UBID is required.'),
   name: string().required('Name is required.'),
-  startDateTime: date()
-    .nullable()
+  startDate: date()
     .typeError('Invalid date.')
     .required('Start date is required.'),
-  duration: number()
-    .required('Meeting duration is required.')
-    .positive('Number must be positive.')
-    .min(1, 'Meeting duration cannot be less than 1 minute.'),
-  eventId: string().required('Must select Event.'),
+  startTime: string().required('Start time is required.'),
+  // .matches(/^\d\d:\d\d$/),
+  endTime: string().required('End time is required'),
+  // .matches(/^\d\d:\d\d$/),
+  eventId: string().required('Must select an Event.'),
 });
 
 export default meetingSchema;
