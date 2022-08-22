@@ -16,6 +16,9 @@ export default class Event extends BaseEntity implements IEvent {
   id: string;
 
   @Column()
+  ubid: string;
+
+  @Column()
   name: string;
 
   @Column()

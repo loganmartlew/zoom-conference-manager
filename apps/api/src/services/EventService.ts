@@ -40,6 +40,7 @@ export default class EventService {
 
     if (!eventStub) throw new Error('Unable to create event');
 
+    eventStub.ubid = eventData.ubid;
     eventStub.name = eventData.name;
     eventStub.description = eventData.description;
     eventStub.startDate = eventData.startDate;
