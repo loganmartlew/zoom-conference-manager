@@ -68,7 +68,7 @@ export default class ZoomService {
 
     const zoomId = res.data.id;
 
-    await MeetingService.setZoomId(meeting.ubid, `${zoomId}`);
+    await MeetingService.setZoomId(meeting.id, `${zoomId}`);
   }
 
   static async deleteMeeting(meeting: Meeting) {

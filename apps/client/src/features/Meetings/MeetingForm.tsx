@@ -52,24 +52,31 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
   const { mutate, isLoading } = usePostMeeting(onPostSuccess, onPostError);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    const [startHours, startMinutes] = data.startTime.split(':');
-    const [endHours, endMinutes] = data.endTime.split(':');
+    const startDate = new Date(data.startDate);
+    const startTime = new Date(data.startTime);
+    const endTime = new Date(data.endTime);
 
-    const start = dayjs(data.startDate)
-      .set('hours', +startHours)
-      .set('minutes', +startMinutes);
-    const end = dayjs(data.startDate)
-      .set('hours', +endHours)
-      .set('minutes', +endMinutes);
+    const startHours = startTime.getHours();
+    const startMinutes = startTime.getMinutes();
+    const endHours = endTime.getHours();
+    const endMinutes = endTime.getMinutes();
+
+    const start = dayjs(startDate)
+      .set('hours', startHours)
+      .set('minutes', startMinutes);
+    const end = dayjs(startDate)
+      .set('hours', endHours)
+      .set('minutes', endMinutes);
 
     if (start.isAfter(end)) {
       end.add(1, 'day');
     }
 
     const meetingData: MeetingDTO = {
-      ...data,
+      name: data.name,
       startDateTime: dayjs(start).format(formats.dateTime),
       endDateTime: dayjs(end).format(formats.dateTime),
+      eventId: data.eventId,
     };
 
     mutate(meetingData);

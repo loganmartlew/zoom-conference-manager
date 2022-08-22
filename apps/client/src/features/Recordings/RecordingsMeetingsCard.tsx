@@ -44,7 +44,7 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
     >
       <Stack direction='row' spacing={4}>
         <Stack spacing={2}>
-          <Typography
+          {/* <Typography
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -56,7 +56,7 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
             <Typography variant='body2' display='inline'>
               {meeting.ubid}
             </Typography>
-          </Typography>
+          </Typography> */}
 
           <Typography
             sx={{

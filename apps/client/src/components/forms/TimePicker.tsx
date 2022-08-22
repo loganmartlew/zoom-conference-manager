@@ -5,6 +5,8 @@ import {
   RegisterOptions,
   Path,
   FieldError,
+  FieldErrors,
+  Merge,
 } from 'react-hook-form';
 import { TimePicker } from '@mui/x-date-pickers';
 
@@ -12,7 +14,7 @@ interface Props<T> {
   name: Path<T>;
   label: string;
   control: Control<T>;
-  error: FieldError | void;
+  error: Merge<FieldError, FieldErrors<Date>> | undefined;
   rules?: RegisterOptions;
 }
 
