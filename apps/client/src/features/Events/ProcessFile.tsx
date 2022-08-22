@@ -17,7 +17,7 @@ const Process: FC<Props> = (props) => {
   const send = () => {
     const formData = new FormData();
     formData.append('excelFile', files[0]);
-    axios.post(`/events/:Id/upload`, formData, {
+    axios.post(`/events/:id/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -8,11 +8,12 @@ import {
   PublishEvent,
   UnpublishEvent,
   UploadFile,
-  MulterRequest,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import formidable, { File } from 'formidable';
 import EventService from '../services/EventService';
+import { Logger } from '../loaders/logger';
 
 export const createEvent: CreateEvent = async (req: Request) => {
   const { eventData } = req.body;
@@ -25,6 +26,8 @@ export const createEvent: CreateEvent = async (req: Request) => {
       data: newEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to create Event',
@@ -69,6 +72,8 @@ export const updateEvent: UpdateEvent = async (req: Request) => {
       data: updatedEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to update Event ',
@@ -88,6 +93,8 @@ export const publishEvent: PublishEvent = async (req: Request) => {
       data: publishedEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to publish Event ',
@@ -107,6 +114,8 @@ export const unpublishEvent: UnpublishEvent = async (req: Request) => {
       data: unpublishedEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to unpublish Event ',
@@ -136,16 +145,28 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
 export const uploadFile: UploadFile = async (req: Request) => {
   /// Add [file] into [req], happens in Runtime
   // eslint-disable-next-line prefer-destructuring
-  const file = (req as MulterRequest).file;
   const { id } = req.params;
 
+  const form = formidable({ multiples: false });
+
   try {
-    await EventService.uploadFile(id, file);
+    form.parse(req, async (err, _, files) => {
+      if (err || !files.excelFile) {
+        throw new Error(err);
+      }
+
+      await EventService.uploadFile(id, {
+        path: (files.excelFile as File).filepath,
+      });
+    });
+
     return { status: StatusCodes.OK, message: 'File uploaded' };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: `Fail to extract datas from excel; ${error}`,
+      message: `Fail to extract data from file; ${error}`,
     };
   }
 };
