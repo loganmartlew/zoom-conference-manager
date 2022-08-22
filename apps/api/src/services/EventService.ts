@@ -1,10 +1,12 @@
-/* eslint-disable import/no-cycle */ import XLSX from 'xlsx';
+/* eslint-disable import/no-cycle */
+import XLSX from 'xlsx';
 import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
 import Event from '../entities/Event';
 import ZoomService from './ZoomService';
-import extractExcelData from '../util/extractExcel';
+import MeetingService from './MeetingService';
+import { MeetingBuilder } from '../util/MeetingBuilder';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -31,6 +33,17 @@ export default class EventService {
     if (!event) {
       throw new Error('Event not found');
     }
+
+    event.meetings.sort((a, b) => {
+      if (a.startDateTime < b.startDateTime) {
+        return -1;
+      }
+      if (a.startDateTime > b.startDateTime) {
+        return 1;
+      }
+
+      return 0;
+    });
 
     return event;
   }
@@ -115,7 +128,7 @@ export default class EventService {
     }
   }
   /*
-  [file] parameter :
+  [file] obj structure :
 
   File:  {
     fieldname: 'excelFile',
@@ -130,25 +143,32 @@ export default class EventService {
   */
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async uploadFile(file: any): Promise<void> {
-    try {
-      // Get Root directory, then combine it into excel location
-      const rootDir = __dirname.split('dist/apps/api')[0];
-      const excelFileLocation = rootDir + file.path;
+  static async uploadFile(id: string, file: any): Promise<void> {
+    // Get Root directory, then combine it into excel location
+    const rootDir = __dirname.split('dist/apps/api')[0];
+    const excelFileLocation = rootDir + file.path;
 
+    try {
       const workBook = XLSX.readFile(excelFileLocation);
 
-      // Create List of meeting from excel file
-      const meetingList = extractExcelData(workBook);
+      const agenda = workBook.Sheets.Agenda;
+      const builder = new MeetingBuilder(id, agenda);
+
+      const meetingList = builder.getMeetings();
+
+      await Promise.all(
+        await meetingList.map((meetingDto) => {
+          return MeetingService.create(meetingDto);
+        })
+      );
 
       console.log('Meeting List: ', meetingList);
 
       // Remove the excel file from system
       fs.unlinkSync(excelFileLocation);
-
-      // TODO : Schedule Meeting from the [meetingList]
     } catch (error) {
-      throw new Error('Unable to read the Excel File');
+      fs.unlinkSync(excelFileLocation);
+      throw error;
     }
   }
 }
