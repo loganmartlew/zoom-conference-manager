@@ -5,44 +5,38 @@ import {
   RegisterOptions,
   Path,
   FieldError,
+  FieldErrors,
+  Merge,
 } from 'react-hook-form';
-import { DateTimePicker } from '@mui/x-date-pickers';
-import locale from 'dayjs/locale/en-nz';
+import { TimePicker } from '@mui/x-date-pickers';
 
 interface Props<T> {
   name: Path<T>;
   label: string;
   control: Control<T>;
-  error: FieldError | void;
+  error: Merge<FieldError, FieldErrors<Date>> | undefined;
   rules?: RegisterOptions;
 }
 
 // eslint-disable-next-line react/function-component-definition
-function CustomDatetimePicker<T>({
-  name,
-  label,
-  control,
-  rules,
-  error,
-}: Props<T>) {
+function CustomTimePicker<T>({ name, label, control, rules, error }: Props<T>) {
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
       render={({ field }) => (
-        <DateTimePicker
+        <TimePicker
           {...field}
-          views={['day', 'month', 'year', 'hours', 'minutes']}
-          inputFormat='DD/MM/YYYY hh:mm'
-          ampm
+          views={['hours', 'minutes']}
+          inputFormat='HH:mm'
           renderInput={(params) => (
             <TextField
               {...params}
               label={label}
               required={!!rules?.required}
               error={!!error}
-              helperText={error?.message || locale.formats.L?.toLowerCase()}
+              helperText={error?.message || 'HH:mm (24 hour format)'}
             />
           )}
         />
@@ -51,4 +45,4 @@ function CustomDatetimePicker<T>({
   );
 }
 
-export default CustomDatetimePicker;
+export default CustomTimePicker;

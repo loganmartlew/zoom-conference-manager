@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import eventDtoSchema from './eventDtoSchema';
 
 export interface IFormInput {
+  ubid: string;
   name: string;
   description: string;
   startDate: Date;

@@ -37,7 +37,7 @@ export const assignMeetings = (
 
   const unassignedMeetings = meetings.filter((meeting) => {
     const isAssigned = assignedMeetings.find(
-      (assignedMeeting) => assignedMeeting.ubid === meeting.ubid
+      (assignedMeeting) => assignedMeeting.id === meeting.id
     );
     return !isAssigned;
   });

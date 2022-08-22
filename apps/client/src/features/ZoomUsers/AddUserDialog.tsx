@@ -51,6 +51,7 @@ const AddUserDialog: FC<Props> = ({ open, handleClose, onConfirm }) => {
               label='Name'
               control={control}
               error={errors.name}
+              autoFocus
             />
             <TextInput
               name='email'

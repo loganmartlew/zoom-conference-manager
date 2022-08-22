@@ -13,10 +13,18 @@ interface Props<T> {
   control: Control<T>;
   error: FieldError | void;
   rules?: RegisterOptions;
+  autoFocus?: boolean;
 }
 
 // eslint-disable-next-line react/function-component-definition
-function TextInput<T>({ name, label, control, rules, error }: Props<T>) {
+function TextInput<T>({
+  name,
+  label,
+  control,
+  rules,
+  error,
+  autoFocus,
+}: Props<T>) {
   return (
     <Controller
       name={name}
@@ -29,6 +37,7 @@ function TextInput<T>({ name, label, control, rules, error }: Props<T>) {
           required={!!rules?.required}
           error={!!error}
           helperText={error?.message}
+          autoFocus={autoFocus}
         />
       )}
     />

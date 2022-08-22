@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import {
   Entity,
   BaseEntity,
@@ -10,9 +11,12 @@ import { EventStatus } from '@zoom-conference-manager/types';
 import Meeting from './Meeting';
 
 @Entity()
-export default class Event extends BaseEntity {
+export default class Event extends BaseEntity implements IEvent {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column()
+  ubid: string;
 
   @Column()
   name: string;

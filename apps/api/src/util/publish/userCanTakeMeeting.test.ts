@@ -8,19 +8,19 @@ describe('userCanTakeMeeting', () => {
   const userMeetings: Meeting[] = [
     {
       startDateTime: dayjs('2022-08-01 14:00:00', dateFormat).toDate(),
-      duration: 60,
+      endDateTime: dayjs('2022-08-01 15:00:00', dateFormat).toDate(),
     } as Meeting,
   ];
 
   test('should return true if user can take meeting', () => {
     const meetingBefore: Meeting = {
       startDateTime: dayjs('2022-08-01 12:00:00', dateFormat).toDate(),
-      duration: 60,
+      endDateTime: dayjs('2022-08-01 13:00:00', dateFormat).toDate(),
     } as Meeting;
 
     const meetingAfter: Meeting = {
       startDateTime: dayjs('2022-08-01 16:00:00', dateFormat).toDate(),
-      duration: 60,
+      endDateTime: dayjs('2022-08-01 17:00:00', dateFormat).toDate(),
     } as Meeting;
 
     expect(userCanTakeMeeting(userMeetings, meetingBefore)).toBe(true);
@@ -32,16 +32,16 @@ describe('userCanTakeMeeting', () => {
 
     const meeting: Meeting = {
       startDateTime: dayjs('2022-08-01 15:00:00', dateFormat).toDate(),
-      duration: 60,
+      endDateTime: dayjs('2022-08-01 16:00:00', dateFormat).toDate(),
     } as Meeting;
 
-    expect(userCanTakeMeeting(doubledMeetings, meeting)).toBe(false);
+    expect(userCanTakeMeeting(doubledMeetings, meeting, 1)).toBe(false);
   });
 
   test('should allow specified number of concurrent meetings', () => {
     const meeting: Meeting = {
       startDateTime: dayjs('2022-08-01 15:00:00', dateFormat).toDate(),
-      duration: 60,
+      endDateTime: dayjs('2022-08-01 16:00:00', dateFormat).toDate(),
     } as Meeting;
 
     expect(userCanTakeMeeting(userMeetings, meeting, 1)).toBe(false);

@@ -9,7 +9,6 @@ interface Props {
 }
 
 const MeetingCard: FC<Props> = ({ meeting }) => {
-  const dateTime = dayjs(meeting.startDateTime);
   return (
     <Paper
       sx={{
@@ -32,22 +31,22 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
           </IconButton>
         </Stack>
 
-        <Stack direction='row' spacing={4}>
-          <Stack spacing={2}>
-            <Typography
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3em',
-                width: 'max-content',
-              }}
-            >
-              UBID:
-              <Typography variant='body2' display='inline'>
-                {meeting.ubid}
-              </Typography>
+        <Stack spacing={2}>
+          <Typography
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3em',
+              width: 'max-content',
+            }}
+          >
+            Date:
+            <Typography variant='body2'>
+              {dayjs(meeting.startDateTime).format('YYYY-MM-DD')}
             </Typography>
+          </Typography>
 
+          <Stack spacing={4} direction='row'>
             <Typography
               sx={{
                 display: 'flex',
@@ -57,22 +56,8 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
               }}
             >
               Start Time:
-              <Typography variant='body2'>{dateTime.format('HHmm')}</Typography>
-            </Typography>
-          </Stack>
-
-          <Stack spacing={2}>
-            <Typography
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3em',
-                width: 'max-content',
-              }}
-            >
-              Date:
               <Typography variant='body2'>
-                {dateTime.format('YYYY-MM-DD')}
+                {dayjs(meeting.startDateTime).format('HHmm')}
               </Typography>
             </Typography>
 
@@ -86,7 +71,7 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             >
               End Time:
               <Typography variant='body2'>
-                {dateTime.add(meeting.duration, 'minute').format('HHmm')}
+                {dayjs(meeting.endDateTime).format('HHmm')}
               </Typography>
             </Typography>
           </Stack>
