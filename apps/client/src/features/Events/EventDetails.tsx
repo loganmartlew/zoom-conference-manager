@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
 import { Stack, Typography, Button } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
 import { usePublish } from './usePublish';
 import PublishDialog from './PublishDialog';
 import Process from './ProcessFile';
+import ClearMeetingsButton from './ClearMeetingsButton';
 
 interface Props {
   event: IEvent | undefined;
@@ -82,17 +83,8 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
           >
             Add Meeting
           </Button>
-
           <Process />
-
-          <Button
-            variant='contained'
-            size='small'
-            color='error'
-            startIcon={<Delete />}
-          >
-            Clear Meetings
-          </Button>
+          <ClearMeetingsButton eventId={event.id} />
         </Stack>
         <MeetingsList meetings={event.meetings} />
       </Stack>

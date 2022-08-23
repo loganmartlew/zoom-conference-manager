@@ -26,6 +26,7 @@ export type PublishEvent = Controller<IEvent>;
 export type UnpublishEvent = Controller<IEvent>;
 export type DeleteEvent = Controller<void>;
 export type UploadFile = Controller<void>;
+export type ClearEventMeetings = Controller<void>;
 
 export type CreateMeeting = Controller<IMeeting>;
 export type GetMeeting = Controller<IMeeting>;
