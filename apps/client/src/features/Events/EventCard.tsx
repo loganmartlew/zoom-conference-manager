@@ -55,7 +55,9 @@ const EventCard: FC<Props> = ({ event }) => {
           <EventStatusBadge status={event.status} />
           <Stack direction='row' spacing={1}>
             <Groups />
-            <Typography>0 Meetings</Typography>
+            <Typography>{`${event.meetings.length} Meeting${
+              event.meetings.length === 1 ? '' : 's'
+            }`}</Typography>
           </Stack>
         </Stack>
         <Typography
