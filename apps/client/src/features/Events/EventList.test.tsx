@@ -2,6 +2,7 @@
 // import { QueryClientProvider, QueryClient } from 'react-query';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { renderWithRouter, screen } from '../../test-utils';
 // import EventList from './EventsList';
 import EventCard from './EventCard';
@@ -30,6 +31,7 @@ describe('Test EventList', () => {
   test('A card can be made with specified props', async () => {
     const event: IEvent = {
       id: '1',
+      ubid: '24',
       name: 'Test Event',
       description: 'Test Event Description',
       startDate: '2020-01-01',
@@ -38,7 +40,12 @@ describe('Test EventList', () => {
       meetings: [],
     };
 
-    renderWithRouter(<EventCard key={0} event={event} />, {});
+    renderWithRouter(
+      <QueryClientProvider client={new QueryClient()}>
+        <EventCard key={0} event={event} />
+      </QueryClientProvider>,
+      {}
+    );
 
     const cardName = screen.getByText(/^Test Event$/i);
     const cardDesc = screen.getByText(/Test Event Description/i);
