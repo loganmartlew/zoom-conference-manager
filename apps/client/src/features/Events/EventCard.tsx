@@ -5,6 +5,7 @@ import { Paper, Stack, Typography, Button, IconButton } from '@mui/material';
 import { Groups, Delete } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useDeleteEvent } from './api/deleteEvent';
 
 interface Props {
   event: IEvent;
@@ -13,8 +14,18 @@ interface Props {
 const EventCard: FC<Props> = ({ event }) => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const deleteEvent = () => {
+  const onDeleteSuccess = () => {
     setOpen(false);
+  };
+
+  const onDeleteError = (err: unknown) => {
+    console.log(err);
+  };
+
+  const { mutate } = useDeleteEvent(onDeleteSuccess, onDeleteError);
+
+  const deleteEvent = () => {
+    mutate(event.id);
   };
 
   return (
