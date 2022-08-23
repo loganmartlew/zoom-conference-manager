@@ -1,14 +1,32 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
 import { Paper, Stack, Typography, IconButton } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useDeleteMeeting } from './api/deleteMeeting';
 
 interface Props {
   meeting: IMeeting;
 }
 
 const MeetingCard: FC<Props> = ({ meeting }) => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const onDeleteSuccess = () => {
+    setOpen(false);
+  };
+
+  const onDeleteError = (err: unknown) => {
+    console.log(err);
+  };
+
+  const { mutate } = useDeleteMeeting(onDeleteSuccess, onDeleteError);
+
+  const deleteEvent = () => {
+    mutate(meeting.id);
+  };
+
   return (
     <Paper
       sx={{
@@ -29,6 +47,13 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
           <IconButton size='small' color='error'>
             <Delete fontSize='small' />
           </IconButton>
+          <ConfirmationDialog
+            open={open}
+            handleClose={() => setOpen(false)}
+            onConfirm={deleteEvent}
+            title='Delete Meeting'
+            text='Are you sure you want to delete the meeting?'
+          />
         </Stack>
 
         <Stack spacing={2}>
