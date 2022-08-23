@@ -15,11 +15,11 @@ export default async () => {
     database: dbVars.database,
     synchronize: true,
     entities,
-    // extra: {
-    //   ssl: {
-    //     rejectUnauthorized: false,
-    //   },
-    // },
+    extra: {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
   });
 
   try {
