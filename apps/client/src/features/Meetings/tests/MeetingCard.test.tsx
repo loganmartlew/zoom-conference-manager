@@ -7,7 +7,7 @@ describe('Test MeetingCard', () => {
     renderWithRouter(
       <MeetingCard
         meeting={{
-          ubid: '1',
+          id: '1',
           name: 'test',
           startDateTime: dayjs('2022-08-22 12:00').toDate(),
           endDateTime: dayjs('2022-08-22 12:30').toDate(),
