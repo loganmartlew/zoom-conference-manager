@@ -144,7 +144,9 @@ export default class EventService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async uploadFile(id: string, file: any): Promise<void> {
-    const excelFileLocation = file.path;
+    // Get Root directory, then combine it into excel location
+    const rootDir = __dirname.split('dist/apps/api')[0];
+    const excelFileLocation = rootDir + file.path;
 
     try {
       const workBook = XLSX.readFile(excelFileLocation);
@@ -155,12 +157,12 @@ export default class EventService {
       const meetingList = builder.getMeetings();
 
       await Promise.all(
-        await meetingList.map((meetingDto) => {
-          return MeetingService.create(meetingDto);
+        await meetingList.map(async (meetingDto) => {
+          // console.log(meetingDto);
+          // eslint-disable-next-line @typescript-eslint/return-await
+          return await MeetingService.create(meetingDto);
         })
       );
-
-      console.log('Meeting List: ', meetingList);
 
       // Remove the excel file from system
       fs.unlinkSync(excelFileLocation);

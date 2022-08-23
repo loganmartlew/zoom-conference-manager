@@ -1,8 +1,10 @@
 import { FC, useState } from 'react';
 import { DropzoneDialog } from 'react-mui-dropzone';
+import { useQueryClient } from 'react-query';
 import { Button } from '@mui/material';
 import { Upload } from '@mui/icons-material';
-import { axios } from '../../config/axios';
+import { FileUploadData, useUploadFile } from './api/uploadFile';
+import { eventKey } from './api/getEvent';
 // import FileUpload from '../features/AddAccount/FileProcess';
 
 interface Props {
@@ -11,19 +13,24 @@ interface Props {
 
 const UploadDialog: FC<Props> = (props) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [files, setFiles] = useState<File[]>([]);
+  // const [files, setFiles] = useState<File[]>([]);
   const { id } = props;
 
-  const send = () => {
-    const formData = new FormData();
-    formData.append('excelFile', files[0]);
-    axios.post(`/events/${id}/upload`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  const queryClient = useQueryClient();
 
+  const onPostSuccess = () => {};
+
+  const onPostError = (error: unknown, variables: FileUploadData) => {
+    console.log(error, variables);
+  };
+
+  const { mutate } = useUploadFile(onPostSuccess, onPostError);
+
+  const send = (files: File[]) => {
     setOpen(false);
+    mutate({ file: files[0], eventId: id });
+
+    queryClient.refetchQueries([...eventKey, id]);
   };
 
   return (
@@ -44,8 +51,8 @@ const UploadDialog: FC<Props> = (props) => {
         open={open}
         onClose={() => setOpen(false)}
         onSave={(newFiles) => {
-          setFiles(newFiles);
-          send();
+          // setFiles(newFiles);
+          send(newFiles);
         }}
       />
     </>

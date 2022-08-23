@@ -8,10 +8,10 @@ import {
   PublishEvent,
   UnpublishEvent,
   UploadFile,
+  MulterRequest,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import formidable, { File } from 'formidable';
 import EventService from '../services/EventService';
 import { Logger } from '../loaders/logger';
 
@@ -145,28 +145,18 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
 export const uploadFile: UploadFile = async (req: Request) => {
   /// Add [file] into [req], happens in Runtime
   // eslint-disable-next-line prefer-destructuring
+  const file = (req as MulterRequest).file;
   const { id } = req.params;
 
-  const form = formidable({ multiples: false });
-
   try {
-    form.parse(req, async (err, _, files) => {
-      if (err || !files.excelFile) {
-        throw new Error(err);
-      }
-
-      await EventService.uploadFile(id, {
-        path: (files.excelFile as File).filepath,
-      });
-    });
-
+    await EventService.uploadFile(id, file);
     return { status: StatusCodes.OK, message: 'File uploaded' };
   } catch (error) {
     Logger.error(error);
 
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: `Fail to extract data from file; ${error}`,
+      message: `Fail to extract datas from excel; ${error}`,
     };
   }
 };
