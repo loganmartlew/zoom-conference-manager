@@ -81,6 +81,20 @@ export default class EventService {
     return result.affected > 0;
   }
 
+  static async clearMeetings(id: string): Promise<boolean> {
+    const event = await this.getOne(id);
+
+    await Promise.all(
+      event.meetings.map((meeting) => {
+        return MeetingService.delete(meeting.id);
+      })
+    );
+
+    const updatedEvent = await this.getOne(id);
+
+    return updatedEvent.meetings.length === 0;
+  }
+
   static async update(id: string, eventData: EventDTO): Promise<Event> {
     try {
       const event = await this.getOne(id);

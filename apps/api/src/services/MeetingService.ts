@@ -1,7 +1,6 @@
 /* eslint-disable import/no-cycle */
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { formats } from '@zoom-conference-manager/dates';
-import { EventStatus } from '@zoom-conference-manager/types';
 import dayjs from 'dayjs';
 import Meeting from '../entities/Meeting';
 import EventService from './EventService';
