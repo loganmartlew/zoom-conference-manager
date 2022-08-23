@@ -68,6 +68,14 @@ export default class EventService {
   }
 
   static async delete(id: string): Promise<boolean> {
+    const event = await this.getOne(id);
+
+    await Promise.all(
+      event.meetings.map((meeting) => {
+        return MeetingService.delete(meeting.id);
+      })
+    );
+
     const result = await Event.delete(id);
     if (!result.affected) return false;
     return result.affected > 0;

@@ -1,9 +1,11 @@
 /* eslint-disable import/no-cycle */
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { formats } from '@zoom-conference-manager/dates';
+import { EventStatus } from '@zoom-conference-manager/types';
 import dayjs from 'dayjs';
 import Meeting from '../entities/Meeting';
 import EventService from './EventService';
+import ZoomService from './ZoomService';
 
 export default class MeetingService {
   static async getAll() {
@@ -58,5 +60,15 @@ export default class MeetingService {
     } catch (error) {
       throw new Error('Unable to set Meetings Zoom id');
     }
+  }
+
+  static async delete(id: string) {
+    const meeting = await this.getOne(id);
+
+    await ZoomService.deleteMeeting(meeting);
+
+    const result = await Meeting.delete(id);
+    if (!result.affected) return false;
+    return result.affected > 0;
   }
 }

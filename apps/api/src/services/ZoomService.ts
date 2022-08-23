@@ -73,14 +73,14 @@ export default class ZoomService {
 
   static async deleteMeeting(meeting: Meeting) {
     if (!meeting.zoomId) {
-      Logger.error(`Unable to delete meeting ${meeting.name}`);
+      Logger.error(`Unable to delete meeting ${meeting.name} from Zoom`);
       return;
     }
 
     try {
       await axios.delete(`/meetings/${meeting.zoomId}`);
     } catch (e) {
-      Logger.error(`Unable to delete meeting ${meeting.name}`);
+      Logger.error(`Unable to delete meeting ${meeting.name} from Zoom`);
     }
   }
 }

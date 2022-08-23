@@ -19,7 +19,8 @@ export const useDeleteMeeting = (
     onError,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSettled: (_, __, id) => {
-      queryClient.invalidateQueries([...eventKey, id]);
+      queryClient.invalidateQueries([...eventKey]);
+      queryClient.refetchQueries([...eventKey]);
     },
   });
 

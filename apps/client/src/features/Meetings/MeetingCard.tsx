@@ -44,7 +44,7 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             <Edit fontSize='small' />
           </IconButton>
 
-          <IconButton size='small' color='error'>
+          <IconButton size='small' color='error' onClick={() => setOpen(true)}>
             <Delete fontSize='small' />
           </IconButton>
           <ConfirmationDialog
