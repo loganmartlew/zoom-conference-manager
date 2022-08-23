@@ -14,6 +14,7 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
+import copy from 'copy-to-clipboard';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 
 interface Props {
@@ -35,6 +36,10 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
     setOpen(false);
   };
 
+  const copyLink = () => {
+    copy('test link');
+  };
+
   return (
     <Paper
       sx={{
@@ -44,7 +49,7 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
     >
       <Stack direction='row' spacing={4}>
         <Stack spacing={2}>
-          {/* <Typography
+          <Typography
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -52,11 +57,22 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
               width: 'max-content',
             }}
           >
-            UBID:
-            <Typography variant='body2' display='inline'>
-              {meeting.ubid}
+            Name: {meeting.name}
+          </Typography>
+
+          <Typography
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3em',
+              width: 'max-content',
+            }}
+          >
+            Date:
+            <Typography variant='body2'>
+              {dateTime.format('YYYY-MM-DD')}
             </Typography>
-          </Typography> */}
+          </Typography>
 
           <Typography
             sx={{
@@ -79,23 +95,9 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
                 width: 'max-content',
               }}
             >
-              Date:
-              <Typography variant='body2'>
-                {dateTime.format('YYYY-MM-DD')}
-              </Typography>
-            </Typography>
-
-            <Typography
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3em',
-                width: 'max-content',
-              }}
-            >
               End Time:
               <Typography variant='body2'>
-                {dateTimeEnd.format('HH:mm')};
+                {dateTimeEnd.format('HH:mm')}
               </Typography>
             </Typography>
           </Stack>
@@ -118,7 +120,7 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
                   InputLabelProps={{ shrink: false }}
                 />
                 <Tooltip title='Copy to Clipboard'>
-                  <IconButton size='small' color='primary'>
+                  <IconButton size='small' color='primary' onClick={copyLink}>
                     <ContentPasteGoIcon fontSize='small' />
                   </IconButton>
                 </Tooltip>
