@@ -1,11 +1,22 @@
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Stack, Typography, Button } from '@mui/material';
 
 const RehearsalsPage: FC = () => {
   return (
-    <Typography variant='h3' sx={{ mb: 3 }}>
-      Rehearsals
-    </Typography>
+    <Stack direction='row' spacing={7}>
+      <Typography variant='h3' sx={{ mb: 3 }}>
+        Rehearsals
+      </Typography>
+      <Button
+        variant='contained'
+        sx={{
+          width = 'max-content',
+          height: 'max-content',
+        }}
+      >
+        Create Rehearsal
+      </Button>
+    </Stack>
   );
 };
 
