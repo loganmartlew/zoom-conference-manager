@@ -10,7 +10,7 @@ const RehearsalsPage: FC = () => {
       <Button
         variant='contained'
         sx={{
-          width = 'max-content',
+          width: 'max-content',
           height: 'max-content',
         }}
       >
