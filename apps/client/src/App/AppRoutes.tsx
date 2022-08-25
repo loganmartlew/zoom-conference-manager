@@ -11,6 +11,7 @@ import ZoomUsersPage from '../pages/ZoomUsersPage';
 import RecordingsPage from '../pages/RecordingsPage';
 import RecordingsDetailsPage from '../pages/RecordingsDetailsPage';
 import RehearsalsPage from '../pages/RehearsalsPage';
+import NewRehearsalsPage from '../pages/NewRehearsalsPage';
 
 const AppRoutes: FC = () => {
   return (
@@ -28,6 +29,7 @@ const AppRoutes: FC = () => {
           <Route path='/recordings' element={<RecordingsPage />} />
           <Route path='/recordings/:id' element={<RecordingsDetailsPage />} />
           <Route path='/rehearsals' element={<RehearsalsPage />} />
+          <Route path='/create-rehearsal' element={<NewRehearsalsPage />} />
         </Route>
       </Routes>
     </Router>

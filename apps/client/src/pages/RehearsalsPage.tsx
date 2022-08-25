@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { Stack, Typography, Button } from '@mui/material';
 
 const RehearsalsPage: FC = () => {
@@ -9,6 +10,8 @@ const RehearsalsPage: FC = () => {
       </Typography>
       <Button
         variant='contained'
+        component={Link}
+        to='/create-rehearsal'
         sx={{
           width: 'max-content',
           height: 'max-content',
