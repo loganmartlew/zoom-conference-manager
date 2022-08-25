@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { Typography } from '@mui/material';
 
-const RehersalsPage: FC = () => {
+const RehearsalsPage: FC = () => {
   return (
     <Typography variant='h3' sx={{ mb: 3 }}>
-      Rehersals
+      Rehearsals
     </Typography>
   );
 };
 
-export default RehersalsPage;
+export default RehearsalsPage;

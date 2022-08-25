@@ -10,7 +10,7 @@ import AddAccount from '../pages/AddAccount';
 import ZoomUsersPage from '../pages/ZoomUsersPage';
 import RecordingsPage from '../pages/RecordingsPage';
 import RecordingsDetailsPage from '../pages/RecordingsDetailsPage';
-import RehersalsPage from '../pages/RehersalsPage';
+import RehearsalsPage from '../pages/RehearsalsPage';
 
 const AppRoutes: FC = () => {
   return (
@@ -27,7 +27,7 @@ const AppRoutes: FC = () => {
           <Route path='/zoom-users' element={<ZoomUsersPage />} />
           <Route path='/recordings' element={<RecordingsPage />} />
           <Route path='/recordings/:id' element={<RecordingsDetailsPage />} />
-          <Route path='/rehersals' element={<RehersalsPage />} />
+          <Route path='/rehearsals' element={<RehearsalsPage />} />
         </Route>
       </Routes>
     </Router>
