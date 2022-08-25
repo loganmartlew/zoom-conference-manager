@@ -9,6 +9,7 @@ import {
   PersonAdd,
   People,
   VideoFile,
+  CoPresent,
 } from '@mui/icons-material';
 import TopBar from './TopBar';
 import SideNavigation, { DrawerHeader } from './SideNavigation';
@@ -21,6 +22,7 @@ const items: NavItem[] = [
   { text: 'Events', path: '/events', icon: <Event /> },
   { text: 'New Event', path: '/new-event', icon: <AddBox /> },
   { text: 'New Meeting', path: '/new-meeting', icon: <AddBox /> },
+  { text: 'Rehersals', path: '/rehersals', icon: <CoPresent /> },
   { text: 'Recordings', path: '/recordings', icon: <VideoFile /> },
   { text: 'Add Account', path: '/add-account', icon: <PersonAdd /> },
   { text: 'Zoom Users', path: '/zoom-users', icon: <People /> },
