@@ -3,6 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MeetingData } from './MeetingTypes/UpdateMeetingTypes';
 import UpdateMeeting from './UpdateMeeting';
 
+/**
+ * This function creates a mock of meeting data
+ * to fetch.
+ * @returns
+ */
 const getMockMeetingData = (): MeetingData => {
   const meeting: MeetingData = {
     id: 'mockid',
@@ -13,6 +18,15 @@ const getMockMeetingData = (): MeetingData => {
   return meeting;
 };
 
+/**
+ * This function creates a mock update meeting
+ * note this isn't a functional piece of code
+ * it is mainly used to act as the prop
+ * to allow for editing of the code.
+ * @param id placerholder id
+ * @param meetingData placeholder meeting data
+ * @returns
+ */
 const mockUpdateFunction = (
   id: string,
   meetingData: MeetingData

@@ -97,7 +97,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     } catch (e) {
       setUpdateMeetingAlert({
         active: true,
-        alertText: 'Error Updating Meeting',
+        alertText: 'Error Updating Meeting Please Review Your Inputs!',
       });
     }
   };

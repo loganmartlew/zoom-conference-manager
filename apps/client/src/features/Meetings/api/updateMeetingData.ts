@@ -5,5 +5,5 @@ export const updateMeetingData = (
   id: string,
   meetingData: MeetingData
 ): Promise<MeetingData> => {
-  return axios.patch(`meetings/${id}`, { meetingData });
+  return axios.put(`meetings/${id}`, { meetingData });
 };
