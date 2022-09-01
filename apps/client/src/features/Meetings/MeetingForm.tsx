@@ -11,9 +11,10 @@ import {
   styled,
 } from '@mui/material';
 import dayjs from 'dayjs';
+import DatePicker from '../../components/forms/DatePicker';
+import TimePicker from '../../components/forms/TimePicker';
 import TextInput from '../../components/forms/TextInput';
 import Select from '../../components/forms/Select';
-import DatetimePicker from '../../components/forms/DatetimePicker';
 import { IFormInput, useMeetingForm } from './useMeetingForm';
 import { usePostMeeting } from './api/postMeeting';
 
@@ -51,12 +52,33 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
   const { mutate, isLoading } = usePostMeeting(onPostSuccess, onPostError);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    const startDate = new Date(data.startDate);
+    const startTime = new Date(data.startTime);
+    const endTime = new Date(data.endTime);
+
+    const startHours = startTime.getHours();
+    const startMinutes = startTime.getMinutes();
+    const endHours = endTime.getHours();
+    const endMinutes = endTime.getMinutes();
+
+    const start = dayjs(startDate)
+      .set('hours', startHours)
+      .set('minutes', startMinutes);
+    const end = dayjs(startDate)
+      .set('hours', endHours)
+      .set('minutes', endMinutes);
+
+    if (start.isAfter(end)) {
+      end.add(1, 'day');
+    }
+
     const meetingData: MeetingDTO = {
-      ...data,
-      startDateTime: dayjs(data.startDateTime).format(formats.dateTime),
+      name: data.name,
+      startDateTime: dayjs(start).format(formats.dateTime),
+      endDateTime: dayjs(end).format(formats.dateTime),
+      eventId: data.eventId,
     };
 
-    // console.log(meetingData);
     mutate(meetingData);
   };
 
@@ -73,28 +95,29 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
     >
       <Stack spacing={2}>
         <TextInput
-          name='ubid'
-          label='UBID'
-          control={control}
-          error={errors.ubid}
-        />
-        <TextInput
           name='name'
           label='Name'
           control={control}
           error={errors.name}
+          autoFocus
         />
-        <DatetimePicker
-          name='startDateTime'
-          label='Meeting Date and Time'
+        <DatePicker
+          name='startDate'
+          label='Date'
           control={control}
-          error={errors.startDateTime as FieldError | void}
+          error={errors.startDate as FieldError | void}
         />
-        <TextInput
-          name='duration'
-          label='Meeting Duration (minutes)'
+        <TimePicker
+          name='startTime'
+          label='Start Time'
           control={control}
-          error={errors.duration}
+          error={errors.startTime}
+        />
+        <TimePicker
+          name='endTime'
+          label='End Time'
+          control={control}
+          error={errors.endTime}
         />
         <Select
           name='eventId'
