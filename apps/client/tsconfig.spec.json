@@ -14,8 +14,9 @@
     "**/*.spec.js",
     "**/*.test.jsx",
     "**/*.spec.jsx",
-    "**/*.d.ts"
-, "src/features/Meetings/tests/RemoveMeeting.tsx"  ],
+    "**/*.d.ts",
+    "src/features/Meetings/tests/RemoveMeeting.tsx"
+  ],
   "files": [
     "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",
     "../../node_modules/@nrwl/react/typings/image.d.ts"
