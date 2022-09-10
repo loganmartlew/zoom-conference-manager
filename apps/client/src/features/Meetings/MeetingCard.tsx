@@ -27,6 +27,13 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
     mutate(meeting.id);
   };
 
+  // temporary code to simulate the active field of a meeting for now.
+  let active = true;
+  if (Math.floor(Math.random() * 2) === 0) {
+    active = false;
+  }
+
+  // TODO: USE THE ACTUAL MEETING ACTIVE PROPERTY, PERHAPS ADD SOMETHING FOR INACTIVE MEETINGS?
   return (
     <Paper
       sx={{
@@ -34,6 +41,15 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
       }}
       elevation={3}
     >
+      {active ? (
+        <Paper elevation={0}>
+          <Typography variant='body1' color='red'>
+            Currently Active Meeting
+          </Typography>
+        </Paper>
+      ) : (
+        <></>
+      )}
       <Stack spacing={1}>
         <Stack direction='row' alignItems='center'>
           <Typography variant='h6' fontSize='1.5rem' sx={{ mr: 1 }}>
