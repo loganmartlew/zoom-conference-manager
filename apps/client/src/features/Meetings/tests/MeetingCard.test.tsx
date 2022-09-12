@@ -7,10 +7,10 @@ describe('Test RecordingCard', () => {
     renderWithRouter(
       <MeetingCard
         meeting={{
-          ubid: '1',
+          id: '1',
           name: 'test',
           startDateTime: dayjs('2022-08-22 12:00').toDate(),
-          endDateTime: dayjs('2022-08-22').toDate(),
+          endDateTime: dayjs('2022-08-22 12:30').toDate(),
           zoomId: '1',
         }}
       />,
@@ -18,7 +18,13 @@ describe('Test RecordingCard', () => {
     );
 
     const cardName = screen.getByText(/test/i);
+    const cardDate = screen.getByText(/2022-08-22/i);
+    const cardStartTime = screen.getByText(/1200/i);
+    const cardEndTime = screen.getByText(/1230/i);
 
     expect(cardName).toBeTruthy();
+    expect(cardDate).toBeTruthy();
+    expect(cardStartTime).toBeTruthy();
+    expect(cardEndTime).toBeTruthy();
   });
 });
