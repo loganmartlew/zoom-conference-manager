@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useReducer } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import {
   Collapse,
@@ -15,12 +15,63 @@ interface Props {
   meetings: IMeeting[];
 }
 
+interface MeetingSearchState {
+  searchType: string;
+}
+
+enum MeetingSearchType {
+  ALL = 'ALL',
+  ACTIVE = 'ACTIVE',
+}
+
+interface MeetingSearchAction {
+  meetingAction: MeetingSearchType;
+  payload: string;
+}
+
+// some form of reducer to be added dynmically to
+const meetingSearchReducer = (
+  meetingSearchState: MeetingSearchState,
+  meetingSearchAction: MeetingSearchAction
+) => {
+  switch (meetingSearchAction.meetingAction) {
+    case MeetingSearchType.ALL:
+      return {
+        ...meetingSearchState,
+        searchType: meetingSearchAction.payload,
+      };
+    case MeetingSearchType.ACTIVE:
+      return {
+        ...meetingSearchState,
+        searchType: meetingSearchAction.payload,
+      };
+    default:
+      return {
+        ...meetingSearchState,
+      };
+  }
+};
+
 const MeetingsList: FC<Props> = ({ meetings }) => {
   const [showNoMeetings, setShowNoMeetings] = useState(true);
-  const [meetingSearch, setMeetingSearch] = useState<string>('all');
+  const [meetingSearch, meetingSearchDispatch] = useReducer(
+    meetingSearchReducer,
+    { searchType: 'all' }
+  );
 
   const handleMeetingSearch = (e: SelectChangeEvent) => {
-    setMeetingSearch(e.target.value as string);
+    const selected = e.target.value as string;
+    if (selected === 'all') {
+      meetingSearchDispatch({
+        meetingAction: MeetingSearchType.ALL,
+        payload: selected,
+      });
+    } else if (selected === 'active') {
+      meetingSearchDispatch({
+        meetingAction: MeetingSearchType.ACTIVE,
+        payload: selected,
+      });
+    }
   };
 
   if (meetings && meetings?.length < 1) {
@@ -64,7 +115,7 @@ const MeetingsList: FC<Props> = ({ meetings }) => {
     <>
       <Stack spacing={3}>
         <Select
-          value={meetingSearch}
+          value={meetingSearch.searchType}
           label='Meeting Search'
           onChange={handleMeetingSearch}
         >
@@ -72,6 +123,8 @@ const MeetingsList: FC<Props> = ({ meetings }) => {
           <MenuItem value='active'>Active Meetings</MenuItem>
         </Select>
         {meetings.map((meeting) => (
+          // need to add code to print only the active meetings
+          // based on state
           <MeetingCard meeting={meeting} />
         ))}
       </Stack>
