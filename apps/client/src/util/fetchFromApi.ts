@@ -9,10 +9,11 @@ export default function <T extends Controller<ExtractControllerData<T>>>(
   fetcher: Promise<AxiosResponse<unknown, unknown>>
 ) {
   return (fetcher as ReturnType<T>).then((res) => {
-    if (!res.data) {
+    if (res.error) {
       throw new Error();
     }
 
-    return res.data;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return res.data!;
   });
 }

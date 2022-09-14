@@ -179,12 +179,12 @@ export default class EventService {
       const meetingList = builder.getMeetings();
 
       await Promise.all(
-        await meetingList.map((meetingDto) => {
-          return MeetingService.create(meetingDto);
+        await meetingList.map(async (meetingDto) => {
+          // console.log(meetingDto);
+          // eslint-disable-next-line @typescript-eslint/return-await
+          return await MeetingService.create(meetingDto);
         })
       );
-
-      console.log('Meeting List: ', meetingList);
 
       // Remove the excel file from system
       fs.unlinkSync(excelFileLocation);

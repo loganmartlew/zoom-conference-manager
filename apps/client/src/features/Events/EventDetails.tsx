@@ -8,7 +8,7 @@ import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
 import { usePublish } from './usePublish';
 import PublishDialog from './PublishDialog';
-import Process from './ProcessFile';
+import UploadDialog from './UploadDialog';
 import ClearMeetingsButton from './ClearMeetingsButton';
 
 interface Props {
@@ -83,7 +83,8 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
           >
             Add Meeting
           </Button>
-          <Process />
+          <UploadDialog id={event.id} />
+
           <ClearMeetingsButton eventId={event.id} />
         </Stack>
         <MeetingsList meetings={event.meetings} />
