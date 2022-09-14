@@ -89,6 +89,14 @@ export const publishEvent: PublishEvent = async (req: Request) => {
       data: publishedEvent,
     };
   } catch (error) {
+    if (error instanceof Error) {
+      return {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to publish Event ',
+        error,
+      };
+    }
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to publish Event ',

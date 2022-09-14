@@ -113,22 +113,18 @@ export default class EventService {
   }
 
   static async publish(id: string): Promise<Event> {
-    try {
-      const event = await this.getOne(id);
+    const event = await this.getOne(id);
 
-      if (event.status === EventStatus.PUBLISHED) {
-        throw new Error('Event is already published');
-      }
-
-      event.status = EventStatus.PUBLISHED;
-      const updatedEvent = await event.save();
-
-      await ZoomService.publishEvent(updatedEvent);
-
-      return updatedEvent;
-    } catch (error) {
-      throw new Error('Unable to publish event');
+    if (event.status === EventStatus.PUBLISHED) {
+      throw new Error('Event is already published');
     }
+
+    await ZoomService.publishEvent(event);
+
+    event.status = EventStatus.PUBLISHED;
+    const updatedEvent = await event.save();
+
+    return updatedEvent;
   }
 
   static async unpublish(id: string): Promise<Event> {
