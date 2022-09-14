@@ -50,6 +50,20 @@ export const updateMeeting: UpdateMeeting = async () => {
   return { status: StatusCodes.OK, message: 'Update Meeting' };
 };
 
-export const deleteMeeting: DeleteMeeting = async () => {
-  return { status: StatusCodes.OK, message: 'Delete Meeting' };
+export const deleteMeeting: DeleteMeeting = async (req: Request) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
+  }
+
+  const deleted = await MeetingService.delete(id);
+
+  if (!deleted) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to delete Event',
+    };
+  }
+  return { status: StatusCodes.OK, message: 'Meeting deleted' };
 };

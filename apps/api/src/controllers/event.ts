@@ -9,6 +9,7 @@ import {
   UnpublishEvent,
   UploadFile,
   MulterRequest,
+  ClearEventMeetings,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -140,6 +141,24 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
     };
   }
   return { status: StatusCodes.OK, message: 'Event deleted' };
+};
+
+export const clearEventMeetings: ClearEventMeetings = async (req: Request) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
+  }
+
+  const cleared = await EventService.clearMeetings(id);
+
+  if (!cleared) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to clear Event meetings',
+    };
+  }
+  return { status: StatusCodes.OK, message: 'Event meetings cleared' };
 };
 
 export const uploadFile: UploadFile = async (req: Request) => {
