@@ -46,8 +46,23 @@ export const getMeeting: GetMeeting = async (req: Request) => {
   return { status: StatusCodes.OK, message: 'Get Meeting', data: meeting };
 };
 
-export const updateMeeting: UpdateMeeting = async () => {
-  return { status: StatusCodes.OK, message: 'Update Meeting' };
+export const updateMeeting: UpdateMeeting = async (req: Request) => {
+  const { id } = req.params;
+  const { meetingData } = req.body;
+  try {
+    const updatedMeeting = await MeetingService.update(id, meetingData);
+    return {
+      status: StatusCodes.CREATED,
+      message: 'Update Meeting',
+      data: updatedMeeting,
+    };
+  } catch (error) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Fail to update Meeting',
+      error,
+    };
+  }
 };
 
 export const deleteMeeting: DeleteMeeting = async (req: Request) => {

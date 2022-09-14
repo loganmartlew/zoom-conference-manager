@@ -61,6 +61,23 @@ export default class MeetingService {
     }
   }
 
+  static async update(id: string, meetingData: MeetingDTO) {
+    const meeting = await this.getOne(id);
+    const event = await EventService.getOne(meetingData.eventId);
+
+    meeting.name = meetingData.name;
+    meeting.startDateTime = dayjs(
+      meetingData.startDateTime,
+      formats.dateTime
+    ).toDate();
+    meeting.duration = meetingData.duration;
+
+    // TODO : Update ZoomID ?
+    meeting.event = event;
+
+    const updatedMeeting = await meeting.save();
+    return updatedMeeting;
+
   static async delete(id: string) {
     const meeting = await this.getOne(id);
 

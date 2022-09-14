@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavLayout from '../features/Navigation/NavLayout';
-
 import EventsPage from '../pages/EventsPage';
 import EventDetailsPage from '../pages/EventDetailsPage';
 import NewEventPage from '../pages/NewEventPage';
