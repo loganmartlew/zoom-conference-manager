@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { renderWithRouter, screen } from '../../../test-utils';
 import MeetingCard from '../MeetingCard';
 
-describe('Test RecordingCard', () => {
+describe('Test MeetingCard', () => {
   test('Card can be rendered', async () => {
     renderWithRouter(
       <MeetingCard
