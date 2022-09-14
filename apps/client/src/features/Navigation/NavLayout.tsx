@@ -23,6 +23,7 @@ const items: NavItem[] = [
   { text: 'New Event', path: '/new-event', icon: <AddBox /> },
   { text: 'New Meeting', path: '/new-meeting', icon: <AddBox /> },
   { text: 'Rehearsals', path: '/rehearsals', icon: <CoPresent /> },
+  { text: 'New Rehearsal', path: '/new-rehearsal', icon: <AddBox /> },
   { text: 'Recordings', path: '/recordings', icon: <VideoFile /> },
   { text: 'Add Account', path: '/add-account', icon: <PersonAdd /> },
   { text: 'Zoom Users', path: '/zoom-users', icon: <People /> },

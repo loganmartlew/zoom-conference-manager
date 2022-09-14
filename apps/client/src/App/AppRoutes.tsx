@@ -29,7 +29,7 @@ const AppRoutes: FC = () => {
           <Route path='/recordings' element={<RecordingsPage />} />
           <Route path='/recordings/:id' element={<RecordingsDetailsPage />} />
           <Route path='/rehearsals' element={<RehearsalsPage />} />
-          <Route path='/create-rehearsal' element={<NewRehearsalsPage />} />
+          <Route path='/new-rehearsal' element={<NewRehearsalsPage />} />
         </Route>
       </Routes>
     </Router>
