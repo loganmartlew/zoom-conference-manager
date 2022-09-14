@@ -1,18 +1,13 @@
 import { FC } from 'react';
 import { Paper, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
+import { IRehearsal } from '@zoom-conference-manager/api-interfaces';
 
-interface RehearsalsCardProps {
-  name: string;
-  startDate: Date;
-  startTime: Date;
-  endTime: Date;
-  presenter: string;
+interface Props {
+  rehearsal: IRehearsal;
 }
 
-const RehearsalsCard: FC<RehearsalsCardProps> = (props) => {
-  const { name, startDate, startTime, endTime, presenter } = props;
-
+const RehearsalsCard: FC<Props> = ({ rehearsal }) => {
   return (
     <Paper
       sx={{
@@ -23,11 +18,11 @@ const RehearsalsCard: FC<RehearsalsCardProps> = (props) => {
       <Stack spacing={2}>
         <Stack>
           <Typography variant='h5' fontWeight={500} mr={3}>
-            {name}
+            {rehearsal.name}
           </Typography>
 
           <Typography variant='h6' fontWeight={500} mr={3}>
-            {presenter}
+            {rehearsal.presenter}
           </Typography>
         </Stack>
 
@@ -42,7 +37,7 @@ const RehearsalsCard: FC<RehearsalsCardProps> = (props) => {
           >
             Start Date:
             <Typography variant='body2'>
-              {dayjs(startDate).format('YYYY-MM-DD')}
+              {dayjs(rehearsal.startDate).format('YYYY-MM-DD')}
             </Typography>
           </Typography>
 
@@ -56,7 +51,7 @@ const RehearsalsCard: FC<RehearsalsCardProps> = (props) => {
           >
             Start Time:
             <Typography variant='body2'>
-              {dayjs(startTime).format('HH:mm')}
+              {dayjs(rehearsal.startTime).format('HH:mm')}
             </Typography>
           </Typography>
 
@@ -70,7 +65,7 @@ const RehearsalsCard: FC<RehearsalsCardProps> = (props) => {
           >
             End Time:
             <Typography variant='body2'>
-              {dayjs(endTime).format('HH:mm')}
+              {dayjs(rehearsal.endTime).format('HH:mm')}
             </Typography>
           </Typography>
         </Stack>

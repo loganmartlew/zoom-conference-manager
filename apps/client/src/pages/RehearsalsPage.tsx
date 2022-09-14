@@ -1,8 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Stack, Typography, Button } from '@mui/material';
-import dayjs from 'dayjs';
-import RehearsalsCard from '../features/Rehersals/RehearsalsCard';
+import RehearsalsList from '../features/Rehersals/RehearsalsList';
 
 const RehearsalsPage: FC = () => {
   return (
@@ -23,13 +22,7 @@ const RehearsalsPage: FC = () => {
           Create Rehearsal
         </Button>
       </Stack>
-      <RehearsalsCard
-        name='test'
-        startDate={dayjs('2022-08-09').toDate()}
-        startTime={dayjs('2022-08-09 12:00').toDate()}
-        endTime={dayjs('2022-08-09 12:30').toDate()}
-        presenter='Test Presenter'
-      />
+      <RehearsalsList rehearsals={[]} />
     </Stack>
   );
 };

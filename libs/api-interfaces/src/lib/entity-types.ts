@@ -29,3 +29,11 @@ export interface IZoomUser {
   name: string;
   email: string;
 }
+
+export interface IRehearsal {
+  name: string;
+  startDate: Date;
+  startTime: Date;
+  endTime: Date;
+  presenter: string;
+}
