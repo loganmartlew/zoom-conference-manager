@@ -40,10 +40,16 @@ const ConfirmationDialog: FC<Props> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button type='button' onClick={close}>
+        <Button
+          data-testid='confirmation--dialog--cancel'
+          type='button'
+          onClick={close}
+        >
           Cancel
         </Button>
-        <Button onClick={confirm}>Confirm</Button>
+        <Button data-testid='confirmation--dialog--confirm' onClick={confirm}>
+          Confirm
+        </Button>
       </DialogActions>
     </Dialog>
   );
