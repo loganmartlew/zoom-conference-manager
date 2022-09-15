@@ -58,10 +58,7 @@ export default class ZoomService {
       schedule_for: userEmail,
       start_time: meeting.startDateTime.toISOString(),
       duration: Math.abs(
-        dayjs(meeting.startDateTime).diff(
-          dayjs(meeting.endDateTime).add(30, 'minutes'),
-          'minute'
-        )
+        dayjs(meeting.startDateTime).diff(dayjs(meeting.endDateTime), 'minute')
       ),
       type: SCHEDULED_MEETING,
     };
