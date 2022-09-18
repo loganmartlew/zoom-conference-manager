@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useRef } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { Id, toast } from 'react-toastify';
@@ -39,9 +40,15 @@ function useToastMutation<Vars>(
       onSuccess();
     },
     onError: (error: unknown, variables: Vars) => {
+      let message = errorMessage;
+
+      if ((error as any).response?.data?.message) {
+        message = (error as any).response.data.message;
+      }
+
       if (toastRef.current) {
         toast.update(toastRef.current, {
-          render: errorMessage,
+          render: message,
           type: toast.TYPE.ERROR,
           isLoading: false,
           ...notificationSettings,
