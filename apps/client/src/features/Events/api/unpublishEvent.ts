@@ -14,8 +14,8 @@ export const useUnpublishEvent = (
   onSuccess: () => void,
   onError: (error: unknown, variables: string) => void
 ) => {
-  return useToastMutation(unpublishEvent, {
-    queryKey: (vars: string) => [...eventKey, vars],
+  return useToastMutation<string>(unpublishEvent, {
+    queryKey: (vars) => [...eventKey, vars],
     onSuccess,
     onError,
     pendingMessage: 'Unpublishing event...',

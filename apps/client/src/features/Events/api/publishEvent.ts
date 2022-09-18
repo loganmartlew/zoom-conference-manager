@@ -13,7 +13,7 @@ export const usePublishEvent = (
   onError: (error: unknown, variables: string) => void
 ) => {
   return useToastMutation<string>(publishEvent, {
-    queryKey: (vars: string) => [...eventKey, vars],
+    queryKey: (vars) => [...eventKey, vars],
     onSuccess,
     onError,
     pendingMessage: 'Publishing event...',
