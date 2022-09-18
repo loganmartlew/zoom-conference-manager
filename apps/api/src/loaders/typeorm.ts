@@ -2,9 +2,20 @@ import { DataSource } from 'typeorm';
 import { db } from '../config';
 import { Logger } from './logger';
 import entities from '../entities';
+import { environment } from '../environments/environment';
 
 export default async () => {
   const dbVars = db();
+
+  const prodOptions = environment.production
+    ? {
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
+      }
+    : {};
 
   const dataSource = new DataSource({
     type: 'postgres',
@@ -15,13 +26,14 @@ export default async () => {
     database: dbVars.database,
     synchronize: true,
     entities,
+    ...prodOptions,
   });
 
   try {
     await dataSource.initialize();
     Logger.info('Connected to database');
   } catch (error) {
-    Logger.crit(error);
+    Logger.error(error);
     throw new Error('Unable to connect to database');
   }
 };

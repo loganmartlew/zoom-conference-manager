@@ -1,53 +1,77 @@
-import { FC } from 'react';
-import { Paper, Button, Stack, Typography, styled } from '@mui/material';
+import { FC, useState } from 'react';
+import { IEvent } from '@zoom-conference-manager/api-interfaces';
+import { Link } from 'react-router-dom';
+import { Paper, Stack, Typography, Button, IconButton } from '@mui/material';
+import { Groups, Delete } from '@mui/icons-material';
+import EventStatusBadge from './EventStatusBadge';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useDeleteEvent } from './api/deleteEvent';
 
-interface EventCardProps {
-  name: string;
-  desc: string;
-  start: string;
-  end: string;
+interface Props {
+  event: IEvent;
 }
 
-const InfoStack = styled(Stack)(() => ({
-  gap: '1rem',
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-}));
+const EventCard: FC<Props> = ({ event }) => {
+  const [open, setOpen] = useState<boolean>(false);
 
-const GenericTypography = styled(Typography)(() => ({
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-}));
+  const onDeleteSuccess = () => {
+    setOpen(false);
+  };
 
-const EventCard: FC<EventCardProps> = (props) => {
-  const { name, desc, start, end } = props;
+  const onDeleteError = (err: unknown) => {
+    console.log(err);
+  };
+
+  const { mutate } = useDeleteEvent(onDeleteSuccess, onDeleteError);
+
+  const deleteEvent = () => {
+    mutate(event.id);
+  };
+
   return (
     <Paper
       sx={{
-        width: '85%',
-        padding: '0.8rem',
-        marginTop: '1rem',
-        display: 'block',
-        textAlign: 'unset',
+        padding: '1.5em',
       }}
-      component={Button}
       elevation={3}
     >
-      <Stack direction='row' justifyContent='space-between'>
-        <InfoStack width='90%' direction='column' justifyContent='space-evenly'>
-          <GenericTypography variant='h5'>{name}</GenericTypography>
-          <GenericTypography variant='body2' width='50%'>
-            {desc}
-          </GenericTypography>
-        </InfoStack>
-        <InfoStack width='10%' direction='column' justifyContent='space-evenly'>
-          <GenericTypography alignSelf='end' variant='body2'>
-            {start}
-          </GenericTypography>
-          <GenericTypography alignSelf='end' variant='body2'>
-            {end}
-          </GenericTypography>
-        </InfoStack>
+      <Stack spacing={2}>
+        <Stack direction='row' spacing={1} alignItems='center'>
+          <Typography variant='h5' fontWeight={500}>
+            {event.name}
+          </Typography>
+          <IconButton color='error' onClick={() => setOpen(true)}>
+            <Delete />
+          </IconButton>
+          <ConfirmationDialog
+            open={open}
+            handleClose={() => setOpen(false)}
+            onConfirm={deleteEvent}
+            title='Delete Event'
+            text='Are you sure you want to delete the event?'
+          />
+        </Stack>
+        <Stack direction='row' spacing={2}>
+          <EventStatusBadge status={event.status} />
+          <Stack direction='row' spacing={1}>
+            <Groups />
+            <Typography>{`${event.meetings.length} Meeting${
+              event.meetings.length === 1 ? '' : 's'
+            }`}</Typography>
+          </Stack>
+        </Stack>
+        <Typography
+          sx={{ width: 'max-content', whiteSpace: 'noWrap' }}
+        >{`${event.startDate} - ${event.endDate}`}</Typography>
+        <Typography variant='body1'>{event.description}</Typography>
+        <Button
+          component={Link}
+          to={`/events/${event.id}`}
+          variant='outlined'
+          sx={{ width: 'max-content' }}
+        >
+          View Details
+        </Button>
       </Stack>
     </Paper>
   );

@@ -1,53 +1,189 @@
-import { Request, Response } from 'express';
+import {
+  CreateEvent,
+  GetAllEvents,
+  GetEvent,
+  GetEventNames,
+  UpdateEvent,
+  DeleteEvent,
+  PublishEvent,
+  UnpublishEvent,
+  UploadFile,
+  MulterRequest,
+  ClearEventMeetings,
+} from '@zoom-conference-manager/api-interfaces';
+import { Request } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import EventService from '../services/EventService';
+import { Logger } from '../loaders/logger';
 
-export const createEvent = async (req: Request, res: Response) => {
+export const createEvent: CreateEvent = async (req: Request) => {
   const { eventData } = req.body;
 
   try {
     const newEvent = await EventService.create(eventData);
-    return res.status(201).json({ message: 'Created Event', event: newEvent });
+    return {
+      status: StatusCodes.CREATED,
+      message: 'Created Event',
+      data: newEvent,
+    };
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to create Event', error });
+    Logger.error(error);
+
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to create Event',
+      error,
+    };
   }
 };
 
-export const getEvent = async (req: Request, res: Response) => {
+export const getEvent: GetEvent = async (req: Request) => {
   const { id } = req.params;
   const event = await EventService.getOne(id);
 
-  return res.json({ message: 'Found Event', event });
+  return { status: StatusCodes.OK, message: 'Found Event', data: event };
 };
 
-export const getAllEvents = async (req: Request, res: Response) => {
+export const getAllEvents: GetAllEvents = async () => {
   const events = await EventService.getAll();
-  return res.status(200).json(events);
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved all events',
+    data: events,
+  };
 };
 
-export const updateEvent = async (req: Request, res: Response) => {
+export const getEventNames: GetEventNames = async () => {
+  const eventNames = await EventService.getNames();
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved event names',
+    data: eventNames,
+  };
+};
+
+export const updateEvent: UpdateEvent = async (req: Request) => {
   const { eventData } = req.body;
   const { id } = req.params;
   try {
     const updatedEvent = await EventService.update(id, eventData);
-    return res
-      .status(200)
-      .json({ message: 'Updated Event', event: updatedEvent });
+    return {
+      status: StatusCodes.OK,
+      message: 'Updated Event',
+      data: updatedEvent,
+    };
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to update Event ', error });
+    Logger.error(error);
+
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to update Event ',
+      error,
+    };
   }
 };
 
-export const deleteEvent = async (req: Request, res: Response) => {
+export const publishEvent: PublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const publishedEvent = await EventService.publish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Published Event',
+      data: publishedEvent,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to publish Event ',
+        error,
+      };
+    }
+
+    Logger.error(error);
+
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to publish Event ',
+      error,
+    };
+  }
+};
+
+export const unpublishEvent: UnpublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const unpublishedEvent = await EventService.unpublish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Unpublished Event',
+      data: unpublishedEvent,
+    };
+  } catch (error) {
+    Logger.error(error);
+
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to unpublish Event ',
+      error,
+    };
+  }
+};
+
+export const deleteEvent: DeleteEvent = async (req: Request) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.json({ message: 'ID Must be provided' });
+    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
   }
 
   const deleted = await EventService.delete(id);
 
   if (!deleted) {
-    return res.json({ message: 'Failed to delete Event' });
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to delete Event',
+    };
   }
-  return res.json({ message: 'Event deleted' });
+  return { status: StatusCodes.OK, message: 'Event deleted' };
+};
+
+export const clearEventMeetings: ClearEventMeetings = async (req: Request) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
+  }
+
+  const cleared = await EventService.clearMeetings(id);
+
+  if (!cleared) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to clear Event meetings',
+    };
+  }
+  return { status: StatusCodes.OK, message: 'Event meetings cleared' };
+};
+
+export const uploadFile: UploadFile = async (req: Request) => {
+  /// Add [file] into [req], happens in Runtime
+  // eslint-disable-next-line prefer-destructuring
+  const file = (req as MulterRequest).file;
+  const { id } = req.params;
+
+  try {
+    await EventService.uploadFile(id, file);
+    return { status: StatusCodes.OK, message: 'File uploaded' };
+  } catch (error) {
+    Logger.error(error);
+
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: `Fail to extract datas from excel; ${error}`,
+    };
+  }
 };

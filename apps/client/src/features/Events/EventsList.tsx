@@ -1,5 +1,11 @@
 import { FC, useState } from 'react';
-import { CircularProgress, Collapse, Alert, AlertTitle } from '@mui/material';
+import {
+  CircularProgress,
+  Collapse,
+  Alert,
+  AlertTitle,
+  Stack,
+} from '@mui/material';
 import { useAllEvents } from './api/getEvents';
 import EventCard from './EventCard';
 
@@ -45,20 +51,29 @@ const EventsList: FC = () => {
     );
   }
 
+  if (!events) {
+    return (
+      <Collapse in={showNoEvents}>
+        <Alert
+          onClose={() => {
+            setShowNoEvents(false);
+          }}
+          severity='success'
+          variant='outlined'
+        >
+          <AlertTitle>No Events</AlertTitle>
+          No events found...
+        </Alert>
+      </Collapse>
+    );
+  }
+
   return (
-    <>
-      {events?.map((event) => {
-        return (
-          <EventCard
-            key={event.id}
-            name={event.name}
-            desc={event.description}
-            start={event.startDate}
-            end={event.endDate}
-          />
-        );
+    <Stack spacing={3}>
+      {events.map((event) => {
+        return <EventCard key={event.id} event={event} />;
       })}
-    </>
+    </Stack>
   );
 };
 
