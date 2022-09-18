@@ -5,7 +5,7 @@ import { Id, toast } from 'react-toastify';
 function useToastMutation<Vars>(
   mutationFn: (variables: Vars) => Promise<unknown>,
   options: {
-    queryKey: (variables: Vars) => never;
+    queryKey: (variables: Vars) => string | string[];
     onSuccess: () => void;
     onError: (error: unknown, variables: Vars) => void;
     pendingMessage: string;
