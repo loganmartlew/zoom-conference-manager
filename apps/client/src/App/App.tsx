@@ -5,6 +5,7 @@ import globalStyles from './globalStyles';
 import AppRoutes from './AppRoutes';
 import Providers from './Providers';
 import notificationStyles from './notificationStyles';
+import notificationSettings from './notificationSettings';
 import './imports.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,7 +14,7 @@ const App: FC = () => (
     <CssBaseline />
     {globalStyles}
     <AppRoutes />
-    <ToastContainer theme='light' position='bottom-right' autoClose={5000} />
+    <ToastContainer {...notificationSettings} />
     {notificationStyles}
   </Providers>
 );

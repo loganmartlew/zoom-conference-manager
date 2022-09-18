@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { Id, toast } from 'react-toastify';
+import notificationSettings from '../App/notificationSettings';
 
 function useToastMutation<Vars>(
   mutationFn: (variables: Vars) => Promise<unknown>,
@@ -32,7 +33,7 @@ function useToastMutation<Vars>(
           render: successMessage,
           type: toast.TYPE.SUCCESS,
           isLoading: false,
-          autoClose: 5000,
+          ...notificationSettings,
         });
       }
       onSuccess();
@@ -43,7 +44,7 @@ function useToastMutation<Vars>(
           render: errorMessage,
           type: toast.TYPE.ERROR,
           isLoading: false,
-          autoClose: 5000,
+          ...notificationSettings,
         });
       }
       onError(error, variables);
@@ -55,7 +56,7 @@ function useToastMutation<Vars>(
 
   const publish = useCallback(
     (variables: Vars) => {
-      toastRef.current = toast.loading(pendingMessage);
+      toastRef.current = toast.loading(pendingMessage, notificationSettings);
       mutate(variables);
     },
     [mutate, pendingMessage]
