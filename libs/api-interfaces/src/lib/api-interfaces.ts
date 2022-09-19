@@ -33,6 +33,7 @@ export type ClearEventMeetings = Controller<void>;
 export type CreateMeeting = Controller<IMeeting>;
 export type GetMeeting = Controller<IMeeting>;
 export type GetAllMeetings = Controller<IMeeting[]>;
+export type GetTodaysMeetings = Controller<IMeeting[]>;
 export type UpdateMeeting = Controller<IMeeting>;
 export type DeleteMeeting = Controller<void>;
 

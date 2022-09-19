@@ -22,6 +22,7 @@ export interface IMeeting {
   startDateTime: Date;
   endDateTime: Date;
   zoomId: string;
+  event?: IEvent;
 }
 
 export interface IZoomUser {

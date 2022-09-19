@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { formats } from '@zoom-conference-manager/dates';
+import { EventStatus } from '@zoom-conference-manager/types';
 import dayjs from 'dayjs';
 import Meeting from '../entities/Meeting';
 import EventService from './EventService';
@@ -10,6 +11,26 @@ export default class MeetingService {
   static async getAll() {
     const meetings = await Meeting.find();
     return meetings;
+  }
+
+  static async getTodays() {
+    const meetings = await Meeting.find({
+      where: {
+        event: {
+          status: EventStatus.PUBLISHED,
+        },
+      },
+      relations: ['event'],
+    });
+
+    const todaysMeetings = meetings.filter((meeting) => {
+      const today = dayjs().startOf('day');
+      const meetingStartDate = dayjs(meeting.startDateTime).startOf('day');
+
+      return today.isSame(meetingStartDate);
+    });
+
+    return todaysMeetings;
   }
 
   static async getOne(id: string) {

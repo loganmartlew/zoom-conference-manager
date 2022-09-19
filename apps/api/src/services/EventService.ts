@@ -3,6 +3,7 @@ import XLSX from 'xlsx';
 import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
 import { EventStatus } from '@zoom-conference-manager/types';
+import dayjs from 'dayjs';
 import Event from '../entities/Event';
 import ZoomService from './ZoomService';
 import MeetingService from './MeetingService';
@@ -34,11 +35,14 @@ export default class EventService {
     });
 
     const todaysEvents = events.filter((event) => {
-      const today = new Date(new Date().toISOString().split('T')[0]); // Grabs only date (day month year) from ISO string
-      const eventStartDate = new Date(event.startDate);
-      const eventEndDate = new Date(event.endDate);
+      const today = dayjs().startOf('day');
+      const eventStartDate = dayjs(event.startDate);
+      const eventEndDate = dayjs(event.endDate);
 
-      return today >= eventStartDate && today <= eventEndDate;
+      return (
+        (today.isAfter(eventStartDate) && today.isBefore(eventEndDate)) ||
+        today.isSame(eventStartDate)
+      );
     });
 
     return todaysEvents;

@@ -4,6 +4,7 @@ import {
   GetAllMeetings,
   GetMeeting,
   UpdateMeeting,
+  GetTodaysMeetings,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -36,6 +37,15 @@ export const getAllMeeting: GetAllMeetings = async () => {
   return {
     status: StatusCodes.OK,
     message: 'Retrieved all meetings',
+    data: meetings,
+  };
+};
+
+export const getTodaysMeetings: GetTodaysMeetings = async () => {
+  const meetings = await MeetingService.getTodays();
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved todays meetings',
     data: meetings,
   };
 };
