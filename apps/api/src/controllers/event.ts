@@ -10,6 +10,7 @@ import {
   UploadFile,
   MulterRequest,
   ClearEventMeetings,
+  GetTodaysEvents,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -59,6 +60,15 @@ export const getEventNames: GetEventNames = async () => {
     status: StatusCodes.OK,
     message: 'Retrieved event names',
     data: eventNames,
+  };
+};
+
+export const getTodaysEvents: GetTodaysEvents = async () => {
+  const events = await EventService.getTodaysEvents();
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved todays events',
+    data: events,
   };
 };
 

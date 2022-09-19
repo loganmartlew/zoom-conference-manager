@@ -9,6 +9,7 @@ export interface ApiResponse<T> {
 }
 
 export interface MulterRequest extends Request {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   file: any;
 }
 
@@ -21,6 +22,7 @@ export type CreateEvent = Controller<IEvent>;
 export type GetEvent = Controller<IEvent>;
 export type GetAllEvents = Controller<IEvent[]>;
 export type GetEventNames = Controller<IEventName[]>;
+export type GetTodaysEvents = Controller<IEvent[]>;
 export type UpdateEvent = Controller<IEvent>;
 export type PublishEvent = Controller<IEvent>;
 export type UnpublishEvent = Controller<IEvent>;

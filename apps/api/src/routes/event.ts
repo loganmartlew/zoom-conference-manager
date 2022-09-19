@@ -11,6 +11,7 @@ import {
   deleteEvent,
   uploadFile,
   clearEventMeetings,
+  getTodaysEvents,
 } from '../controllers/event';
 import response from '../util/response';
 
@@ -18,6 +19,7 @@ const router = express.Router();
 
 router.get('/', response(getAllEvents));
 router.post('/', response(createEvent));
+router.get('/today', response(getTodaysEvents));
 router.get('/:id', response(getEvent));
 router.put('/:id', response(updateEvent));
 router.patch('/:id/publish', response(publishEvent));
