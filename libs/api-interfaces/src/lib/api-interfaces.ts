@@ -23,6 +23,7 @@ export type GetEvent = Controller<IEvent>;
 export type GetAllEvents = Controller<IEvent[]>;
 export type GetEventNames = Controller<IEventName[]>;
 export type GetTodaysEvents = Controller<IEvent[]>;
+export type GetUpcomingEvents = Controller<IEvent[]>;
 export type UpdateEvent = Controller<IEvent>;
 export type PublishEvent = Controller<IEvent>;
 export type UnpublishEvent = Controller<IEvent>;
@@ -34,6 +35,7 @@ export type CreateMeeting = Controller<IMeeting>;
 export type GetMeeting = Controller<IMeeting>;
 export type GetAllMeetings = Controller<IMeeting[]>;
 export type GetTodaysMeetings = Controller<IMeeting[]>;
+export type GetUpcomingMeetings = Controller<IMeeting[]>;
 export type UpdateMeeting = Controller<IMeeting>;
 export type DeleteMeeting = Controller<void>;
 

@@ -11,6 +11,7 @@ import {
   MulterRequest,
   ClearEventMeetings,
   GetTodaysEvents,
+  GetUpcomingEvents,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -68,6 +69,15 @@ export const getTodaysEvents: GetTodaysEvents = async () => {
   return {
     status: StatusCodes.OK,
     message: 'Retrieved todays events',
+    data: events,
+  };
+};
+
+export const getUpcomingEvents: GetUpcomingEvents = async () => {
+  const events = await EventService.getUpcoming();
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved upcoming events',
     data: events,
   };
 };

@@ -48,6 +48,24 @@ export default class EventService {
     return todaysEvents;
   }
 
+  static async getUpcoming(): Promise<Event[]> {
+    const events = await Event.find({
+      where: {
+        status: EventStatus.PUBLISHED,
+      },
+      relations: ['meetings'],
+    });
+
+    const upcomingEvents = events.filter((event) => {
+      const today = dayjs().startOf('day');
+      const eventStartDate = dayjs(event.startDate);
+
+      return today.isBefore(eventStartDate);
+    });
+
+    return upcomingEvents;
+  }
+
   static async getOne(id: string): Promise<Event> {
     const event = await Event.findOne({
       where: { id },

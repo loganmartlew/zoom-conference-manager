@@ -33,6 +33,26 @@ export default class MeetingService {
     return todaysMeetings;
   }
 
+  static async getUpcoming() {
+    const meetings = await Meeting.find({
+      where: {
+        event: {
+          status: EventStatus.PUBLISHED,
+        },
+      },
+      relations: ['event'],
+    });
+
+    const upcomingMeetings = meetings.filter((meeting) => {
+      const today = dayjs().startOf('day');
+      const meetingStartDate = dayjs(meeting.startDateTime).startOf('day');
+
+      return today.isBefore(meetingStartDate);
+    });
+
+    return upcomingMeetings;
+  }
+
   static async getOne(id: string) {
     const meeting = await Meeting.findOneBy({ id });
     if (!meeting) {
