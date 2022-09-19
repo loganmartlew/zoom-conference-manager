@@ -64,7 +64,7 @@ export const getEventNames: GetEventNames = async () => {
 };
 
 export const getTodaysEvents: GetTodaysEvents = async () => {
-  const events = await EventService.getTodaysEvents();
+  const events = await EventService.getTodays();
   return {
     status: StatusCodes.OK,
     message: 'Retrieved todays events',

@@ -25,6 +25,25 @@ export default class EventService {
     return eventNames;
   }
 
+  static async getTodays(): Promise<Event[]> {
+    const events = await Event.find({
+      where: {
+        status: EventStatus.PUBLISHED,
+      },
+      relations: ['meetings'],
+    });
+
+    const todaysEvents = events.filter((event) => {
+      const today = new Date(new Date().toISOString().split('T')[0]); // Grabs only date (day month year) from ISO string
+      const eventStartDate = new Date(event.startDate);
+      const eventEndDate = new Date(event.endDate);
+
+      return today >= eventStartDate && today <= eventEndDate;
+    });
+
+    return todaysEvents;
+  }
+
   static async getOne(id: string): Promise<Event> {
     const event = await Event.findOne({
       where: { id },
