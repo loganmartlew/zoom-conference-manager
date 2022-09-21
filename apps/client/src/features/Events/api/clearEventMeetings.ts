@@ -1,8 +1,8 @@
 import { ClearEventMeetings } from '@zoom-conference-manager/api-interfaces';
-import { useMutation, useQueryClient } from 'react-query';
 import { eventKey } from './getEvent';
 import { axios } from '../../../config/axios';
 import fetchFromApi from '../../../util/fetchFromApi';
+import useToastMutation from '../../../util/useToastMutation';
 
 export const clearEventMeetings = async (eventId: string) => {
   return fetchFromApi<ClearEventMeetings>(
@@ -14,16 +14,12 @@ export const useClearEventMeetings = (
   onSuccess: () => void,
   onError: (error: unknown, variables: string) => void
 ) => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation(clearEventMeetings, {
+  return useToastMutation<string>(clearEventMeetings, {
+    queryKey: (id) => [...eventKey, id],
     onSuccess,
     onError,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onSettled: (_, __, id) => {
-      queryClient.invalidateQueries([...eventKey, id]);
-    },
+    pendingMessage: 'Clearing meetings...',
+    successMessage: 'Meetings cleared!',
+    errorMessage: 'Failed to clear meetings',
   });
-
-  return { mutate, isLoading };
 };

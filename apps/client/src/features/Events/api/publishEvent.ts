@@ -1,8 +1,8 @@
 import { PublishEvent } from '@zoom-conference-manager/api-interfaces';
-import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { eventKey } from './getEvent';
 import fetchFromApi from '../../../util/fetchFromApi';
+import useToastMutation from '../../../util/useToastMutation';
 
 export const publishEvent = async (eventId: string) => {
   return fetchFromApi<PublishEvent>(axios.patch(`/events/${eventId}/publish`));
@@ -12,15 +12,12 @@ export const usePublishEvent = (
   onSuccess: () => void,
   onError: (error: unknown, variables: string) => void
 ) => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation(publishEvent, {
+  return useToastMutation<string>(publishEvent, {
+    queryKey: (vars) => [...eventKey, vars],
     onSuccess,
     onError,
-    onSettled: (_, __, id) => {
-      queryClient.invalidateQueries([...eventKey, id]);
-    },
+    pendingMessage: 'Publishing event...',
+    successMessage: 'Event published!',
+    errorMessage: 'Failed to publish event',
   });
-
-  return { mutate, isLoading };
 };
