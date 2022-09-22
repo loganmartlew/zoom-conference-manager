@@ -61,6 +61,23 @@ export default class MeetingService {
     }
   }
 
+  static async update(id: string, meetingData: MeetingDTO) {
+    const meeting = await this.getOne(id);
+
+    meeting.name = meetingData.name;
+    meeting.startDateTime = dayjs(
+      meetingData.startDateTime,
+      formats.dateTime
+    ).toDate();
+    meeting.endDateTime = dayjs(
+      meetingData.endDateTime,
+      formats.dateTime
+    ).toDate();
+
+    const updatedMeeting = await meeting.save();
+    return updatedMeeting;
+  }
+
   static async delete(id: string) {
     const meeting = await this.getOne(id);
 
