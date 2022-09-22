@@ -47,6 +47,7 @@ const UploadDialog: FC<Props> = (props) => {
       <DropzoneDialog
         acceptedFiles={[
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-excel',
         ]}
         open={open}
         onClose={() => setOpen(false)}

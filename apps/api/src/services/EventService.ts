@@ -166,9 +166,7 @@ export default class EventService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async uploadFile(id: string, file: any): Promise<void> {
-    // Get Root directory, then combine it into excel location
-    const rootDir = __dirname.split('dist/apps/api')[0];
-    const excelFileLocation = rootDir + file.path;
+    const excelFileLocation = file.path;
 
     try {
       const workBook = XLSX.readFile(excelFileLocation);
