@@ -11,6 +11,14 @@ export default class ApiError {
     errorCode: number | null,
     message: string | null
   ) {
+    if (parentError instanceof ApiError) {
+      this.parentError = null;
+      this.message = parentError.message;
+      this.errorCode = parentError.errorCode;
+      this.statusCode = parentError.statusCode;
+      return;
+    }
+
     this.parentError = parentError;
 
     if (errorCode && validCodes.has(errorCode)) {
