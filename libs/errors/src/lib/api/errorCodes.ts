@@ -35,6 +35,7 @@ const dbCodes: Codes = {
   }),
   3002: new Code({
     message: 'Object not found',
+    statusCode: statusCodes.NOT_FOUND,
   }),
   3003: new Code({
     message: 'Unable to save object',
@@ -65,6 +66,9 @@ const validationCodes: Codes = {
   }),
   4004: new Code({
     message: 'Unable to process data',
+  }),
+  4005: new Code({
+    message: 'System at capacity',
   }),
 };
 

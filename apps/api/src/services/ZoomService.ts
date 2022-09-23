@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import { ApiError } from '@zoom-conference-manager/errors';
 import dayjs from 'dayjs';
 import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
@@ -20,7 +21,11 @@ export default class ZoomService {
 
     if (unassignedMeetings.length > 0) {
       Logger.error(`Unable to assign ${unassignedMeetings.length} meetings`);
-      throw new Error('Failed to assign all meetings. More users required.');
+      throw new ApiError(
+        null,
+        4005,
+        'Failed to assign all meetings. More users required.'
+      );
     }
 
     Logger.info(`Assigned meetings`);
@@ -37,10 +42,10 @@ export default class ZoomService {
           );
         })
       );
-    } catch (e) {
+    } catch (error) {
       Logger.error(`Unable to publish event`);
-      Logger.error(e);
-      throw new Error('Error scheduling meetings');
+      Logger.error(error);
+      throw new ApiError(error, 2000, 'Error scheduling meetings');
     }
   }
 
