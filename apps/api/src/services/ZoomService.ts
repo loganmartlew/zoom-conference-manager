@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
 import dayjs from 'dayjs';
+import { ZoomMeetingResponseDTO } from '@zoom-conference-manager/api-interfaces';
 import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
@@ -7,6 +8,7 @@ import { Logger } from '../loaders/logger';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import MeetingService from './MeetingService';
 import ZoomUserService from './ZoomUserService';
+import { ZoomMeetingType } from '../types/ZoomMeetingTypes';
 
 export default class ZoomService {
   static async publishEvent(event: Event) {
@@ -69,6 +71,27 @@ export default class ZoomService {
     const zoomId = res.data.id;
 
     await MeetingService.setZoomId(meeting.id, `${zoomId}`);
+  }
+
+  static async getAllMeetings(
+    userEmail: string,
+    type: ZoomMeetingType = ZoomMeetingType.SCHEDULED
+  ) {
+    let zoomMeetings: ZoomMeetingResponseDTO[] = [];
+
+    try {
+      const res = await axios.get(`/users/${userEmail}/meetings?type=${type}`);
+
+      if (res.status !== 200) {
+        throw new Error('Error with response');
+      }
+
+      zoomMeetings = res.data.meetings;
+    } catch (error) {
+      Logger.error('Error requesting ZOOM API');
+    }
+
+    return zoomMeetings;
   }
 
   static async deleteMeeting(meeting: Meeting) {
