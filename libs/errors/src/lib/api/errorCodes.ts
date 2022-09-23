@@ -33,11 +33,38 @@ const dbCodes: Codes = {
   3001: new Code({
     message: 'Unable to connect to the database',
   }),
+  3002: new Code({
+    message: 'Object not found',
+  }),
+  3003: new Code({
+    message: 'Unable to save object',
+  }),
+  3004: new Code({
+    message: 'Unable to create object',
+  }),
+  3005: new Code({
+    message: 'Unable to delete object',
+  }),
+  3006: new Code({
+    message: 'Unable to update object',
+  }),
 };
 
 const validationCodes: Codes = {
   4000: new Code({
     message: 'An unknown validation error occurred',
+  }),
+  4001: new Code({
+    message: 'Invalid data provided',
+  }),
+  4002: new Code({
+    message: 'Incorrect data format',
+  }),
+  4003: new Code({
+    message: 'Missing required data',
+  }),
+  4004: new Code({
+    message: 'Unable to process data',
   }),
 };
 
