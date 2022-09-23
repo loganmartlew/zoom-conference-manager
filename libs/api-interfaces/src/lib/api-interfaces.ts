@@ -6,7 +6,7 @@ export type ApiResponse<T> =
   | {
       status: number;
       message: string;
-      data: T;
+      data?: T;
       error?: never;
     }
   | {
