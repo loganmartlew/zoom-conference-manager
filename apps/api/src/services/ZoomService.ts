@@ -24,7 +24,7 @@ export default class ZoomService {
     }
 
     Logger.info(`Assigned meetings`);
-    Logger.info(JSON.stringify(userMeetings, null, 2));
+    // Logger.info(JSON.stringify(userMeetings, null, 2));
 
     const flatMeetings = flattenMeetings(userMeetings);
 
@@ -83,6 +83,27 @@ export default class ZoomService {
       await axios.delete(`/meetings/${meeting.zoomId}`);
     } catch (e) {
       Logger.error(`Unable to delete meeting ${meeting.name} from Zoom`);
+    }
+  }
+
+  static async updateMeeting(meeting: Meeting) {
+    if (!meeting.zoomId) {
+      Logger.error(`Unable to update meeting ${meeting.name} from Zoom`);
+      return;
+    }
+
+    const meetingData = {
+      topic: meeting.name,
+      start_time: meeting.startDateTime.toISOString(),
+      duration: Math.abs(
+        dayjs(meeting.startDateTime).diff(dayjs(meeting.endDateTime), 'minute')
+      ),
+    };
+
+    try {
+      await axios.patch(`/meetings/${meeting.zoomId}`, meetingData);
+    } catch (e) {
+      Logger.error(`Unable to update meeting ${meeting.name} from Zoom`);
     }
   }
 }

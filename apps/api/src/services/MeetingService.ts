@@ -74,9 +74,7 @@ export default class MeetingService {
       formats.dateTime
     ).toDate();
 
-    // TODO : check if this meeting is already published
-
-    // TODO : If meeting is already published, send update to Zoom API
+    await ZoomService.updateMeeting(meeting);
 
     const updatedMeeting = await meeting.save();
     return updatedMeeting;
