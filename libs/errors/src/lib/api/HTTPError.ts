@@ -1,12 +1,12 @@
-import ApiError from '../ApiError';
-import ErrorOptions from '../ErrorOptions';
+import ApiError from './ApiError';
+import ApiErrorOptions from './ApiErrorOptions';
 
 export default class HTTPError extends ApiError {
   public readonly message: string;
   public readonly errorCode: number;
   public readonly statusCode: number;
 
-  constructor(parentError: unknown, options: ErrorOptions) {
+  constructor(parentError: unknown, options: ApiErrorOptions) {
     super(parentError);
     const { message, errorCode, statusCode } = options;
 

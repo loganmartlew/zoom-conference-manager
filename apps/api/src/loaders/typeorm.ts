@@ -1,9 +1,9 @@
+import { DbError } from '@zoom-conference-manager/errors';
 import { DataSource } from 'typeorm';
 import { db } from '../config';
 import { Logger } from './logger';
 import entities from '../entities';
 import { environment } from '../environments/environment';
-import DbError from '../errors/DbError';
 
 export default async () => {
   const dbVars = db();
