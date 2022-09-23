@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ApiResponse } from '@zoom-conference-manager/api-interfaces';
 import { ApiError } from '@zoom-conference-manager/errors';
-import Axios from 'axios';
+import Axios, { AxiosError } from 'axios';
 import { environment } from '../environments/environment';
 
 export const axios = Axios.create({
@@ -11,16 +12,12 @@ axios.interceptors.response.use(
   (response) => {
     return response.data;
   },
-  (error) => {
-    if (error instanceof ApiError) {
-      return Promise.reject(error);
+  (error: AxiosError<ApiResponse<never>>) => {
+    if (error.response?.data.error) {
+      const e = error.response.data.error as ApiError;
+      return Promise.reject(e);
     }
 
-    if ((error as any).response?.data?.error instanceof ApiError) {
-      const apiError = (error as any).response.data.error;
-      return Promise.reject(apiError);
-    }
-
-    return Promise.reject(error);
+    return Promise.reject(new ApiError(error, 1000, null));
   }
 );

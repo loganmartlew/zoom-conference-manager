@@ -40,16 +40,12 @@ function useToastMutation<Vars>(
       }
       onSuccess();
     },
-    onError: (error: unknown, variables: Vars) => {
-      let message = errorMessage;
-
-      if (error instanceof ApiError) {
-        message = `Error ${error.statusCode}: ${error.message}`;
-      }
-
+    onError: (error: ApiError, variables: Vars) => {
       if (toastRef.current) {
         toast.update(toastRef.current, {
-          render: message,
+          render: !error.message
+            ? errorMessage
+            : `${error.errorCode}: ${error.message}`,
           type: toast.TYPE.ERROR,
           isLoading: false,
           ...notificationSettings,
