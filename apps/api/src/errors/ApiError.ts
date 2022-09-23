@@ -6,7 +6,7 @@ export default class ApiError {
 
   constructor() {
     this.message = 'An unknown error occurred';
-    this.errorCode = 9000;
+    this.errorCode = 1000;
     this.statusCode = 500;
   }
 }
