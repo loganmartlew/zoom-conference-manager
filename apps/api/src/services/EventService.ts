@@ -128,7 +128,7 @@ export default class EventService {
 
       return updatedEvent;
     } catch (error) {
-      throw new ApiError(error, 3003, 'Unable to save Event');
+      throw new ApiError(error, 3003, 'Unable to publish Event');
     }
   }
 
@@ -147,7 +147,7 @@ export default class EventService {
 
       return updatedEvent;
     } catch (error) {
-      throw new ApiError(error, 3003, 'Unable to save Event');
+      throw new ApiError(error, 3003, 'Unable to unpublish Event');
     }
   }
   /*
