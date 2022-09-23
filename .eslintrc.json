@@ -52,7 +52,8 @@
         "react/jsx-props-no-spreading": "off",
         "react/require-default-props": "off",
         "react/jsx-no-useless-fragment": "off",
-        "lines-between-class-members": "off"
+        "@typescript-eslint/lines-between-class-members": "off",
+        "@typescript-eslint/no-throw-literal": "off"
       }
     },
     {

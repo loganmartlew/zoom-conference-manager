@@ -3,6 +3,7 @@ import { db } from '../config';
 import { Logger } from './logger';
 import entities from '../entities';
 import { environment } from '../environments/environment';
+import DbError from '../errors/DbError';
 
 export default async () => {
   const dbVars = db();
@@ -34,6 +35,6 @@ export default async () => {
     Logger.info('Connected to database');
   } catch (error) {
     Logger.error(error);
-    throw new Error('Unable to connect to database');
+    throw new DbError(error, { message: 'Unable to connect to database' });
   }
 };

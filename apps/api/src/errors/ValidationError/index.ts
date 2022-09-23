@@ -1,14 +1,13 @@
 import ApiError from '../ApiError';
 import ErrorOptions from '../ErrorOptions';
 
-/* eslint-disable @typescript-eslint/lines-between-class-members */
-export default class DbError extends ApiError {
+export default class ValidationError extends ApiError {
   public readonly message: string;
   public readonly errorCode: number;
   public readonly statusCode: number;
 
-  constructor(options: ErrorOptions) {
-    super();
+  constructor(parentError: unknown, options: ErrorOptions) {
+    super(parentError);
     const { message, errorCode, statusCode } = options;
 
     this.message = message ?? 'An unknown validation error occurred';
