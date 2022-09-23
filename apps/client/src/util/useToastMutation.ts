@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ApiError } from '@zoom-conference-manager/errors';
 import { useCallback, useRef } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { Id, toast } from 'react-toastify';
@@ -42,8 +43,8 @@ function useToastMutation<Vars>(
     onError: (error: unknown, variables: Vars) => {
       let message = errorMessage;
 
-      if ((error as any).response?.data?.message) {
-        message = (error as any).response.data.message;
+      if (error instanceof ApiError) {
+        message = `Error ${error.statusCode}: ${error.message}`;
       }
 
       if (toastRef.current) {
