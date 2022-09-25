@@ -13,7 +13,7 @@ const getMockMeetingData = (): MeetingData => {
     id: 'mockid',
     name: 'test name',
     startDateTime: '19/08/2022 1602',
-    duration: 2,
+    endDateTime: '2',
   };
   return meeting;
 };
@@ -35,7 +35,7 @@ const mockUpdateFunction = (
     id,
     name: meetingData.name,
     startDateTime: meetingData.startDateTime,
-    duration: meetingData.duration,
+    endDateTime: '3',
   };
   return Promise.resolve(meeting);
 };

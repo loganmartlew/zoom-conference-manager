@@ -7,7 +7,7 @@ import { MeetingData } from './MeetingTypes/UpdateMeetingTypes';
 import UpdateMeeting from './UpdateMeeting';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import { useDeleteMeeting } from './api/deleteMeeting';
-// import { updateMeetingData } from './api/updateMeetingData';
+import { updateMeetingData } from './api/updateMeeting';
 
 interface Props {
   meeting: IMeeting;
@@ -158,10 +158,7 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
               <Box>
                 <UpdateMeeting
                   meetingData={convertToMeetingType(meeting)}
-                  // tempory function prop for now
-                  updateMeetingData={(id: string, meetingData: MeetingData) => {
-                    return Promise.resolve(meetingData);
-                  }}
+                  updateMeetingData={updateMeetingData}
                   meetingId={meeting.id}
                   editOnRender={false}
                 />

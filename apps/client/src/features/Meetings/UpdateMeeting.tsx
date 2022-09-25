@@ -184,8 +184,8 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
             name: 'endDateTime',
           });
         }}
-        name='duration'
-        errorText='duration must be a postive number'
+        name='endDateTime'
+        errorText='end date time appears to be invalid please try again!'
       />
       <Button
         onClick={() => {
