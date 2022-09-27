@@ -74,19 +74,25 @@ export default class ZoomService {
   }
 
   static async getAllMeetings(
-    userEmail: string,
     type: ZoomMeetingType = ZoomMeetingType.SCHEDULED
   ) {
-    let zoomMeetings: ZoomMeetingResponseDTO[] = [];
+    const users = await ZoomUserService.getAll();
+    const zoomMeetings: ZoomMeetingResponseDTO[] = [];
 
     try {
-      const res = await axios.get(`/users/${userEmail}/meetings?type=${type}`);
+      await Promise.all(
+        users.map(async (user) => {
+          const res = await axios.get(
+            `/users/${user.email}/meetings?type=${type}`
+          );
+          if (res.status !== 200) {
+            throw new Error('Error with response');
+          }
+          const activeMeetings: ZoomMeetingResponseDTO = res.data.meetings;
 
-      if (res.status !== 200) {
-        throw new Error('Error with response');
-      }
-
-      zoomMeetings = res.data.meetings;
+          zoomMeetings.push(activeMeetings);
+        })
+      );
     } catch (error) {
       Logger.error('Error requesting ZOOM API');
     }
