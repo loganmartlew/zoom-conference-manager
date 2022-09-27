@@ -7,6 +7,7 @@ import Event from '../entities/Event';
 import ZoomService from './ZoomService';
 import MeetingService from './MeetingService';
 import { MeetingBuilder } from '../util/MeetingBuilder';
+import { ZoomMeetingType } from '../types/ZoomMeetingTypes';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -25,13 +26,34 @@ export default class EventService {
     return eventNames;
   }
 
-  static async getOne(id: string): Promise<Event> {
+  static async getOne(id: string, isActiveMeeting = false): Promise<Event> {
     const event = await Event.findOne({
       where: { id },
       relations: ['meetings'],
     });
     if (!event) {
       throw new Error('Event not found');
+    }
+
+    if (isActiveMeeting) {
+      const activeMeetings = await ZoomService.getAllMeetings(
+        ZoomMeetingType.LIVE
+      );
+
+      if (activeMeetings.length === 0) {
+        event.meetings = [];
+      } else {
+        event.meetings = event.meetings.filter((meeting) => {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const activeMeeting of activeMeetings) {
+            if (meeting.zoomId === String(activeMeeting.id)) {
+              return true;
+            }
+          }
+
+          return false;
+        });
+      }
     }
 
     event.meetings.sort((a, b) => {

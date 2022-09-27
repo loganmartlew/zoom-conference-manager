@@ -36,7 +36,13 @@ export const createEvent: CreateEvent = async (req: Request) => {
 
 export const getEvent: GetEvent = async (req: Request) => {
   const { id } = req.params;
-  const event = await EventService.getOne(id);
+  // eslint-disable-next-line no-unneeded-ternary
+  const isActiveMeeting = req.query.activeMeeting === 'true' ? true : false;
+  if (isActiveMeeting) {
+    console.log('Filtering meeting : ', isActiveMeeting);
+  }
+
+  const event = await EventService.getOne(id, isActiveMeeting);
 
   return { status: StatusCodes.OK, message: 'Found Event', data: event };
 };
