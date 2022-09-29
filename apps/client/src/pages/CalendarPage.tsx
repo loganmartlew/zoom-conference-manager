@@ -10,8 +10,6 @@ const CalendarPage: FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
   const { data: events } = useAllEvents();
 
-  console.log(selectedEvent);
-
   useEffect(() => {
     if (!events) return;
 
