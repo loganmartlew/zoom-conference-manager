@@ -3,16 +3,16 @@ import { DropzoneDialog } from 'react-mui-dropzone';
 import { Button } from '@mui/material';
 import { Upload } from '@mui/icons-material';
 import { axios } from '../../config/axios';
-// import FileUpload from '../features/AddAccount/FileProcess';
 
-interface Props {
-  id: string;
-}
+// interface Props {
+//   id: string;
+// }
 
-const Process: FC<Props> = (props) => {
+// const Process: FC<Props> = (props) => {
+const Process: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [files, setFiles] = useState<File[]>([]);
-  const { id } = props;
+  // const { id } = props;
 
   const send = () => {
     const formData = new FormData();

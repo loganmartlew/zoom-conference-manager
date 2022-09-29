@@ -64,7 +64,8 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
             Add Meeting
           </Button>
 
-          <Process id={event.id} />
+          {/* <Process id={event.id} /> */}
+          <Process />
 
           <Button
             variant='contained'
