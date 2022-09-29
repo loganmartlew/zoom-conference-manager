@@ -5,20 +5,20 @@ import { useEventNames } from '../Events/api/getEventNames';
 import meetingSchema from './meetingSchema';
 
 export interface IFormInput {
-  ubid: string;
   name: string;
-  startDateTime: Date;
-  duration: number;
+  startDate: Date;
+  startTime: Date;
+  endTime: Date;
   eventId: string;
 }
 
 export const useMeetingForm = (eventId: string | null) => {
   const form = useForm<IFormInput>({
     defaultValues: {
-      ubid: '',
       name: '',
-      startDateTime: dayjs().toDate(),
-      duration: 0,
+      startDate: dayjs().toDate(),
+      startTime: new Date(0, 0, 0, 0, 0),
+      endTime: new Date(0, 0, 0, 0, 0),
       eventId: eventId || '',
     },
     resolver: yupResolver(meetingSchema),

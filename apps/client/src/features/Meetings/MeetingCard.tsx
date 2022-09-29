@@ -1,15 +1,32 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
 import { Paper, Stack, Typography, IconButton } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useDeleteMeeting } from './api/deleteMeeting';
 
 interface Props {
   meeting: IMeeting;
 }
 
 const MeetingCard: FC<Props> = ({ meeting }) => {
-  const dateTime = dayjs(meeting.startDateTime);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const onDeleteSuccess = () => {
+    setOpen(false);
+  };
+
+  const onDeleteError = (err: unknown) => {
+    console.log(err);
+  };
+
+  const { mutate } = useDeleteMeeting(onDeleteSuccess, onDeleteError);
+
+  const deleteEvent = () => {
+    mutate(meeting.id);
+  };
+
   return (
     <Paper
       sx={{
@@ -27,27 +44,39 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             <Edit fontSize='small' />
           </IconButton>
 
-          <IconButton size='small' color='error'>
+          <IconButton
+            data-testid={`delete-meeting-${meeting.id}`}
+            size='small'
+            color='error'
+            onClick={() => setOpen(true)}
+          >
             <Delete fontSize='small' />
           </IconButton>
+          <ConfirmationDialog
+            open={open}
+            handleClose={() => setOpen(false)}
+            onConfirm={deleteEvent}
+            title='Delete Meeting'
+            text='Are you sure you want to delete the meeting?'
+          />
         </Stack>
 
-        <Stack direction='row' spacing={4}>
-          <Stack spacing={2}>
-            <Typography
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3em',
-                width: 'max-content',
-              }}
-            >
-              UBID:
-              <Typography variant='body2' display='inline'>
-                {meeting.ubid}
-              </Typography>
+        <Stack spacing={2}>
+          <Typography
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3em',
+              width: 'max-content',
+            }}
+          >
+            Date:
+            <Typography variant='body2'>
+              {dayjs(meeting.startDateTime).format('YYYY-MM-DD')}
             </Typography>
+          </Typography>
 
+          <Stack spacing={4} direction='row'>
             <Typography
               sx={{
                 display: 'flex',
@@ -57,22 +86,8 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
               }}
             >
               Start Time:
-              <Typography variant='body2'>{dateTime.format('HHmm')}</Typography>
-            </Typography>
-          </Stack>
-
-          <Stack spacing={2}>
-            <Typography
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3em',
-                width: 'max-content',
-              }}
-            >
-              Date:
               <Typography variant='body2'>
-                {dateTime.format('YYYY-MM-DD')}
+                {dayjs(meeting.startDateTime).format('HHmm')}
               </Typography>
             </Typography>
 
@@ -86,7 +101,7 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             >
               End Time:
               <Typography variant='body2'>
-                {dateTime.add(meeting.duration, 'minute').format('HHmm')}
+                {dayjs(meeting.endDateTime).format('HHmm')}
               </Typography>
             </Typography>
           </Stack>

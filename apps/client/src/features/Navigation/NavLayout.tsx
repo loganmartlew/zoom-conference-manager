@@ -6,8 +6,9 @@ import {
   Dashboard,
   Event,
   AddBox,
-  PersonAdd,
   People,
+  VideoFile,
+  CalendarMonth,
 } from '@mui/icons-material';
 import TopBar from './TopBar';
 import SideNavigation, { DrawerHeader } from './SideNavigation';
@@ -20,7 +21,8 @@ const items: NavItem[] = [
   { text: 'Events', path: '/events', icon: <Event /> },
   { text: 'New Event', path: '/new-event', icon: <AddBox /> },
   { text: 'New Meeting', path: '/new-meeting', icon: <AddBox /> },
-  { text: 'Add Account', path: '/add-account', icon: <PersonAdd /> },
+  { text: 'Calendar', path: '/calendar', icon: <CalendarMonth /> },
+  { text: 'Recordings', path: '/recordings', icon: <VideoFile /> },
   { text: 'Zoom Users', path: '/zoom-users', icon: <People /> },
 ];
 

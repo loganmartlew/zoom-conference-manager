@@ -1,19 +1,33 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { IEvent } from '@zoom-conference-manager/api-interfaces';
 import { Link } from 'react-router-dom';
-import { Paper, Stack, Typography, Button } from '@mui/material';
-import { Groups } from '@mui/icons-material';
+import { Paper, Stack, Typography, Button, IconButton } from '@mui/material';
+import { Groups, Delete } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useDeleteEvent } from './api/deleteEvent';
 
 interface Props {
-  id: string;
-  name: string;
-  desc: string;
-  start: string;
-  end: string;
+  event: IEvent;
 }
 
-const EventCard: FC<Props> = (props) => {
-  const { id, name, desc, start, end } = props;
+const EventCard: FC<Props> = ({ event }) => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const onDeleteSuccess = () => {
+    setOpen(false);
+  };
+
+  const onDeleteError = (err: unknown) => {
+    console.log(err);
+  };
+
+  const { mutate } = useDeleteEvent(onDeleteSuccess, onDeleteError);
+
+  const deleteEvent = () => {
+    mutate(event.id);
+  };
+
   return (
     <Paper
       sx={{
@@ -22,23 +36,37 @@ const EventCard: FC<Props> = (props) => {
       elevation={3}
     >
       <Stack spacing={2}>
-        <Typography variant='h5' fontWeight={500} mr={3}>
-          {name}
-        </Typography>
+        <Stack direction='row' spacing={1} alignItems='center'>
+          <Typography variant='h5' fontWeight={500}>
+            {event.name}
+          </Typography>
+          <IconButton color='error' onClick={() => setOpen(true)}>
+            <Delete />
+          </IconButton>
+          <ConfirmationDialog
+            open={open}
+            handleClose={() => setOpen(false)}
+            onConfirm={deleteEvent}
+            title='Delete Event'
+            text='Are you sure you want to delete the event?'
+          />
+        </Stack>
         <Stack direction='row' spacing={2}>
-          <EventStatusBadge status='draft' />
+          <EventStatusBadge status={event.status} />
           <Stack direction='row' spacing={1}>
             <Groups />
-            <Typography>0 Meetings</Typography>
+            <Typography>{`${event.meetings.length} Meeting${
+              event.meetings.length === 1 ? '' : 's'
+            }`}</Typography>
           </Stack>
         </Stack>
         <Typography
           sx={{ width: 'max-content', whiteSpace: 'noWrap' }}
-        >{`${start} - ${end}`}</Typography>
-        <Typography variant='body1'>{desc}</Typography>
+        >{`${event.startDate} - ${event.endDate}`}</Typography>
+        <Typography variant='body1'>{event.description}</Typography>
         <Button
           component={Link}
-          to={`/events/${id}`}
+          to={`/events/${event.id}`}
           variant='outlined'
           sx={{ width: 'max-content' }}
         >

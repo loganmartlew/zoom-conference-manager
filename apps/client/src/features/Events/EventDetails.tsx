@@ -1,13 +1,15 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { IEvent } from '@zoom-conference-manager/api-interfaces';
+import { EventStatus } from '@zoom-conference-manager/types';
 import { Stack, Typography, Button } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
-
+import { Add } from '@mui/icons-material';
 import EventStatusBadge from './EventStatusBadge';
 import MeetingsList from '../Meetings/MeetingsList';
-// eslint-disable-next-line import/extensions
-import Process from './ProcessFile';
+import { usePublish } from './usePublish';
+import PublishDialog from './PublishDialog';
+import UploadDialog from './UploadDialog';
+import ClearMeetingsButton from './ClearMeetingsButton';
 
 interface Props {
   event: IEvent | undefined;
@@ -15,6 +17,18 @@ interface Props {
 }
 
 const EventDetails: FC<Props> = ({ event, isLoading }) => {
+  const { publish, unpublish } = usePublish(() => {});
+
+  const publishEvent = () => {
+    if (!event) return;
+    publish(event.id);
+  };
+
+  const unpublishEvent = () => {
+    if (!event) return;
+    unpublish(event.id);
+  };
+
   if (isLoading) {
     return <Typography>Loading...</Typography>;
   }
@@ -28,14 +42,20 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
       <Stack spacing={1}>
         <Typography variant='h5'>Status</Typography>
         <Stack direction='row' spacing={1} alignItems='center'>
-          <EventStatusBadge status='draft' />
+          <EventStatusBadge status={event.status} />
           <Typography variant='body2'>
-            Event has not yet been published
+            Event has
+            {event.status === EventStatus.DRAFT ? ' not yet ' : ' '}
+            been published
           </Typography>
         </Stack>
-        <Button variant='contained' size='small' sx={{ width: 'max-content' }}>
-          Publish
-        </Button>
+
+        {event.status === EventStatus.DRAFT && (
+          <PublishDialog type='publish' onConfirm={publishEvent} />
+        )}
+        {event.status === EventStatus.PUBLISHED && (
+          <PublishDialog type='unpublish' onConfirm={unpublishEvent} />
+        )}
       </Stack>
 
       <Stack spacing={1}>
@@ -63,18 +83,9 @@ const EventDetails: FC<Props> = ({ event, isLoading }) => {
           >
             Add Meeting
           </Button>
+          <UploadDialog id={event.id} />
 
-          {/* <Process id={event.id} /> */}
-          <Process />
-
-          <Button
-            variant='contained'
-            size='small'
-            color='error'
-            startIcon={<Delete />}
-          >
-            Clear Meetings
-          </Button>
+          <ClearMeetingsButton eventId={event.id} />
         </Stack>
         <MeetingsList meetings={event.meetings} />
       </Stack>

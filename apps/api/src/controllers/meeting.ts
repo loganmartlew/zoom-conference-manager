@@ -7,6 +7,7 @@ import {
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { Logger } from '../loaders/logger';
 import MeetingService from '../services/MeetingService';
 
 export const createMeeting: CreateMeeting = async (req: Request) => {
@@ -20,6 +21,8 @@ export const createMeeting: CreateMeeting = async (req: Request) => {
       data: newMeeting,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Fail to create Meeting',
@@ -47,6 +50,20 @@ export const updateMeeting: UpdateMeeting = async () => {
   return { status: StatusCodes.OK, message: 'Update Meeting' };
 };
 
-export const deleteMeeting: DeleteMeeting = async () => {
-  return { status: StatusCodes.OK, message: 'Delete Meeting' };
+export const deleteMeeting: DeleteMeeting = async (req: Request) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
+  }
+
+  const deleted = await MeetingService.delete(id);
+
+  if (!deleted) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to delete Event',
+    };
+  }
+  return { status: StatusCodes.OK, message: 'Meeting deleted' };
 };

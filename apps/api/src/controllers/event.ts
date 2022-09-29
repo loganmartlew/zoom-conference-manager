@@ -5,12 +5,16 @@ import {
   GetEventNames,
   UpdateEvent,
   DeleteEvent,
+  PublishEvent,
+  UnpublishEvent,
   UploadFile,
   MulterRequest,
+  ClearEventMeetings,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import EventService from '../services/EventService';
+import { Logger } from '../loaders/logger';
 
 export const createEvent: CreateEvent = async (req: Request) => {
   const { eventData } = req.body;
@@ -23,6 +27,8 @@ export const createEvent: CreateEvent = async (req: Request) => {
       data: newEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to create Event',
@@ -67,9 +73,61 @@ export const updateEvent: UpdateEvent = async (req: Request) => {
       data: updatedEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to update Event ',
+      error,
+    };
+  }
+};
+
+export const publishEvent: PublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const publishedEvent = await EventService.publish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Published Event',
+      data: publishedEvent,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to publish Event ',
+        error,
+      };
+    }
+
+    Logger.error(error);
+
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to publish Event ',
+      error,
+    };
+  }
+};
+
+export const unpublishEvent: UnpublishEvent = async (req: Request) => {
+  const { id } = req.params;
+
+  try {
+    const unpublishedEvent = await EventService.unpublish(id);
+    return {
+      status: StatusCodes.OK,
+      message: 'Unpublished Event',
+      data: unpublishedEvent,
+    };
+  } catch (error) {
+    Logger.error(error);
+
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to unpublish Event ',
       error,
     };
   }
@@ -93,6 +151,24 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
   return { status: StatusCodes.OK, message: 'Event deleted' };
 };
 
+export const clearEventMeetings: ClearEventMeetings = async (req: Request) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
+  }
+
+  const cleared = await EventService.clearMeetings(id);
+
+  if (!cleared) {
+    return {
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Failed to clear Event meetings',
+    };
+  }
+  return { status: StatusCodes.OK, message: 'Event meetings cleared' };
+};
+
 export const uploadFile: UploadFile = async (req: Request) => {
   /// Add [file] into [req], happens in Runtime
   // eslint-disable-next-line prefer-destructuring
@@ -103,6 +179,8 @@ export const uploadFile: UploadFile = async (req: Request) => {
     await EventService.uploadFile(id, file);
     return { status: StatusCodes.OK, message: 'File uploaded' };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: `Fail to extract datas from excel; ${error}`,

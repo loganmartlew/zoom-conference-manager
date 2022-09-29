@@ -8,6 +8,8 @@ import NewEventPage from '../pages/NewEventPage';
 import NewMeetingPage from '../pages/NewMeetingPage';
 import CalendarPage from '../pages/CalendarPage';
 import ZoomUsersPage from '../pages/ZoomUsersPage';
+import RecordingsPage from '../pages/RecordingsPage';
+import RecordingsDetailsPage from '../pages/RecordingsDetailsPage';
 
 const AppRoutes: FC = () => {
   return (
@@ -20,8 +22,10 @@ const AppRoutes: FC = () => {
           <Route path='/events/:id' element={<EventDetailsPage />} />
           <Route path='/new-event' element={<NewEventPage />} />
           <Route path='/new-meeting' element={<NewMeetingPage />} />
-          <Route path='/add-account' element={<CalendarPage />} />
+          <Route path='/calendar' element={<CalendarPage />} />
           <Route path='/zoom-users' element={<ZoomUsersPage />} />
+          <Route path='/recordings' element={<RecordingsPage />} />
+          <Route path='/recordings/:id' element={<RecordingsDetailsPage />} />
         </Route>
       </Routes>
     </Router>
