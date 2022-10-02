@@ -8,22 +8,31 @@ interface Props {
   isEditable: boolean;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   name: string;
-  errorText: string;
+  displayName: string;
+  helperText: string;
 }
 
 const UpdateMeetingField: FC<Props> = (props: Props) => {
-  const { value, editField, isEditable, handleChange, name, errorText } = props;
+  const {
+    value,
+    editField,
+    isEditable,
+    handleChange,
+    name,
+    helperText,
+    displayName,
+  } = props;
 
   const getEditableField = () => {
     return (
       <TextField
         value={value}
-        label={name}
+        label={displayName}
         name={name}
         onChange={handleChange}
         data-testid={`update--meeting--${name}`}
         inputProps={{ 'data-testid': `update--meeting--textfield--${name}` }}
-        helperText={errorText}
+        helperText={helperText}
       />
     );
   };
@@ -36,7 +45,7 @@ const UpdateMeetingField: FC<Props> = (props: Props) => {
         <TextField
           disabled
           value={value}
-          label={name}
+          label={displayName}
           name={name}
           data-testid={`update--meeting--${name}`}
           inputProps={{ 'data-testid': `update--meeting--textfield--${name}` }}

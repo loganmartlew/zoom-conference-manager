@@ -86,10 +86,6 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             )
           }
 
-          <IconButton size='small' color='primary'>
-            <Edit fontSize='small' />
-          </IconButton>
-
           <IconButton
             data-testid={`delete-meeting-${meeting.id}`}
             size='small'

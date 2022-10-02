@@ -1,8 +1,8 @@
 interface Meeting {
   name: string;
   date: string;
-  time: string;
-  endDateTime: string;
+  startTime: string;
+  endTime: string;
   event: string;
 }
 
@@ -18,15 +18,15 @@ interface MeetingData {
 interface UpdateValue {
   name: string;
   date: string;
-  time: string;
-  endDateTime: string;
+  startTime: string;
+  endTime: string;
 }
 
 interface UpdateEdit {
   name: boolean;
   date: boolean;
-  time: boolean;
-  endDateTime: boolean;
+  startTime: boolean;
+  endTime: boolean;
 }
 
 interface UpdateState {

@@ -115,13 +115,13 @@ describe('UpdateMeeting testing', () => {
 
     // test time field
     const timeField = screen
-      .getByTestId('update--meeting--time')
+      .getByTestId('update--meeting--startTime')
       .querySelector('input')?.value;
     expect(timeField).toBe('1602');
 
     // test duration field
     const durationField = screen
-      .getByTestId('update--meeting--duration')
+      .getByTestId('update--meeting--endDateTime')
       .querySelector('input')?.value;
     expect(durationField).toBe('2');
   });
@@ -156,19 +156,19 @@ describe('UpdateMeeting testing', () => {
 
     // test the time field
     const timeText = changeTextFieldValue(
-      'update--meeting--textfield--time',
-      'update--meeting--time',
+      'update--meeting--textfield--startTime',
+      'update--meeting--startTime',
       '0000',
-      'time field is undefined'
+      'Start time field is undefined'
     );
     expect(timeText).toBe('0000');
 
     // test the duration field
     const durationText = changeTextFieldValue(
-      'update--meeting--textfield--duration',
-      'update--meeting--duration',
+      'update--meeting--textfield--endTime',
+      'update--meeting--endTime',
       '3',
-      'duration field is undefined'
+      'End time field is undefined'
     );
     expect(durationText).toBe('3');
   });
@@ -192,12 +192,12 @@ describe('UpdateMeeting testing', () => {
     testIconClick('update--meeting--date', 'update--meeting--icon--date');
 
     // test time field icon
-    testIconClick('update--meeting--time', 'update--meeting--icon--time');
+    testIconClick(
+      'update--meeting--startTime',
+      'update--meeting--icon--startTime'
+    );
 
     // test duration field icon
-    testIconClick(
-      'update--meeting--duration',
-      'update--meeting--icon--duration'
-    );
+    testIconClick('update--meeting--endTime', 'update--meeting--icon--endTime');
   });
 });

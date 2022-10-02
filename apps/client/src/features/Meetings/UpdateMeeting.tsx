@@ -72,14 +72,14 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     value: {
       name: meetingData.name,
       date: formatDateTime()[0],
-      endDateTime: meetingData.endDateTime,
-      time: formatDateTime()[1],
+      endTime: dayjs(meetingData.endDateTime).format('HHmm'),
+      startTime: formatDateTime()[1],
     },
     edit: {
       name: editOnRender,
       date: editOnRender,
-      endDateTime: editOnRender,
-      time: editOnRender,
+      endTime: editOnRender,
+      startTime: editOnRender,
     },
   });
 
@@ -130,24 +130,29 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           });
         }}
         name='date'
-        errorText='date format dd/mm/yyyy'
+        displayName='Date'
+        helperText='Date format dd/mm/yyyy'
       />
       <UpdateMeetingField
-        value={meetingState.value.time}
+        value={meetingState.value.startTime}
         editField={() => {
-          editField('time', meetingState.edit.time ? 'true' : 'false');
+          editField(
+            'startTime',
+            meetingState.edit.startTime ? 'true' : 'false'
+          );
         }}
-        isEditable={meetingState.edit.time}
+        isEditable={meetingState.edit.startTime}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
           meetingDispatch({
             type: UpdateMeetingType.SET,
             payload: value,
-            name: 'time',
+            name: 'startTime',
           });
         }}
-        name='time'
-        errorText='time format 0000 - 2400 where 2400 represents 24:00'
+        name='startTime'
+        displayName='Start Time'
+        helperText='Time format 0000 - 2400 where 2400 represents 24:00'
       />
       <UpdateMeetingField
         value={meetingState.value.name}
@@ -164,49 +169,48 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           });
         }}
         name='name'
-        errorText=''
+        displayName='Name'
+        helperText=''
         data-testid='update--meeting--name'
       />
       <UpdateMeetingField
-        value={meetingState.value.endDateTime}
+        value={meetingState.value.endTime}
         editField={() => {
-          editField(
-            'endDateTime',
-            meetingState.edit.endDateTime ? 'true' : 'false'
-          );
+          editField('endTime', meetingState.edit.endTime ? 'true' : 'false');
         }}
-        isEditable={meetingState.edit.endDateTime}
+        isEditable={meetingState.edit.endTime}
         handleChange={(e: ChangeEvent<HTMLInputElement>) => {
           const { value } = e.target;
           meetingDispatch({
             type: UpdateMeetingType.SET,
             payload: value,
-            name: 'endDateTime',
+            name: 'endTime',
           });
         }}
-        name='endDateTime'
-        errorText='end date time appears to be invalid please try again!'
+        name='endTime'
+        displayName='End Time'
+        helperText='Time format 0000 - 2400 where 2400 represents 24:00'
       />
       <Button
         onClick={() => {
           // note this date format is required for backend processing
           const [day, month, year] = meetingState.value.date.split('/');
-          const hours = meetingState.value.time.substring(0, 2);
-          const mins = meetingState.value.time.substring(2);
+          const hours = meetingState.value.startTime.substring(0, 2);
+          const mins = meetingState.value.startTime.substring(2);
           const secs = '00'; // the start time doesn't require a specific second to start
           sendMeetingUpdate(meetingId, {
             id: meetingId,
             name: meetingState.value.name,
             startDateTime: `${year}-${month}-${day} ${hours}:${mins}:${secs}`,
-            endDateTime: meetingState.value.endDateTime,
+            endDateTime: meetingState.value.endTime,
           });
 
           // reset all of the fields to disabled (require to click edit, in order to edit again)
           const fieldNames: Array<keyof Meeting> = [
             'date',
-            'time',
+            'startTime',
             'name',
-            'endDateTime',
+            'endTime',
             'event',
           ];
           fieldNames.forEach((name) => {
