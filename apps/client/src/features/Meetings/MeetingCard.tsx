@@ -104,6 +104,27 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
                 {dayjs(meeting.endDateTime).format('HHmm')}
               </Typography>
             </Typography>
+            <Typography
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3em',
+                width: 'max-content',
+              }}
+            >
+              Zoom ID:
+              <Typography variant='body2'>{meeting.zoomId}</Typography>
+            </Typography>
+            <Typography
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3em',
+                width: 'max-content',
+              }}
+            >
+              Zoom User:
+            </Typography>
           </Stack>
         </Stack>
       </Stack>
