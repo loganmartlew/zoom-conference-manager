@@ -1,4 +1,5 @@
 import { FC, ChangeEvent, useReducer, useState } from 'react';
+import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
 import { Stack, Button, Alert } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
@@ -15,7 +16,7 @@ interface Props {
   updateMeetingData: (
     id: string,
     meetingData: MeetingData
-  ) => Promise<MeetingData>;
+  ) => Promise<MeetingDTO>;
   meetingId: string;
   editOnRender: boolean;
 }
@@ -102,8 +103,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     }
   };
 
-  // method used as argument to UpdateMeetingField component in order
-  // to dispatch allow for editing different fields.
+  /**
+   * method used as argument to UpdateMeetingField component in order
+   * to dispatch allow for editing different fields.
+   * @param fieldName
+   * @param value
+   */
   const editField = (fieldName: keyof Meeting, value: string) => {
     // note payload is blank is it is just toggling the current edit boolean value
     meetingDispatch({
@@ -193,16 +198,55 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       />
       <Button
         onClick={() => {
-          // note this date format is required for backend processing
-          const [day, month, year] = meetingState.value.date.split('/');
-          const hours = meetingState.value.startTime.substring(0, 2);
-          const mins = meetingState.value.startTime.substring(2);
-          const secs = '00'; // the start time doesn't require a specific second to start
+          function convertToDateToFormat(date: string) {
+            const [day, month, year] = date.split('/');
+            return `${month}/${day}/${year}`;
+          }
+
+          const startDateFormatted = new Date(
+            convertToDateToFormat(meetingState.value.date)
+          );
+
+          console.log(startDateFormatted);
+
+          const hoursStart = parseInt(
+            meetingState.value.startTime.substring(0, 2),
+            10
+          );
+          const minsStart = parseInt(
+            meetingState.value.startTime.substring(2),
+            10
+          );
+          startDateFormatted.setHours(hoursStart);
+          startDateFormatted.setMinutes(minsStart);
+
+          const endDateFormatted = new Date(
+            convertToDateToFormat(meetingState.value.date)
+          );
+          const hoursEnd = parseInt(
+            meetingState.value.endTime.substring(0, 2),
+            10
+          );
+          const minsEnd = parseInt(meetingState.value.endTime.substring(2), 10);
+          endDateFormatted.setHours(hoursEnd);
+          endDateFormatted.setMinutes(minsEnd);
+
+          const startDateTimeToSend = dayjs(startDateFormatted);
+          const endDateTimeToSend = dayjs(endDateFormatted);
+
+          if (startDateTimeToSend.isAfter(endDateTimeToSend)) {
+            endDateTimeToSend.add(1, 'day');
+          }
+
+          console.log(dayjs(startDateTimeToSend).format('YYYY-DD-MM HH:mm:ss'));
+
           sendMeetingUpdate(meetingId, {
             id: meetingId,
             name: meetingState.value.name,
-            startDateTime: `${year}-${month}-${day} ${hours}:${mins}:${secs}`,
-            endDateTime: meetingState.value.endTime,
+            startDateTime: dayjs(startDateTimeToSend).format(
+              'YYYY-MM-DD HH:mm:ss'
+            ),
+            endDateTime: dayjs(endDateTimeToSend).format('YYYY-MM-DD HH:mm:ss'),
           });
 
           // reset all of the fields to disabled (require to click edit, in order to edit again)

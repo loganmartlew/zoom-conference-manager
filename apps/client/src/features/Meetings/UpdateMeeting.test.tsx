@@ -1,3 +1,4 @@
+import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 /* eslint-disable react/jsx-boolean-value */
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MeetingData } from './MeetingTypes/UpdateMeetingTypes';
@@ -30,9 +31,9 @@ const getMockMeetingData = (): MeetingData => {
 const mockUpdateFunction = (
   id: string,
   meetingData: MeetingData
-): Promise<MeetingData> => {
-  const meeting: MeetingData = {
-    id,
+): Promise<MeetingDTO> => {
+  const meeting: MeetingDTO = {
+    eventId: id,
     name: meetingData.name,
     startDateTime: meetingData.startDateTime,
     endDateTime: '3',
