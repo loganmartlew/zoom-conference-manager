@@ -88,11 +88,16 @@ export class MeetingBuilder {
 
     const [title, date, startTime, endTime, session] = cellValues;
 
-    const startDate = dayjs(`${date} ${startTime}`, 'MM/DD/YYYY hh:mm A');
+    const expandedDate = MeetingBuilder.expandDate(date);
+
+    const startDate = dayjs(
+      `${expandedDate} ${startTime}`,
+      'MM/DD/YYYY hh:mm A'
+    );
 
     const startDateTime = startDate.format(formats.dateTime);
 
-    const endDate = dayjs(`${date} ${endTime}`, 'MM/DD/YYYY hh:mm A');
+    const endDate = dayjs(`${expandedDate} ${endTime}`, 'MM/DD/YYYY hh:mm A');
 
     const endDateTime = endDate.format(formats.dateTime);
 
@@ -112,5 +117,14 @@ export class MeetingBuilder {
     };
 
     return [meetingDto, session];
+  }
+
+  private static expandDate(date: string): string {
+    const [month, day, year] = date.split('/');
+
+    const eMonth = month.padStart(2, '0');
+    const eDay = day.padStart(2, '0');
+
+    return `${eMonth}/${eDay}/${year}`;
   }
 }

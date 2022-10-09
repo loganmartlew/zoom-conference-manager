@@ -1,14 +1,32 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
 import { Paper, Stack, Typography, IconButton } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useDeleteMeeting } from './api/deleteMeeting';
 
 interface Props {
   meeting: IMeeting;
 }
 
 const MeetingCard: FC<Props> = ({ meeting }) => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const onDeleteSuccess = () => {
+    setOpen(false);
+  };
+
+  const onDeleteError = (err: unknown) => {
+    console.log(err);
+  };
+
+  const { mutate } = useDeleteMeeting(onDeleteSuccess, onDeleteError);
+
+  const deleteEvent = () => {
+    mutate(meeting.id);
+  };
+
   return (
     <Paper
       sx={{
@@ -26,9 +44,21 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             <Edit fontSize='small' />
           </IconButton>
 
-          <IconButton size='small' color='error'>
+          <IconButton
+            data-testid={`delete-meeting-${meeting.id}`}
+            size='small'
+            color='error'
+            onClick={() => setOpen(true)}
+          >
             <Delete fontSize='small' />
           </IconButton>
+          <ConfirmationDialog
+            open={open}
+            handleClose={() => setOpen(false)}
+            onConfirm={deleteEvent}
+            title='Delete Meeting'
+            text='Are you sure you want to delete the meeting?'
+          />
         </Stack>
 
         <Stack spacing={2}>
@@ -73,6 +103,27 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
               <Typography variant='body2'>
                 {dayjs(meeting.endDateTime).format('HHmm')}
               </Typography>
+            </Typography>
+            <Typography
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3em',
+                width: 'max-content',
+              }}
+            >
+              Zoom ID:
+              <Typography variant='body2'>{meeting.zoomId}</Typography>
+            </Typography>
+            <Typography
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3em',
+                width: 'max-content',
+              }}
+            >
+              Zoom User:
             </Typography>
           </Stack>
         </Stack>

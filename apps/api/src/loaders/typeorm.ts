@@ -2,9 +2,20 @@ import { DataSource } from 'typeorm';
 import { db } from '../config';
 import { Logger } from './logger';
 import entities from '../entities';
+import { environment } from '../environments/environment';
 
 export default async () => {
   const dbVars = db();
+
+  const prodOptions = environment.production
+    ? {
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
+      }
+    : {};
 
   const dataSource = new DataSource({
     type: 'postgres',
@@ -15,6 +26,7 @@ export default async () => {
     database: dbVars.database,
     synchronize: true,
     entities,
+    ...prodOptions,
   });
 
   try {
