@@ -48,7 +48,7 @@ export const getMeeting: GetMeeting = async (req: Request) => {
 
 export const updateMeeting: UpdateMeeting = async (req: Request) => {
   const { id } = req.params;
-  const { meetingData } = req.body;
+  const meetingData = req.body;
   try {
     const updatedMeeting = await MeetingService.update(id, meetingData);
     return {
