@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable import/no-cycle */
 import dayjs from 'dayjs';
 import Event from '../entities/Event';
@@ -6,6 +7,7 @@ import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import { flattenMeetings } from '../util/publish/flattenMeetings';
+import { splitMeetingsToChunks } from '../util/publish/splitMeetingsToChunks';
 import MeetingService from './MeetingService';
 import ZoomUserService from './ZoomUserService';
 
@@ -27,16 +29,23 @@ export default class ZoomService {
     Logger.info(JSON.stringify(userMeetings, null, 2));
 
     const flatMeetings = flattenMeetings(userMeetings);
+    const meetingChunks = splitMeetingsToChunks(flatMeetings);
 
     try {
-      await Promise.all(
-        flatMeetings.map((flatMeeting) => {
-          return ZoomService.scheduleMeeting(
-            flatMeeting.meeting,
-            flatMeeting.email
-          );
-        })
-      );
+      // eslint-disable-next-line no-restricted-syntax
+      for (const chunk of meetingChunks) {
+        await Promise.all(
+          chunk.map((flatMeeting) => {
+            return ZoomService.scheduleMeeting(
+              flatMeeting.meeting,
+              flatMeeting.email
+            );
+          })
+        );
+
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
     } catch (e) {
       Logger.error(`Unable to publish event`);
       Logger.error(e);
