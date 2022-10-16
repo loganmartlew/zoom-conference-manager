@@ -114,16 +114,16 @@ export default class EventService {
   }
 
   static async publish(id: string): Promise<Event> {
-    const event = await this.getOne(id);
-
-    if (event.status === EventStatus.PUBLISHED) {
-      throw new ApiError(null, 3006, 'Event is already published');
-    }
-
-    await ZoomService.publishEvent(event);
-
     try {
-      event.status = EventStatus.PUBLISHED;
+      const event = await this.getOne(id);
+
+      if (event.status === EventStatus.DRAFT) {
+        throw new Error('Event is not published');
+      }
+
+      await ZoomService.unpublishEvent(event);
+
+      event.status = EventStatus.DRAFT;
       const updatedEvent = await event.save();
 
       return updatedEvent;
