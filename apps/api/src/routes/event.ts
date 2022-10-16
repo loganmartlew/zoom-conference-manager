@@ -11,6 +11,7 @@ import {
   deleteEvent,
   uploadFile,
   clearEventMeetings,
+  getEventRecordings,
 } from '../controllers/event';
 import response from '../util/response';
 
@@ -25,5 +26,6 @@ router.patch('/:id/unpublish', response(unpublishEvent));
 router.delete('/:id', response(deleteEvent));
 router.post('/:id/upload', multer.single('excelFile'), response(uploadFile));
 router.delete('/:id/meetings', response(clearEventMeetings));
+router.get('/:id/recordings', response(getEventRecordings));
 
 export default router;

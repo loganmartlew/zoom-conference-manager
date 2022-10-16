@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiError } from '@zoom-conference-manager/errors';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { IEvent, IEventName, IMeeting, IZoomUser } from './entity-types';
 
 export type ApiResponse<T> =
@@ -7,21 +8,25 @@ export type ApiResponse<T> =
       status: number;
       message: string;
       data?: T;
+      download?: any;
       error?: never;
     }
   | {
       status: number;
       message: string;
       data?: never;
+      download?: never;
       error: ApiError;
     };
 
 export interface MulterRequest extends Request {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   file: any;
 }
 
-export type Controller<T> = (req: Request) => Promise<ApiResponse<T>>;
+export type Controller<T> = (
+  req: Request,
+  res: Response
+) => Promise<ApiResponse<T>>;
 export type ExtractControllerData<T> = T extends Controller<infer U>
   ? U
   : never;
@@ -36,6 +41,7 @@ export type UnpublishEvent = Controller<IEvent>;
 export type DeleteEvent = Controller<void>;
 export type UploadFile = Controller<void>;
 export type ClearEventMeetings = Controller<void>;
+export type GetEventRecordings = Controller<never>;
 
 export type CreateMeeting = Controller<IMeeting>;
 export type GetMeeting = Controller<IMeeting>;

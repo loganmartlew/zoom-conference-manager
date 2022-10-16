@@ -10,6 +10,7 @@ import MeetingService from './MeetingService';
 import { MeetingBuilder } from '../util/MeetingBuilder';
 import { MeetingRecording } from '../types/MeetingRecording';
 import WorkbookBuilder from '../util/WorkbookBuilder';
+import { RecordingFile } from '../types/RecordingResponse';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -181,7 +182,6 @@ export default class EventService {
 
       await Promise.all(
         await meetingList.map(async (meetingDto) => {
-          // console.log(meetingDto);
           // eslint-disable-next-line @typescript-eslint/return-await
           return await MeetingService.create(meetingDto);
         })
@@ -198,7 +198,10 @@ export default class EventService {
   static async getRecordingsSpreadsheet(id: string) {
     const event = await this.getOne(id);
 
-    const recordings = await ZoomService.getEventRecordings(event);
+    const allRecordings = await ZoomService.getEventRecordings(event);
+    const recordings = allRecordings.filter(
+      (recording) => recording != null
+    ) as RecordingFile[];
 
     const meetingRecordings: MeetingRecording[] = recordings
       .map((recording) => {

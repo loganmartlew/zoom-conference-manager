@@ -144,9 +144,9 @@ export default class ZoomService {
     }
   }
 
-  static async getRecording(meeting: Meeting): Promise<RecordingFile> {
+  static async getRecording(meeting: Meeting): Promise<RecordingFile | null> {
     if (!meeting.zoomId) {
-      throw new Error('Meeting does not have a zoomId');
+      return null;
     }
 
     try {
@@ -158,10 +158,10 @@ export default class ZoomService {
       );
 
       if (recordings.length === 0) {
-        throw new ApiError(null, 2005, 'No recordings found for meeting');
+        return null;
       }
 
-      return recordings[0];
+      return { ...recordings[0], meeting_id: meeting.zoomId };
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -170,7 +170,7 @@ export default class ZoomService {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       if (error.response?.data?.code === 3301) {
-        throw new ApiError(error, 2005, 'No recordings found for meeting');
+        return null;
       }
 
       handleZoomError(error, 'Error getting recording from Zoom');

@@ -78,8 +78,12 @@ export default class MeetingService {
 
   static async getRecording(id: string) {
     const meeting = await this.getOne(id);
-
     const recording = await ZoomService.getRecording(meeting);
+
+    if (!recording) {
+      throw new ApiError(null, 2005, 'Recording not found');
+    }
+
     return recording;
   }
 }
