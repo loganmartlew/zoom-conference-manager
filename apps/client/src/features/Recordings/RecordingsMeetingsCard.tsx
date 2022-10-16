@@ -101,7 +101,11 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
               </Typography>
             </Typography>
           </Stack>
-          <Button variant='outlined' onClick={handleClickOpen}>
+          <Button
+            variant='outlined'
+            onClick={handleClickOpen}
+            sx={{ width: 'max-content' }}
+          >
             Get Recording
           </Button>
           <Dialog
