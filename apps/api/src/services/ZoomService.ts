@@ -82,7 +82,6 @@ export default class ZoomService {
         throw error;
       }
 
-      console.log('ERROR');
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore error
       if (error.response?.data) {
@@ -123,8 +122,40 @@ export default class ZoomService {
 
     try {
       await axios.delete(`/meetings/${meeting.zoomId}`);
-    } catch (e) {
-      Logger.error(`Unable to delete meeting ${meeting.name} from Zoom`);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore error
+      if (error.response?.data) {
+        const zoomResponse: { code: number; message: string } =
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore error
+          error.response.data;
+
+        switch (zoomResponse.code) {
+          case 400: {
+            throw new ApiError(error, 2004, null);
+          }
+          case 401: {
+            throw new ApiError(error, 2002, null);
+          }
+          case 403: {
+            throw new ApiError(error, 2003, null);
+          }
+          case 404: {
+            throw new ApiError(error, 2005, null);
+          }
+          case 429: {
+            throw new ApiError(error, 2001, null);
+          }
+          default: {
+            throw new ApiError(error, 2000, null);
+          }
+        }
+      }
     }
   }
 }
