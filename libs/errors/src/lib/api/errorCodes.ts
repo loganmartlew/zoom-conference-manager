@@ -40,6 +40,10 @@ const httpCodes: Codes = {
     message: 'Request failed due to invalid input',
     statusCode: statusCodes.BAD_REQUEST,
   }),
+  2005: new Code({
+    message: 'Request failed due to a resource not being found',
+    statusCode: statusCodes.NOT_FOUND,
+  }),
 };
 
 const dbCodes: Codes = {
