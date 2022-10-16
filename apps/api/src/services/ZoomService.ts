@@ -5,11 +5,43 @@ import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
-import { RecordingResponse } from '../types/RecordingResponse';
+import { RecordingFile, RecordingResponse } from '../types/RecordingResponse';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import { flattenMeetings } from '../util/publish/flattenMeetings';
 import MeetingService from './MeetingService';
 import ZoomUserService from './ZoomUserService';
+
+function handleZoomError(error: unknown, defaultMessage: string | null) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore error
+  if (error.response?.data) {
+    const zoomResponse: { code: number; message: string } =
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore error
+      error.response.data;
+
+    switch (zoomResponse.code) {
+      case 400: {
+        throw new ApiError(error, 2004, null);
+      }
+      case 401: {
+        throw new ApiError(error, 2002, null);
+      }
+      case 403: {
+        throw new ApiError(error, 2003, null);
+      }
+      case 404: {
+        throw new ApiError(error, 2005, null);
+      }
+      case 429: {
+        throw new ApiError(error, 2001, null);
+      }
+      default: {
+        throw new ApiError(error, 2000, defaultMessage);
+      }
+    }
+  }
+}
 
 export default class ZoomService {
   static async publishEvent(event: Event) {
@@ -56,6 +88,14 @@ export default class ZoomService {
     );
   }
 
+  static async getEventRecordings(event: Event) {
+    const recordings = await Promise.all(
+      event.meetings.map((meeting) => ZoomService.getRecording(meeting))
+    );
+
+    return recordings;
+  }
+
   static async scheduleMeeting(meeting: Meeting, userEmail: string) {
     const SCHEDULED_MEETING = 2;
 
@@ -83,35 +123,7 @@ export default class ZoomService {
         throw error;
       }
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore error
-      if (error.response?.data) {
-        const zoomResponse: { code: number; message: string } =
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore error
-          error.response.data;
-
-        switch (zoomResponse.code) {
-          case 400: {
-            throw new ApiError(error, 2004, null);
-          }
-          case 401: {
-            throw new ApiError(error, 2002, null);
-          }
-          case 403: {
-            throw new ApiError(error, 2003, null);
-          }
-          case 404: {
-            throw new ApiError(error, 2005, null);
-          }
-          case 429: {
-            throw new ApiError(error, 2001, null);
-          }
-          default: {
-            throw new ApiError(error, 2000, null);
-          }
-        }
-      }
+      handleZoomError(error, 'Error scheduling meeting with Zoom');
     }
   }
 
@@ -128,39 +140,11 @@ export default class ZoomService {
         throw error;
       }
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore error
-      if (error.response?.data) {
-        const zoomResponse: { code: number; message: string } =
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore error
-          error.response.data;
-
-        switch (zoomResponse.code) {
-          case 400: {
-            throw new ApiError(error, 2004, null);
-          }
-          case 401: {
-            throw new ApiError(error, 2002, null);
-          }
-          case 403: {
-            throw new ApiError(error, 2003, null);
-          }
-          case 404: {
-            throw new ApiError(error, 2005, null);
-          }
-          case 429: {
-            throw new ApiError(error, 2001, null);
-          }
-          default: {
-            throw new ApiError(error, 2000, null);
-          }
-        }
-      }
+      handleZoomError(error, 'Error deleting meeting from Zoom');
     }
   }
 
-  static async getRecording(meeting: Meeting) {
+  static async getRecording(meeting: Meeting): Promise<RecordingFile> {
     if (!meeting.zoomId) {
       throw new Error('Meeting does not have a zoomId');
     }
@@ -174,14 +158,18 @@ export default class ZoomService {
       );
 
       if (recordings.length === 0) {
-        throw new Error('No recordings found');
+        throw new ApiError(null, 2005, 'No recordings found for meeting');
       }
 
       return recordings[0];
-    } catch (e) {
-      Logger.error(`Unable to get recording for meeting ${meeting.name}`);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+
+      handleZoomError(error, 'Error getting recording from Zoom');
     }
 
-    return null;
+    return {} as RecordingFile;
   }
 }
