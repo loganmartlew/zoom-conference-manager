@@ -6,6 +6,7 @@ export interface RecordingResponse {
 
 export interface RecordingFile {
   id: string;
+  meeting_id: string;
   file_size: number;
   download_url: string;
 }

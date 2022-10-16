@@ -56,9 +56,11 @@ export const deleteMeeting: DeleteMeeting = async (req: Request) => {
 export const getRecording: GetMeetingRecording = async (req: Request) => {
   const { id } = req.params;
 
+  const recording = await MeetingService.getRecording(id);
+
   return {
     status: StatusCodes.OK,
     message: 'Retrieved recording',
-    data: `https://google.com/${id}`,
+    data: recording.download_url,
   };
 };
