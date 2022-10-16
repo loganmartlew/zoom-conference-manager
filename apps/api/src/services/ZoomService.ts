@@ -54,9 +54,25 @@ export default class ZoomService {
   }
 
   static async unpublishEvent(event: Event) {
-    await Promise.all(
-      event.meetings.map((meeting) => ZoomService.deleteMeeting(meeting))
-    );
+    const meetingChunks = splitArrayToChunks(event.meetings, 20);
+
+    try {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const chunk of meetingChunks) {
+        await Promise.all(
+          chunk.map((meeting) => {
+            return ZoomService.deleteMeeting(meeting);
+          })
+        );
+
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    } catch (e) {
+      Logger.error(`Unable to publish event`);
+      Logger.error(e);
+      throw new Error('Error scheduling meetings');
+    }
   }
 
   static async scheduleMeeting(meeting: Meeting, userEmail: string) {

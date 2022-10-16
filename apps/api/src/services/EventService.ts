@@ -135,10 +135,10 @@ export default class EventService {
         throw new Error('Event is not published');
       }
 
+      await ZoomService.unpublishEvent(event);
+
       event.status = EventStatus.DRAFT;
       const updatedEvent = await event.save();
-
-      await ZoomService.unpublishEvent(event);
 
       return updatedEvent;
     } catch (error) {
