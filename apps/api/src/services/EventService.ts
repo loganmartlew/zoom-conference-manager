@@ -117,8 +117,8 @@ export default class EventService {
     try {
       const event = await this.getOne(id);
 
-      if (event.status === EventStatus.DRAFT) {
-        throw new Error('Event is not published');
+      if (event.status === EventStatus.PUBLISHED) {
+        throw new ApiError(null, 3006, 'Event is already published');
       }
 
       await ZoomService.unpublishEvent(event);
