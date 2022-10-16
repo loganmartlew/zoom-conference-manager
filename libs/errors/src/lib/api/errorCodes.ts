@@ -28,6 +28,18 @@ const httpCodes: Codes = {
     message: 'Request failed due to rate limiting',
     statusCode: statusCodes.TOO_MANY_REQUESTS,
   }),
+  2002: new Code({
+    message: 'Request failed due to invalid credentials',
+    statusCode: statusCodes.UNAUTHORIZED,
+  }),
+  2003: new Code({
+    message: 'Request failed due to invalid permissions',
+    statusCode: statusCodes.FORBIDDEN,
+  }),
+  2004: new Code({
+    message: 'Request failed due to invalid input',
+    statusCode: statusCodes.BAD_REQUEST,
+  }),
 };
 
 const dbCodes: Codes = {
