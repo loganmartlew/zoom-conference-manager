@@ -122,7 +122,7 @@ describe('UpdateMeeting testing', () => {
 
     // test duration field
     const durationField = screen
-      .getByTestId('update--meeting--endDateTime')
+      .getByTestId('update--meeting--endTime')
       .querySelector('input')?.value;
     expect(durationField).toBe('2');
   });

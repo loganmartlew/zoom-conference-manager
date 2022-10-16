@@ -22,14 +22,14 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
   // This method converts the IMeeting type to MeetingData type
   // as required for the below component UpdateMeeting prop inputs.
   const convertToMeetingType = (currentMeeting: IMeeting): MeetingData => {
-    const tempDate = dateTime.format('DD/mm/YYYY');
-    const tempTime = dateTime.format('HHmm');
+    const tempDate = dayjs(dateTime).format('DD/MM/YYYY');
+    const tempTime = dayjs(dateTime).format('HHmm');
     const date = `${tempDate} ${tempTime}`;
     const convertedMeeting: MeetingData = {
       id: currentMeeting.id,
       name: currentMeeting.name,
       startDateTime: date,
-      endDateTime: meeting.endDateTime.toString(),
+      endDateTime: dayjs(meeting.endDateTime.toString()).format('HHmm'),
     };
     return convertedMeeting;
   };

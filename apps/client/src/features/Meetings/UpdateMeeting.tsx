@@ -73,7 +73,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
     value: {
       name: meetingData.name,
       date: formatDateTime()[0],
-      endTime: dayjs(meetingData.endDateTime).format('HHmm'),
+      endTime: meetingData.endDateTime,
       startTime: formatDateTime()[1],
     },
     edit: {
@@ -207,8 +207,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
             convertToDateToFormat(meetingState.value.date)
           );
 
-          console.log(startDateFormatted);
-
           const hoursStart = parseInt(
             meetingState.value.startTime.substring(0, 2),
             10
@@ -237,8 +235,6 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           if (startDateTimeToSend.isAfter(endDateTimeToSend)) {
             endDateTimeToSend.add(1, 'day');
           }
-
-          console.log(dayjs(startDateTimeToSend).format('YYYY-DD-MM HH:mm:ss'));
 
           sendMeetingUpdate(meetingId, {
             id: meetingId,
