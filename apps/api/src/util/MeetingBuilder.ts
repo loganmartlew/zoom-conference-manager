@@ -1,6 +1,7 @@
 /* eslint-disable no-continue */
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { formats } from '@zoom-conference-manager/dates';
+import { ApiError } from '@zoom-conference-manager/errors';
 import dayjs from 'dayjs';
 import { WorkSheet } from 'xlsx';
 
@@ -105,7 +106,7 @@ export class MeetingBuilder {
       endDate.add(1, 'day');
 
       if (endDate.isBefore(startDate)) {
-        throw new Error(`End date is before start date`);
+        throw new ApiError(null, 4001, `End date is before start date`);
       }
     }
 
