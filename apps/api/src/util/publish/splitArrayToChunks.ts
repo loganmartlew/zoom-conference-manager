@@ -1,11 +1,7 @@
-import { FlatMeeting } from './flattenMeetings';
-
-const defaultChunkSize = 20;
-
-export const splitMeetingsToChunks = (
-  meetings: FlatMeeting[],
-  chunkSize = defaultChunkSize
-): FlatMeeting[][] => {
+export const splitArrayToChunks = <T>(
+  meetings: T[],
+  chunkSize: number
+): T[][] => {
   const result = meetings.reduce((resultArray, item, index) => {
     const chunkIndex = Math.floor(index / chunkSize);
 
@@ -17,7 +13,7 @@ export const splitMeetingsToChunks = (
     resultArray[chunkIndex].push(item);
 
     return resultArray;
-  }, [] as FlatMeeting[][]);
+  }, [] as T[][]);
 
   return result;
 };

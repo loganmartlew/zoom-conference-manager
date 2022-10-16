@@ -7,7 +7,7 @@ import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import { flattenMeetings } from '../util/publish/flattenMeetings';
-import { splitMeetingsToChunks } from '../util/publish/splitMeetingsToChunks';
+import { splitArrayToChunks } from '../util/publish/splitArrayToChunks';
 import MeetingService from './MeetingService';
 import ZoomUserService from './ZoomUserService';
 
@@ -29,7 +29,7 @@ export default class ZoomService {
     Logger.info(JSON.stringify(userMeetings, null, 2));
 
     const flatMeetings = flattenMeetings(userMeetings);
-    const meetingChunks = splitMeetingsToChunks(flatMeetings);
+    const meetingChunks = splitArrayToChunks(flatMeetings, 20);
 
     try {
       // eslint-disable-next-line no-restricted-syntax
