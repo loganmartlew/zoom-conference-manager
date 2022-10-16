@@ -6,6 +6,7 @@ import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
+import delay from '../util/delay';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import { flattenMeetings } from '../util/publish/flattenMeetings';
 import { splitArrayToChunks } from '../util/publish/splitArrayToChunks';
@@ -94,12 +95,14 @@ export default class ZoomService {
     };
 
     try {
-      const res = await axios.post<{ id: number }>(
-        `/users/${userEmail}/meetings`,
-        meetingData
-      );
+      // const res = await axios.post<{ id: number }>(
+      //   `/users/${userEmail}/meetings`,
+      //   meetingData
+      // );
+      await delay(100);
 
-      const zoomId = res.data.id;
+      // const zoomId = res.data.id;
+      const zoomId = Math.floor(Math.random() * 1000000000);
 
       await MeetingService.setZoomId(meeting.id, `${zoomId}`);
     } catch (error) {
@@ -146,7 +149,8 @@ export default class ZoomService {
     }
 
     try {
-      await axios.delete(`/meetings/${meeting.zoomId}`);
+      // await axios.delete(`/meetings/${meeting.zoomId}`);
+      await delay(500);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
