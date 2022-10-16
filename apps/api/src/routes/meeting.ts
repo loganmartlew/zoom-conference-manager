@@ -6,6 +6,7 @@ import {
   updateMeeting,
   deleteMeeting,
   getAllMeeting,
+  getRecording,
 } from '../controllers/meeting';
 import response from '../util/response';
 
@@ -16,6 +17,6 @@ router.post('/', response(createMeeting));
 router.get('/:id', response(getMeeting));
 router.put('/:id', response(updateMeeting));
 router.delete('/:id', response(deleteMeeting));
-router.get('/:id/recording', response(deleteMeeting));
+router.get('/:id/recording', response(getRecording));
 
 export default router;

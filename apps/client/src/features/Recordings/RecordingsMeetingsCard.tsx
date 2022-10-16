@@ -1,4 +1,5 @@
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
+import { ApiError } from '@zoom-conference-manager/errors';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
 import {
@@ -15,29 +16,74 @@ import {
   Tooltip,
 } from '@mui/material';
 import copy from 'copy-to-clipboard';
+import { Id, toast } from 'react-toastify';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
+import notificationSettings from '../../App/notificationSettings';
+import { getMeetingRecording } from './api/getMeetingRecording';
 
 interface Props {
   meeting: IMeeting;
 }
 
 const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
+  const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState('');
+
+  const toastRef = useRef<Id | null>(null);
+
   const dateTime = dayjs(meeting.startDateTime);
   const dateTimeEnd = dayjs(meeting.endDateTime);
 
-  // handlers for dialog
-  const [open, setOpen] = useState(false);
+  const handleRequestRecording = async () => {
+    toastRef.current = toast.loading(
+      'Retrieving Recording...',
+      notificationSettings
+    );
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+    try {
+      const recordingUrl = await getMeetingRecording(meeting.id);
+      setUrl(recordingUrl);
 
-  const handleClose = () => {
-    setOpen(false);
+      if (toastRef.current) {
+        toast.update(toastRef.current, {
+          render: 'Recording retrieved',
+          type: toast.TYPE.SUCCESS,
+          isLoading: false,
+          ...notificationSettings,
+        });
+      }
+
+      setOpen(true);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (toastRef.current) {
+          toast.update(toastRef.current, {
+            render: !error.message
+              ? 'Failed to retrieve recording'
+              : `${error.errorCode}: ${error.message}`,
+            type: toast.TYPE.ERROR,
+            isLoading: false,
+            ...notificationSettings,
+          });
+        }
+      } else {
+        // eslint-disable-next-line no-lonely-if
+        if (toastRef.current) {
+          toast.update(toastRef.current, {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            render: error.message || 'Failed to retrieve recording',
+            type: toast.TYPE.ERROR,
+            isLoading: false,
+            ...notificationSettings,
+          });
+        }
+      }
+    }
   };
 
   const copyLink = () => {
-    copy('test link');
+    copy(url);
   };
 
   return (
@@ -103,14 +149,14 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
           </Stack>
           <Button
             variant='outlined'
-            onClick={handleClickOpen}
+            onClick={handleRequestRecording}
             sx={{ width: 'max-content' }}
           >
             Get Recording
           </Button>
           <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={() => setOpen(false)}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
@@ -118,9 +164,11 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
             <DialogContent>
               <Stack direction='row' spacing={2}>
                 <TextField
-                  disabled
+                  onKeyDown={(e) => {
+                    e.preventDefault();
+                  }}
                   name='recordingLink'
-                  defaultValue='Link goes here :)'
+                  defaultValue={url || 'No recording available'}
                   InputLabelProps={{ shrink: false }}
                 />
                 <Tooltip title='Copy to Clipboard'>
@@ -131,7 +179,7 @@ const RecordingsMeetingsCard: FC<Props> = ({ meeting }) => {
               </Stack>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose}>Close</Button>
+              <Button onClick={() => setOpen(false)}>Close</Button>
             </DialogActions>
           </Dialog>
         </Stack>

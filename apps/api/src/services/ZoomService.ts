@@ -167,6 +167,12 @@ export default class ZoomService {
         throw error;
       }
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (error.response?.data?.code === 3301) {
+        throw new ApiError(error, 2005, 'No recordings found for meeting');
+      }
+
       handleZoomError(error, 'Error getting recording from Zoom');
     }
 
