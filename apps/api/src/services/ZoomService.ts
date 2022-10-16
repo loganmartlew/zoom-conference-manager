@@ -4,6 +4,7 @@ import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
+import { RecordingResponse } from '../types/RecordingResponse';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import { flattenMeetings } from '../util/publish/flattenMeetings';
 import MeetingService from './MeetingService';
@@ -84,5 +85,30 @@ export default class ZoomService {
     } catch (e) {
       Logger.error(`Unable to delete meeting ${meeting.name} from Zoom`);
     }
+  }
+
+  static async getRecording(meeting: Meeting) {
+    if (!meeting.zoomId) {
+      throw new Error('Meeting does not have a zoomId');
+    }
+
+    try {
+      const res = await axios.get<RecordingResponse>(
+        `/meetings/${meeting.zoomId}/recordings`
+      );
+      const recordings = res.data.recording_files.sort(
+        (a, b) => a.file_size - b.file_size
+      );
+
+      if (recordings.length === 0) {
+        throw new Error('No recordings found');
+      }
+
+      return recordings[0];
+    } catch (e) {
+      Logger.error(`Unable to get recording for meeting ${meeting.name}`);
+    }
+
+    return null;
   }
 }
