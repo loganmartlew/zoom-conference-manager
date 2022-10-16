@@ -24,6 +24,10 @@ const httpCodes: Codes = {
   2000: new Code({
     message: 'An unknown HTTP error occurred',
   }),
+  2001: new Code({
+    message: 'Request failed due to rate limiting',
+    statusCode: statusCodes.TOO_MANY_REQUESTS,
+  }),
 };
 
 const dbCodes: Codes = {
@@ -54,21 +58,27 @@ const dbCodes: Codes = {
 const validationCodes: Codes = {
   4000: new Code({
     message: 'An unknown validation error occurred',
+    statusCode: statusCodes.BAD_REQUEST,
   }),
   4001: new Code({
     message: 'Invalid data provided',
+    statusCode: statusCodes.BAD_REQUEST,
   }),
   4002: new Code({
     message: 'Incorrect data format',
+    statusCode: statusCodes.BAD_REQUEST,
   }),
   4003: new Code({
     message: 'Missing required data',
+    statusCode: statusCodes.BAD_REQUEST,
   }),
   4004: new Code({
     message: 'Unable to process data',
+    statusCode: statusCodes.UNPROCESSABLE_ENTITY,
   }),
   4005: new Code({
     message: 'System at capacity',
+    statusCode: statusCodes.UNPROCESSABLE_ENTITY,
   }),
 };
 
