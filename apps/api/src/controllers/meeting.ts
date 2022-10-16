@@ -3,6 +3,7 @@ import {
   DeleteMeeting,
   GetAllMeetings,
   GetMeeting,
+  GetMeetingRecording,
   UpdateMeeting,
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
@@ -66,4 +67,14 @@ export const deleteMeeting: DeleteMeeting = async (req: Request) => {
     };
   }
   return { status: StatusCodes.OK, message: 'Meeting deleted' };
+};
+
+export const getRecording: GetMeetingRecording = async (req: Request) => {
+  const { id } = req.params;
+
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved recording',
+    data: `https://google.com/${id}`,
+  };
 };

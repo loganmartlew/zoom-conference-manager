@@ -9,6 +9,7 @@ export interface ApiResponse<T> {
 }
 
 export interface MulterRequest extends Request {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   file: any;
 }
 
@@ -33,6 +34,7 @@ export type GetMeeting = Controller<IMeeting>;
 export type GetAllMeetings = Controller<IMeeting[]>;
 export type UpdateMeeting = Controller<IMeeting>;
 export type DeleteMeeting = Controller<void>;
+export type GetMeetingRecording = Controller<string>;
 
 export type CreateZoomUser = Controller<IZoomUser>;
 export type GetAllZoomUsers = Controller<IZoomUser[]>;
