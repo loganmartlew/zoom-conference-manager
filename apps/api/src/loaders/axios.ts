@@ -17,12 +17,20 @@ axios.interceptors.request.use(
       },
     };
 
+    Logger.info(`Request: ${inspect(newConfig)}`);
+
     return newConfig;
   },
   (error) => {
     return Promise.reject(error);
   }
+  // { synchronous: true }
 );
+
+// axios.interceptors.request.use((request) => {
+//   Logger.info(`Request: ${inspect(request)}`);
+//   return request;
+// });
 
 axios.interceptors.response.use(
   (response) => {

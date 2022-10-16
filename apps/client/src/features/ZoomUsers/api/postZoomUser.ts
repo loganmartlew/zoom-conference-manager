@@ -2,10 +2,10 @@ import {
   CreateZoomUser,
   ZoomUserDTO,
 } from '@zoom-conference-manager/api-interfaces';
-import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { allZoomUsersKey } from './getZoomUsers';
 import fetchFromApi from '../../../util/fetchFromApi';
+import useToastMutation from '../../../util/useToastMutation';
 
 export const postZoomUser = async (zoomUserData: ZoomUserDTO) => {
   return fetchFromApi<CreateZoomUser>(
@@ -17,15 +17,12 @@ export const usePostZoomUser = (
   onSuccess: () => void,
   onError: (error: unknown, variables: ZoomUserDTO) => void
 ) => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation(postZoomUser, {
+  return useToastMutation<ZoomUserDTO>(postZoomUser, {
+    queryKey: () => allZoomUsersKey,
     onSuccess,
     onError,
-    onSettled: () => {
-      queryClient.invalidateQueries(allZoomUsersKey);
-    },
+    pendingMessage: 'Creating Zoom user...',
+    successMessage: 'Zoom user created!',
+    errorMessage: 'Failed to create Zoom user',
   });
-
-  return { mutate, isLoading };
 };

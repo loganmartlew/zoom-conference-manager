@@ -1,6 +1,4 @@
 import multer from 'multer';
+import path from 'path';
 
-// TODO : change excel storing location & name ?
-// TODO : file filter ?
-
-export default multer({ dest: 'uploads/' });
+export default multer({ dest: path.join(__dirname, 'uploads') });

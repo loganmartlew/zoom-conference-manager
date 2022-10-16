@@ -68,9 +68,31 @@ export default class EventService {
   }
 
   static async delete(id: string): Promise<boolean> {
+    const event = await this.getOne(id);
+
+    await Promise.all(
+      event.meetings.map((meeting) => {
+        return MeetingService.delete(meeting.id);
+      })
+    );
+
     const result = await Event.delete(id);
     if (!result.affected) return false;
     return result.affected > 0;
+  }
+
+  static async clearMeetings(id: string): Promise<boolean> {
+    const event = await this.getOne(id);
+
+    await Promise.all(
+      event.meetings.map((meeting) => {
+        return MeetingService.delete(meeting.id);
+      })
+    );
+
+    const updatedEvent = await this.getOne(id);
+
+    return updatedEvent.meetings.length === 0;
   }
 
   static async update(id: string, eventData: EventDTO): Promise<Event> {
@@ -91,22 +113,18 @@ export default class EventService {
   }
 
   static async publish(id: string): Promise<Event> {
-    try {
-      const event = await this.getOne(id);
+    const event = await this.getOne(id);
 
-      if (event.status === EventStatus.PUBLISHED) {
-        throw new Error('Event is already published');
-      }
-
-      event.status = EventStatus.PUBLISHED;
-      const updatedEvent = await event.save();
-
-      await ZoomService.publishEvent(updatedEvent);
-
-      return updatedEvent;
-    } catch (error) {
-      throw new Error('Unable to publish event');
+    if (event.status === EventStatus.PUBLISHED) {
+      throw new Error('Event is already published');
     }
+
+    await ZoomService.publishEvent(event);
+
+    event.status = EventStatus.PUBLISHED;
+    const updatedEvent = await event.save();
+
+    return updatedEvent;
   }
 
   static async unpublish(id: string): Promise<Event> {
@@ -144,9 +162,7 @@ export default class EventService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async uploadFile(id: string, file: any): Promise<void> {
-    // Get Root directory, then combine it into excel location
-    const rootDir = __dirname.split('dist/apps/api')[0];
-    const excelFileLocation = rootDir + file.path;
+    const excelFileLocation = file.path;
 
     try {
       const workBook = XLSX.readFile(excelFileLocation);
@@ -157,12 +173,12 @@ export default class EventService {
       const meetingList = builder.getMeetings();
 
       await Promise.all(
-        await meetingList.map((meetingDto) => {
-          return MeetingService.create(meetingDto);
+        await meetingList.map(async (meetingDto) => {
+          // console.log(meetingDto);
+          // eslint-disable-next-line @typescript-eslint/return-await
+          return await MeetingService.create(meetingDto);
         })
       );
-
-      console.log('Meeting List: ', meetingList);
 
       // Remove the excel file from system
       fs.unlinkSync(excelFileLocation);

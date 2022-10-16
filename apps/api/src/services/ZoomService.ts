@@ -5,6 +5,7 @@ import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
 import { assignMeetings } from '../util/publish/assignMeetings';
+import { flattenMeetings } from '../util/publish/flattenMeetings';
 import MeetingService from './MeetingService';
 import ZoomUserService from './ZoomUserService';
 
@@ -19,31 +20,33 @@ export default class ZoomService {
 
     if (unassignedMeetings.length > 0) {
       Logger.error(`Unable to assign ${unassignedMeetings.length} meetings`);
-      return;
+      throw new Error('Failed to assign all meetings. More users required.');
     }
 
     Logger.info(`Assigned meetings`);
     Logger.info(JSON.stringify(userMeetings, null, 2));
 
+    const flatMeetings = flattenMeetings(userMeetings);
+
     try {
       await Promise.all(
-        userMeetings.map(async (userMeeting) => {
-          await Promise.all(
-            userMeeting.meetings.map(async (meeting) => {
-              await ZoomService.scheduleMeeting(meeting, userMeeting.email);
-            })
+        flatMeetings.map((flatMeeting) => {
+          return ZoomService.scheduleMeeting(
+            flatMeeting.meeting,
+            flatMeeting.email
           );
         })
       );
     } catch (e) {
       Logger.error(`Unable to publish event`);
       Logger.error(e);
+      throw new Error('Error scheduling meetings');
     }
   }
 
   static async unpublishEvent(event: Event) {
     await Promise.all(
-      event.meetings.map((meeting) => this.deleteMeeting(meeting))
+      event.meetings.map((meeting) => ZoomService.deleteMeeting(meeting))
     );
   }
 
@@ -54,9 +57,8 @@ export default class ZoomService {
       topic: meeting.name,
       schedule_for: userEmail,
       start_time: meeting.startDateTime.toISOString(),
-      duration: dayjs(meeting.startDateTime).diff(
-        dayjs(meeting.endDateTime).add(30, 'minutes'),
-        'minute'
+      duration: Math.abs(
+        dayjs(meeting.startDateTime).diff(dayjs(meeting.endDateTime), 'minute')
       ),
       type: SCHEDULED_MEETING,
     };
@@ -73,14 +75,14 @@ export default class ZoomService {
 
   static async deleteMeeting(meeting: Meeting) {
     if (!meeting.zoomId) {
-      Logger.error(`Unable to delete meeting ${meeting.name}`);
+      Logger.error(`Unable to delete meeting ${meeting.name} from Zoom`);
       return;
     }
 
     try {
       await axios.delete(`/meetings/${meeting.zoomId}`);
     } catch (e) {
-      Logger.error(`Unable to delete meeting ${meeting.name}`);
+      Logger.error(`Unable to delete meeting ${meeting.name} from Zoom`);
     }
   }
 }

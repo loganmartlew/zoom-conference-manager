@@ -2,7 +2,7 @@ import Meeting from '../../entities/Meeting';
 import ZoomUser from '../../entities/ZoomUser';
 import { userCanTakeMeeting } from './userCanTakeMeeting';
 
-interface UserMeeting extends ZoomUser {
+export interface UserMeeting extends ZoomUser {
   meetings: Meeting[];
 }
 
