@@ -16,11 +16,11 @@ import NavList from './NavList';
 
 const items: NavItem[] = [
   { text: 'Home', path: '/', icon: <Home /> },
-  { text: 'Dashboard', path: '/dashboard', icon: <Dashboard /> },
+  // { text: 'Dashboard', path: '/dashboard', icon: <Dashboard /> },
   { text: 'Events', path: '/events', icon: <Event /> },
   { text: 'New Event', path: '/new-event', icon: <AddBox /> },
   { text: 'New Meeting', path: '/new-meeting', icon: <AddBox /> },
-  { text: 'Recordings', path: '/recordings', icon: <VideoFile /> },
+  // { text: 'Recordings', path: '/recordings', icon: <VideoFile /> },
   { text: 'Zoom Users', path: '/zoom-users', icon: <People /> },
 ];
 

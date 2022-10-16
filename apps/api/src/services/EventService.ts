@@ -123,7 +123,7 @@ export default class EventService {
 
       await ZoomService.unpublishEvent(event);
 
-      event.status = EventStatus.DRAFT;
+      event.status = EventStatus.PUBLISHED;
       const updatedEvent = await event.save();
 
       return updatedEvent;

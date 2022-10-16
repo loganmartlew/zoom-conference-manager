@@ -9,13 +9,14 @@ import NewMeetingPage from '../pages/NewMeetingPage';
 import ZoomUsersPage from '../pages/ZoomUsersPage';
 import RecordingsPage from '../pages/RecordingsPage';
 import RecordingsDetailsPage from '../pages/RecordingsDetailsPage';
+import HomePage from '../pages/HomePage';
 
 const AppRoutes: FC = () => {
   return (
     <Router>
       <Routes>
         <Route element={<NavLayout />}>
-          <Route path='/' element={<h1>Home</h1>} />
+          <Route path='/' element={<HomePage />} />
           <Route path='/dashboard' element={<h1>Dashboard</h1>} />
           <Route path='/events' element={<EventsPage />} />
           <Route path='/events/:id' element={<EventDetailsPage />} />
