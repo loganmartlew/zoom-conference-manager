@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import { ApiError } from '@zoom-conference-manager/errors';
 import XLSX from 'xlsx';
 import fs from 'fs';
 import { EventDTO } from '@zoom-conference-manager/api-interfaces';
@@ -31,7 +32,7 @@ export default class EventService {
       relations: ['meetings'],
     });
     if (!event) {
-      throw new Error('Event not found');
+      throw new ApiError(null, 3002, 'Event not found');
     }
 
     event.meetings.sort((a, b) => {
@@ -51,7 +52,7 @@ export default class EventService {
   static async create(eventData: EventDTO): Promise<Event> {
     const eventStub = await Event.create();
 
-    if (!eventStub) throw new Error('Unable to create event');
+    if (!eventStub) throw new ApiError(null, 3004, 'Unable to create event');
 
     eventStub.ubid = eventData.ubid;
     eventStub.name = eventData.name;
@@ -63,7 +64,7 @@ export default class EventService {
       const event = await eventStub.save();
       return event;
     } catch (error) {
-      throw new Error('Unable to save event');
+      throw new ApiError(error, 3003, 'Unable to save event');
     }
   }
 
@@ -108,41 +109,45 @@ export default class EventService {
 
       return updatedEvent;
     } catch (error) {
-      throw new Error('Unable to update Event');
+      throw new ApiError(error, 3006, 'Unable to update Event');
     }
   }
 
   static async publish(id: string): Promise<Event> {
-    const event = await this.getOne(id);
-
-    if (event.status === EventStatus.PUBLISHED) {
-      throw new Error('Event is already published');
-    }
-
-    await ZoomService.publishEvent(event);
-
-    event.status = EventStatus.PUBLISHED;
-    const updatedEvent = await event.save();
-
-    return updatedEvent;
-  }
-
-  static async unpublish(id: string): Promise<Event> {
     try {
       const event = await this.getOne(id);
 
-      if (event.status === EventStatus.DRAFT) {
-        throw new Error('Event is not published');
+      if (event.status === EventStatus.PUBLISHED) {
+        throw new ApiError(null, 3006, 'Event is already published');
       }
 
       await ZoomService.unpublishEvent(event);
 
+      event.status = EventStatus.PUBLISHED;
+      const updatedEvent = await event.save();
+
+      return updatedEvent;
+    } catch (error) {
+      throw new ApiError(error, 3003, 'Unable to publish Event');
+    }
+  }
+
+  static async unpublish(id: string): Promise<Event> {
+    const event = await this.getOne(id);
+
+    if (event.status === EventStatus.DRAFT) {
+      throw new ApiError(null, 3006, 'Event is not published');
+    }
+
+    await ZoomService.unpublishEvent(event);
+
+    try {
       event.status = EventStatus.DRAFT;
       const updatedEvent = await event.save();
 
       return updatedEvent;
     } catch (error) {
-      throw new Error('Unable to unpublish event');
+      throw new ApiError(error, 3003, 'Unable to unpublish Event');
     }
   }
   /*
@@ -184,7 +189,7 @@ export default class EventService {
       fs.unlinkSync(excelFileLocation);
     } catch (error) {
       fs.unlinkSync(excelFileLocation);
-      throw error;
+      throw new ApiError(error, 4004, 'Unable to parse excel file');
     }
   }
 }

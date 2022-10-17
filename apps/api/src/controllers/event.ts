@@ -11,30 +11,20 @@ import {
   MulterRequest,
   ClearEventMeetings,
 } from '@zoom-conference-manager/api-interfaces';
+import { ApiError } from '@zoom-conference-manager/errors';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import EventService from '../services/EventService';
-import { Logger } from '../loaders/logger';
 
 export const createEvent: CreateEvent = async (req: Request) => {
   const { eventData } = req.body;
 
-  try {
-    const newEvent = await EventService.create(eventData);
-    return {
-      status: StatusCodes.CREATED,
-      message: 'Created Event',
-      data: newEvent,
-    };
-  } catch (error) {
-    Logger.error(error);
-
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Failed to create Event',
-      error,
-    };
-  }
+  const newEvent = await EventService.create(eventData);
+  return {
+    status: StatusCodes.CREATED,
+    message: 'Created Event',
+    data: newEvent,
+  };
 };
 
 export const getEvent: GetEvent = async (req: Request) => {
@@ -65,88 +55,44 @@ export const getEventNames: GetEventNames = async () => {
 export const updateEvent: UpdateEvent = async (req: Request) => {
   const { eventData } = req.body;
   const { id } = req.params;
-  try {
-    const updatedEvent = await EventService.update(id, eventData);
-    return {
-      status: StatusCodes.OK,
-      message: 'Updated Event',
-      data: updatedEvent,
-    };
-  } catch (error) {
-    Logger.error(error);
 
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Failed to update Event ',
-      error,
-    };
-  }
+  const updatedEvent = await EventService.update(id, eventData);
+  return {
+    status: StatusCodes.OK,
+    message: 'Updated Event',
+    data: updatedEvent,
+  };
 };
 
 export const publishEvent: PublishEvent = async (req: Request) => {
   const { id } = req.params;
 
-  try {
-    const publishedEvent = await EventService.publish(id);
-    return {
-      status: StatusCodes.OK,
-      message: 'Published Event',
-      data: publishedEvent,
-    };
-  } catch (error) {
-    if (error instanceof Error) {
-      return {
-        status: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || 'Failed to publish Event ',
-        error,
-      };
-    }
-
-    Logger.error(error);
-
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Failed to publish Event ',
-      error,
-    };
-  }
+  const publishedEvent = await EventService.publish(id);
+  return {
+    status: StatusCodes.OK,
+    message: 'Published Event',
+    data: publishedEvent,
+  };
 };
 
 export const unpublishEvent: UnpublishEvent = async (req: Request) => {
   const { id } = req.params;
 
-  try {
-    const unpublishedEvent = await EventService.unpublish(id);
-    return {
-      status: StatusCodes.OK,
-      message: 'Unpublished Event',
-      data: unpublishedEvent,
-    };
-  } catch (error) {
-    Logger.error(error);
-
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Failed to unpublish Event ',
-      error,
-    };
-  }
+  const unpublishedEvent = await EventService.unpublish(id);
+  return {
+    status: StatusCodes.OK,
+    message: 'Unpublished Event',
+    data: unpublishedEvent,
+  };
 };
 
 export const deleteEvent: DeleteEvent = async (req: Request) => {
   const { id } = req.params;
 
-  if (!id) {
-    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
-  }
-
   const deleted = await EventService.delete(id);
 
   if (!deleted) {
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Failed to delete Event',
-    };
+    throw new ApiError(null, 3005, 'Unable to delete event');
   }
   return { status: StatusCodes.OK, message: 'Event deleted' };
 };
@@ -154,17 +100,10 @@ export const deleteEvent: DeleteEvent = async (req: Request) => {
 export const clearEventMeetings: ClearEventMeetings = async (req: Request) => {
   const { id } = req.params;
 
-  if (!id) {
-    return { status: StatusCodes.BAD_REQUEST, message: 'ID Must be provided' };
-  }
-
   const cleared = await EventService.clearMeetings(id);
 
   if (!cleared) {
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Failed to clear Event meetings',
-    };
+    throw new ApiError(null, 3005, 'Unable to clear event meetings');
   }
   return { status: StatusCodes.OK, message: 'Event meetings cleared' };
 };
@@ -175,15 +114,6 @@ export const uploadFile: UploadFile = async (req: Request) => {
   const file = (req as MulterRequest).file;
   const { id } = req.params;
 
-  try {
-    await EventService.uploadFile(id, file);
-    return { status: StatusCodes.OK, message: 'File uploaded' };
-  } catch (error) {
-    Logger.error(error);
-
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: `Fail to extract datas from excel; ${error}`,
-    };
-  }
+  await EventService.uploadFile(id, file);
+  return { status: StatusCodes.OK, message: 'File uploaded' };
 };
