@@ -1,8 +1,15 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Stack, Typography } from '@mui/material';
+import { environment } from '../environments/environment';
 
 const HomePage: FC = () => {
+  const onClick = () => {
+    fetch(`${environment.apiUrl}/seed`, {
+      method: 'POST',
+    });
+  };
+
   return (
     <Stack spacing={3}>
       <Typography variant='h3'>Home</Typography>
@@ -19,6 +26,16 @@ const HomePage: FC = () => {
             Add More Users
           </Button>
         </Stack>
+      </Stack>
+      <Stack>
+        <Typography variant='h5'>Seed Data (Researcher Only)</Typography>
+        <Button
+          onClick={onClick}
+          variant='contained'
+          sx={{ width: 'max-content' }}
+        >
+          Seed
+        </Button>
       </Stack>
     </Stack>
   );
