@@ -1,0 +1,18 @@
+name: Test PR On Development
+
+on:
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install required dependencies
+        run: npm ci
+
+      - name: Test project
+        run: npm run test

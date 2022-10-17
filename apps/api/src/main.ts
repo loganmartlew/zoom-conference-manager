@@ -1,24 +1,22 @@
-import * as express from 'express';
-import * as cors from 'cors';
-import { Message } from '@zoom-conference-manager/api-interfaces';
+import getApp from './app';
 import { environment } from './environments/environment';
+import { Logger } from './loaders/logger';
 
-const app = express();
+import 'reflect-metadata';
 
-app.use(cors());
+async function main() {
+  const app = await getApp();
+  const port = process.env.PORT || 3333;
 
-const greeting: Message = { message: 'Welcome to api!' };
+  const server = app.listen(port, () => {
+    Logger.info('--------------------------------------------------');
+    Logger.info(`           Server running on port: ${port}           `);
+    if (environment.mode === 'development') {
+      Logger.info(`Base endpoint of the api is: http://localhost:${port}`);
+    }
+    Logger.info('--------------------------------------------------');
+  });
+  server.on('error', Logger.error);
+}
 
-app.get('/api', (req, res) => {
-  res.send(greeting);
-});
-
-app.get('/api/mode', (req, res) => {
-  res.send(environment.mode);
-});
-
-const port = process.env.PORT || 3333;
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
-});
-server.on('error', console.error);
+main();

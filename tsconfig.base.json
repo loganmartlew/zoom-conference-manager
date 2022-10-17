@@ -12,13 +12,17 @@
     "module": "esnext",
     "lib": ["es2017", "dom"],
     "strict": true,
+    "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@zoom-conference-manager/api-interfaces": [
         "libs/api-interfaces/src/index.ts"
-      ]
+      ],
+      "@zoom-conference-manager/dates": ["libs/dates/src/index.ts"],
+      "@zoom-conference-manager/errors": ["libs/errors/src/index.ts"],
+      "@zoom-conference-manager/types": ["libs/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

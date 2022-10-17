@@ -1,12 +1,22 @@
 import { FC } from 'react';
-import { environment } from '../environments/environment';
+import { CssBaseline } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
+import globalStyles from './globalStyles';
+import AppRoutes from './AppRoutes';
+import Providers from './Providers';
+import notificationStyles from './notificationStyles';
+import notificationSettings from './notificationSettings';
+import './imports.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: FC = () => (
-  <div>
-    <h1>Zoom Conference Manager!</h1>
-    <p>Platform for managing large scale Zoom events.</p>
-    <p>Environment: {environment.mode}</p>
-  </div>
+  <Providers>
+    <CssBaseline />
+    {globalStyles}
+    <AppRoutes />
+    <ToastContainer {...notificationSettings} />
+    {notificationStyles}
+  </Providers>
 );
 
 export default App;
