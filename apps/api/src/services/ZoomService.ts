@@ -73,10 +73,10 @@ export default class ZoomService {
         // eslint-disable-next-line no-promise-executor-return
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-    } catch (e) {
+    } catch (error) {
       Logger.error(`Unable to publish event`);
-      Logger.error(e);
-      throw new Error('Error scheduling meetings');
+      Logger.error(error);
+      throw new ApiError(error, 2000, 'Error un-scheduling meetings');
     }
   }
 
