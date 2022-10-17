@@ -1,3 +1,4 @@
+import { ApiError } from '@zoom-conference-manager/errors';
 import { DataSource } from 'typeorm';
 import { db } from '../config';
 import { Logger } from './logger';
@@ -34,6 +35,6 @@ export default async () => {
     Logger.info('Connected to database');
   } catch (error) {
     Logger.error(error);
-    throw new Error('Unable to connect to database');
+    throw new ApiError(error, 3001, null);
   }
 };
