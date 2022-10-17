@@ -121,7 +121,7 @@ export default class EventService {
         throw new ApiError(null, 3006, 'Event is already published');
       }
 
-      await ZoomService.unpublishEvent(event);
+      await ZoomService.publishEvent(event);
 
       event.status = EventStatus.PUBLISHED;
       const updatedEvent = await event.save();
