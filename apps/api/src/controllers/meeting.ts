@@ -37,22 +37,15 @@ export const getMeeting: GetMeeting = async (req: Request) => {
 };
 
 export const updateMeeting: UpdateMeeting = async (req: Request) => {
+  // ZoomID
   const { id } = req.params;
   const meetingData = req.body;
-  try {
-    const updatedMeeting = await MeetingService.update(id, meetingData);
-    return {
-      status: StatusCodes.OK,
-      message: 'Update Meeting',
-      data: updatedMeeting,
-    };
-  } catch (error) {
-    return {
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Fail to update Meeting',
-      error,
-    };
-  }
+  const updatedMeeting = await MeetingService.update(id, meetingData);
+  return {
+    status: StatusCodes.OK,
+    message: 'Update Meeting',
+    data: updatedMeeting,
+  };
 };
 
 export const deleteMeeting: DeleteMeeting = async (req: Request) => {

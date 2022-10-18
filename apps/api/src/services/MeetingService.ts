@@ -81,8 +81,12 @@ export default class MeetingService {
 
     await ZoomService.updateMeeting(meeting);
 
-    const updatedMeeting = await meeting.save();
-    return updatedMeeting;
+    try {
+      const updatedMeeting = await meeting.save();
+      return updatedMeeting;
+    } catch (error) {
+      throw new ApiError(error, 3006, 'Unable to update Meetings');
+    }
   }
 
   static async delete(id: string) {
