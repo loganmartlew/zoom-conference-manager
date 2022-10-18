@@ -1,8 +1,8 @@
 import { UploadFile } from '@zoom-conference-manager/api-interfaces';
-import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { eventKey } from './getEvent';
 import fetchFromApi from '../../../util/fetchFromApi';
+import useToastMutation from '../../../util/useToastMutation';
 
 export interface FileUploadData {
   file: File;
@@ -25,16 +25,12 @@ export const useUploadFile = (
   onSuccess: () => void,
   onError: (error: unknown, variables: FileUploadData) => void
 ) => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation(uploadFile, {
+  return useToastMutation<FileUploadData>(uploadFile, {
+    queryKey: (vars) => [...eventKey, vars.eventId],
     onSuccess,
     onError,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onSettled: (_: any, __: any, data: FileUploadData) => {
-      queryClient.invalidateQueries([...eventKey, data.eventId]);
-    },
+    pendingMessage: 'Uploading file...',
+    successMessage: 'File uploaded!',
+    errorMessage: 'Failed to upload file',
   });
-
-  return { mutate, isLoading };
 };

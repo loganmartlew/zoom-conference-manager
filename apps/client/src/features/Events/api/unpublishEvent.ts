@@ -1,10 +1,10 @@
 import { UnpublishEvent } from '@zoom-conference-manager/api-interfaces';
-import { useMutation, useQueryClient } from 'react-query';
 import { axios } from '../../../config/axios';
 import { eventKey } from './getEvent';
 import fetchFromApi from '../../../util/fetchFromApi';
+import useToastMutation from '../../../util/useToastMutation';
 
-export const publishEvent = async (eventId: string) => {
+export const unpublishEvent = async (eventId: string) => {
   return fetchFromApi<UnpublishEvent>(
     axios.patch(`/events/${eventId}/unpublish`)
   );
@@ -14,15 +14,12 @@ export const useUnpublishEvent = (
   onSuccess: () => void,
   onError: (error: unknown, variables: string) => void
 ) => {
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation(publishEvent, {
+  return useToastMutation<string>(unpublishEvent, {
+    queryKey: (vars) => [...eventKey, vars],
     onSuccess,
     onError,
-    onSettled: (_, __, id) => {
-      queryClient.invalidateQueries([...eventKey, id]);
-    },
+    pendingMessage: 'Unpublishing event...',
+    successMessage: 'Event unpublished!',
+    errorMessage: 'Failed to unpublish event',
   });
-
-  return { mutate, isLoading };
 };

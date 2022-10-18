@@ -1,7 +1,8 @@
+import { ApiResponse } from '@zoom-conference-manager/api-interfaces';
+import { ApiError } from '@zoom-conference-manager/errors';
 import { Express, NextFunction, Request, Response } from 'express';
 import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
-import { StatusCodes } from 'http-status-codes';
 import routes from '../routes';
 import { Logger } from './logger';
 
@@ -12,11 +13,21 @@ export default (app: Express) => {
     } catch (error) {
       Logger.error(error);
 
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        status: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Internal Server Error',
-        error,
-      });
+      let apiError: ApiError;
+
+      if (error instanceof ApiError) {
+        apiError = error;
+      } else {
+        apiError = new ApiError(error, 1000, null);
+      }
+
+      const response: ApiResponse<never> = {
+        status: apiError.statusCode,
+        message: apiError.message,
+        error: apiError,
+      };
+
+      res.status(apiError.statusCode).json(response);
     }
   });
 
@@ -27,13 +38,23 @@ export default (app: Express) => {
   app.use(routes);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    Logger.error(err);
+  app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+    Logger.error(error);
 
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Internal Server Error',
-      error: err,
-    });
+    let apiError: ApiError;
+
+    if (error instanceof ApiError) {
+      apiError = error;
+    } else {
+      apiError = new ApiError(error, 1000, null);
+    }
+
+    const response: ApiResponse<never> = {
+      status: apiError.statusCode,
+      message: apiError.message,
+      error: apiError,
+    };
+
+    res.status(apiError.statusCode).json(response);
   });
 };
