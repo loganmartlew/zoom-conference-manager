@@ -230,10 +230,10 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
           endDateFormatted.setMinutes(minsEnd);
 
           const startDateTimeToSend = dayjs(startDateFormatted);
-          const endDateTimeToSend = dayjs(endDateFormatted);
+          let endDateTimeToSend = dayjs(endDateFormatted);
 
           if (startDateTimeToSend.isAfter(endDateTimeToSend)) {
-            endDateTimeToSend.add(1, 'day');
+            endDateTimeToSend = endDateTimeToSend.add(1, 'day');
           }
 
           sendMeetingUpdate(meetingId, {
