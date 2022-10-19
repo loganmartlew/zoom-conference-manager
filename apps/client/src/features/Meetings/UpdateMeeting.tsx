@@ -62,6 +62,63 @@ const updateMeetingReducer = (state: UpdateState, action: UpdateAction) => {
   }
 };
 
+/**
+ * This function takes the start date (day/month/year => dd/mm/yyyy) as string, start time (24 hours i.e. 1800) as string
+ * end time (24 hours i.e. 2000) as string and returns an array of the start time and end time formatted, returns a
+ * null array if start time or end time is not in correct format as it would still parse the information however,
+ * it is more likely the user may have input 2401 by mistake rather than intentional. Whilst it should be checked
+ * by the backend if the date is in the correct format i.e. dd/mm/yyyy if it is not likely some kind of error
+ * should be thrown by backend anyways such as internal server error so it can be handled downstream.
+ * @param startDate string
+ * @param startTime string
+ * @param endTime string
+ * @returns an array containing as follows [startDateTime, endDateTime]
+ * where the first element is the start date time and the second the end date time
+ * both formatted. Returns a null array for both startDateTime and EndDateTime [null, null] if
+ * the startTime or endTime input parameters are not in 2400 format.
+ */
+export function formatDateAndTimeMeeting(
+  startDate: string,
+  startTime: string,
+  endTime: string
+) {
+  function convertToDateToFormat(date: string) {
+    const [day, month, year] = date.split('/');
+    return `${month}/${day}/${year}`;
+  }
+
+  if (
+    !(parseInt(startTime, 10) <= 2400 && parseInt(startTime, 10) >= 0) ||
+    !(parseInt(endTime, 10) <= 2400 && parseInt(endTime, 10) >= 0)
+  ) {
+    return [null, null];
+  }
+
+  const tempStartDate = new Date(convertToDateToFormat(startDate));
+
+  const hoursStart = parseInt(startTime.substring(0, 2), 10);
+  const minsStart = parseInt(startTime.substring(2), 10);
+  tempStartDate.setHours(hoursStart);
+  tempStartDate.setMinutes(minsStart);
+
+  const tempEndDate = new Date(convertToDateToFormat(startDate));
+  const hoursEnd = parseInt(endTime.substring(0, 2), 10);
+  const minsEnd = parseInt(endTime.substring(2), 10);
+  tempEndDate.setHours(hoursEnd);
+  tempEndDate.setMinutes(minsEnd);
+
+  const startDateFormatted = dayjs(tempStartDate);
+  let endDateFormatted = dayjs(tempEndDate);
+
+  if (startDateFormatted.isAfter(endDateFormatted)) {
+    endDateFormatted = endDateFormatted.add(1, 'day');
+  }
+
+  const startDateTime = dayjs(startDateFormatted).format('YYYY-MM-DD HH:mm:ss');
+  const endDateTime = dayjs(endDateFormatted).format('YYYY-MM-DD HH:mm:ss');
+  return [startDateTime, endDateTime];
+}
+
 const UpdateMeeting: FC<Props> = (props: Props) => {
   const { meetingId, editOnRender, meetingData, updateMeetingData } = props;
 
@@ -198,43 +255,12 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
       />
       <Button
         onClick={() => {
-          function convertToDateToFormat(date: string) {
-            const [day, month, year] = date.split('/');
-            return `${month}/${day}/${year}`;
-          }
-
-          const startDateFormatted = new Date(
-            convertToDateToFormat(meetingState.value.date)
-          );
-
-          const hoursStart = parseInt(
-            meetingState.value.startTime.substring(0, 2),
-            10
-          );
-          const minsStart = parseInt(
-            meetingState.value.startTime.substring(2),
-            10
-          );
-          startDateFormatted.setHours(hoursStart);
-          startDateFormatted.setMinutes(minsStart);
-
-          const endDateFormatted = new Date(
-            convertToDateToFormat(meetingState.value.date)
-          );
-          const hoursEnd = parseInt(
-            meetingState.value.endTime.substring(0, 2),
-            10
-          );
-          const minsEnd = parseInt(meetingState.value.endTime.substring(2), 10);
-          endDateFormatted.setHours(hoursEnd);
-          endDateFormatted.setMinutes(minsEnd);
-
-          const startDateTimeToSend = dayjs(startDateFormatted);
-          let endDateTimeToSend = dayjs(endDateFormatted);
-
-          if (startDateTimeToSend.isAfter(endDateTimeToSend)) {
-            endDateTimeToSend = endDateTimeToSend.add(1, 'day');
-          }
+          const [startDateTimeToSend, endDateTimeToSend] =
+            formatDateAndTimeMeeting(
+              meetingState.value.date,
+              meetingState.value.startTime,
+              meetingState.value.endTime
+            );
 
           sendMeetingUpdate(meetingId, {
             id: meetingId,

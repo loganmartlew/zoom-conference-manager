@@ -1,8 +1,12 @@
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 /* eslint-disable react/jsx-boolean-value */
 import { render, screen, fireEvent } from '@testing-library/react';
+import dayjs from 'dayjs';
 import { MeetingData } from './MeetingTypes/UpdateMeetingTypes';
+// eslint-disable-next-line import/no-duplicates
 import UpdateMeeting from './UpdateMeeting';
+// eslint-disable-next-line import/no-duplicates
+import { formatDateAndTimeMeeting } from './UpdateMeeting';
 
 /**
  * This function creates a mock of meeting data
@@ -200,5 +204,55 @@ describe('UpdateMeeting testing', () => {
 
     // test duration field icon
     testIconClick('update--meeting--endTime', 'update--meeting--icon--endTime');
+  });
+
+  test('Test that the output format is correct for function used to sending the updated meeting to the backend', () => {
+    // Generic check that the formatting works
+    let [startTime, endTime] = formatDateAndTimeMeeting(
+      '30/10/2022',
+      '0000',
+      '2000'
+    );
+    startTime = dayjs(startTime).format('DD/MM/YYYY HHmm');
+    endTime = dayjs(endTime).format('DD/MM/YYYY HHmm');
+
+    expect(startTime).toBe('30/10/2022 0000');
+    expect(endTime).toBe('30/10/2022 2000');
+
+    // Edge case for ending on the next day
+    [startTime, endTime] = formatDateAndTimeMeeting(
+      '30/10/2022',
+      '1800',
+      '0200'
+    );
+    startTime = dayjs(startTime).format('DD/MM/YYYY HHmm');
+    endTime = dayjs(endTime).format('DD/MM/YYYY HHmm');
+
+    expect(startTime).toBe('30/10/2022 1800');
+    expect(endTime).toBe('31/10/2022 0200');
+
+    // Edge case for ending on the next day and next month
+    [startTime, endTime] = formatDateAndTimeMeeting(
+      '31/10/2022',
+      '1800',
+      '0200'
+    );
+    startTime = dayjs(startTime).format('DD/MM/YYYY HHmm');
+    endTime = dayjs(endTime).format('DD/MM/YYYY HHmm');
+
+    expect(startTime).toBe('31/10/2022 1800');
+    expect(endTime).toBe('01/11/2022 0200');
+
+    // Edge case for ending on the next day, next month, and next year
+    [startTime, endTime] = formatDateAndTimeMeeting(
+      '31/12/2022',
+      '1800',
+      '0200'
+    );
+    startTime = dayjs(startTime).format('DD/MM/YYYY HHmm');
+    endTime = dayjs(endTime).format('DD/MM/YYYY HHmm');
+
+    expect(startTime).toBe('31/12/2022 1800');
+    expect(endTime).toBe('01/01/2023 0200');
   });
 });
