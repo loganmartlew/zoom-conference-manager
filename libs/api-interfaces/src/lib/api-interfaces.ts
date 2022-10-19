@@ -1,14 +1,23 @@
+import { ApiError } from '@zoom-conference-manager/errors';
 import { Request } from 'express';
 import { IEvent, IEventName, IMeeting, IZoomUser } from './entity-types';
 
-export interface ApiResponse<T> {
-  status: number;
-  message: string;
-  data?: T;
-  error?: unknown;
-}
+export type ApiResponse<T> =
+  | {
+      status: number;
+      message: string;
+      data?: T;
+      error?: never;
+    }
+  | {
+      status: number;
+      message: string;
+      data?: never;
+      error: ApiError;
+    };
 
 export interface MulterRequest extends Request {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   file: any;
 }
 

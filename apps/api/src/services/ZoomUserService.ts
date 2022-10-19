@@ -1,4 +1,5 @@
 import { ZoomUserDTO } from '@zoom-conference-manager/api-interfaces';
+import { ApiError } from '@zoom-conference-manager/errors';
 import ZoomUser from '../entities/ZoomUser';
 
 export default class ZoomUserService {
@@ -10,7 +11,8 @@ export default class ZoomUserService {
   static async create(zoomUserData: ZoomUserDTO): Promise<ZoomUser> {
     const zoomUserStub = await ZoomUser.create();
 
-    if (!zoomUserStub) throw new Error('Unable to create zoom user');
+    if (!zoomUserStub)
+      throw new ApiError(null, 3004, 'Unable to create zoom user');
 
     zoomUserStub.name = zoomUserData.name;
     zoomUserStub.email = zoomUserData.email;
@@ -19,7 +21,7 @@ export default class ZoomUserService {
       const zoomUser = await zoomUserStub.save();
       return zoomUser;
     } catch (error) {
-      throw new Error('Unable to save zoom user');
+      throw new ApiError(error, 3003, 'Unable to save zoom user');
     }
   }
 

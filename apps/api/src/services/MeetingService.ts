@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
 import { formats } from '@zoom-conference-manager/dates';
+import { ApiError } from '@zoom-conference-manager/errors';
 import dayjs from 'dayjs';
 import Meeting from '../entities/Meeting';
 import EventService from './EventService';
@@ -15,7 +16,7 @@ export default class MeetingService {
   static async getOne(id: string) {
     const meeting = await Meeting.findOneBy({ id });
     if (!meeting) {
-      throw new Error('Meeting not found');
+      throw new ApiError(null, 3002, 'Meeting not found');
     }
 
     return meeting;
@@ -27,7 +28,7 @@ export default class MeetingService {
     const meetingStub = await Meeting.create();
 
     if (!meetingStub) {
-      throw new Error('Unable to create Meeting');
+      throw new ApiError(null, 3004, 'Unable to create Meeting');
     }
 
     meetingStub.name = meetingData.name;
@@ -42,14 +43,18 @@ export default class MeetingService {
     meetingStub.zoomId = '';
     meetingStub.event = event;
 
-    const meeting = await meetingStub.save();
-    return meeting;
+    try {
+      const meeting = await meetingStub.save();
+      return meeting;
+    } catch (error) {
+      throw new ApiError(error, 3003, 'Unable to save Meeting');
+    }
   }
 
   static async setZoomId(meetingId: string, zoomId: string) {
     const meeting = await Meeting.findOneBy({ id: meetingId });
     if (!meeting) {
-      throw new Error('Meeting not found');
+      throw new ApiError(null, 3002, 'Meeting not found');
     }
 
     try {
@@ -57,7 +62,7 @@ export default class MeetingService {
       await meeting.save();
       return meeting;
     } catch (error) {
-      throw new Error('Unable to set Meetings Zoom id');
+      throw new ApiError(error, 3006, 'Unable to set Meetings Zoom id');
     }
   }
 
@@ -76,8 +81,12 @@ export default class MeetingService {
 
     await ZoomService.updateMeeting(meeting);
 
-    const updatedMeeting = await meeting.save();
-    return updatedMeeting;
+    try {
+      const updatedMeeting = await meeting.save();
+      return updatedMeeting;
+    } catch (error) {
+      throw new ApiError(error, 3006, 'Unable to update Meetings');
+    }
   }
 
   static async delete(id: string) {
