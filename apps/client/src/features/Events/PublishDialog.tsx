@@ -24,7 +24,7 @@ const PublishDialog: FC<Props> = ({ type, onConfirm }) => {
     }
     if (type === 'unpublish') {
       return {
-        title: 'Unublish Event',
+        title: 'Unpublish Event',
         text: 'Are you sure you want to unpublish the event?',
       };
     }
