@@ -135,22 +135,18 @@ export default class EventService {
   }
 
   static async publish(id: string): Promise<Event> {
-    try {
-      const event = await this.getOne(id);
+    const event = await this.getOne(id);
 
-      if (event.status === EventStatus.PUBLISHED) {
-        throw new Error('Event is already published');
-      }
-
-      event.status = EventStatus.PUBLISHED;
-      const updatedEvent = await event.save();
-
-      await ZoomService.publishEvent(updatedEvent);
-
-      return updatedEvent;
-    } catch (error) {
-      throw new Error('Unable to publish event');
+    if (event.status === EventStatus.PUBLISHED) {
+      throw new Error('Event is already published');
     }
+
+    await ZoomService.publishEvent(event);
+
+    event.status = EventStatus.PUBLISHED;
+    const updatedEvent = await event.save();
+
+    return updatedEvent;
   }
 
   static async unpublish(id: string): Promise<Event> {
@@ -201,12 +197,12 @@ export default class EventService {
       const meetingList = builder.getMeetings();
 
       await Promise.all(
-        await meetingList.map((meetingDto) => {
-          return MeetingService.create(meetingDto);
+        await meetingList.map(async (meetingDto) => {
+          // console.log(meetingDto);
+          // eslint-disable-next-line @typescript-eslint/return-await
+          return await MeetingService.create(meetingDto);
         })
       );
-
-      console.log('Meeting List: ', meetingList);
 
       // Remove the excel file from system
       fs.unlinkSync(excelFileLocation);

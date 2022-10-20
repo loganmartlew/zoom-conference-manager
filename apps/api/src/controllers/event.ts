@@ -14,6 +14,7 @@ import {
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import EventService from '../services/EventService';
+import { Logger } from '../loaders/logger';
 
 export const createEvent: CreateEvent = async (req: Request) => {
   const { eventData } = req.body;
@@ -26,6 +27,8 @@ export const createEvent: CreateEvent = async (req: Request) => {
       data: newEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to create Event',
@@ -76,6 +79,8 @@ export const updateEvent: UpdateEvent = async (req: Request) => {
       data: updatedEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to update Event ',
@@ -95,6 +100,16 @@ export const publishEvent: PublishEvent = async (req: Request) => {
       data: publishedEvent,
     };
   } catch (error) {
+    if (error instanceof Error) {
+      return {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || 'Failed to publish Event ',
+        error,
+      };
+    }
+
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to publish Event ',
@@ -114,6 +129,8 @@ export const unpublishEvent: UnpublishEvent = async (req: Request) => {
       data: unpublishedEvent,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Failed to unpublish Event ',
@@ -168,6 +185,8 @@ export const uploadFile: UploadFile = async (req: Request) => {
     await EventService.uploadFile(id, file);
     return { status: StatusCodes.OK, message: 'File uploaded' };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: `Fail to extract datas from excel; ${error}`,

@@ -7,6 +7,7 @@ import {
 } from '@zoom-conference-manager/api-interfaces';
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { Logger } from '../loaders/logger';
 import MeetingService from '../services/MeetingService';
 
 export const createMeeting: CreateMeeting = async (req: Request) => {
@@ -20,6 +21,8 @@ export const createMeeting: CreateMeeting = async (req: Request) => {
       data: newMeeting,
     };
   } catch (error) {
+    Logger.error(error);
+
     return {
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Fail to create Meeting',
