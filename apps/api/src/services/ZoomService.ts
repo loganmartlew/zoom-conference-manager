@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable import/no-cycle */
 import { ApiError } from '@zoom-conference-manager/errors';
 import dayjs from 'dayjs';
@@ -8,6 +9,7 @@ import { Logger } from '../loaders/logger';
 import { RecordingFile, RecordingResponse } from '../types/RecordingResponse';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import { flattenMeetings } from '../util/publish/flattenMeetings';
+import { splitArrayToChunks } from '../util/publish/splitArrayToChunks';
 import MeetingService from './MeetingService';
 import ZoomUserService from './ZoomUserService';
 
@@ -65,16 +67,23 @@ export default class ZoomService {
     Logger.info(JSON.stringify(userMeetings, null, 2));
 
     const flatMeetings = flattenMeetings(userMeetings);
+    const meetingChunks = splitArrayToChunks(flatMeetings, 20);
 
     try {
-      await Promise.all(
-        flatMeetings.map((flatMeeting) => {
-          return ZoomService.scheduleMeeting(
-            flatMeeting.meeting,
-            flatMeeting.email
-          );
-        })
-      );
+      // eslint-disable-next-line no-restricted-syntax
+      for (const chunk of meetingChunks) {
+        await Promise.all(
+          chunk.map((flatMeeting) => {
+            return ZoomService.scheduleMeeting(
+              flatMeeting.meeting,
+              flatMeeting.email
+            );
+          })
+        );
+
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
     } catch (error) {
       Logger.error(`Unable to publish event`);
       Logger.error(error);
@@ -83,9 +92,25 @@ export default class ZoomService {
   }
 
   static async unpublishEvent(event: Event) {
-    await Promise.all(
-      event.meetings.map((meeting) => ZoomService.deleteMeeting(meeting))
-    );
+    const meetingChunks = splitArrayToChunks(event.meetings, 20);
+
+    try {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const chunk of meetingChunks) {
+        await Promise.all(
+          chunk.map((meeting) => {
+            return ZoomService.deleteMeeting(meeting);
+          })
+        );
+
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    } catch (error) {
+      Logger.error(`Unable to publish event`);
+      Logger.error(error);
+      throw new ApiError(error, 2000, 'Error un-scheduling meetings');
+    }
   }
 
   static async getEventRecordings(event: Event) {

@@ -1,7 +1,7 @@
 import Meeting from '../../entities/Meeting';
 import { UserMeeting } from './assignMeetings';
 
-interface FlatMeeting {
+export interface FlatMeeting {
   email: string;
   meeting: Meeting;
 }

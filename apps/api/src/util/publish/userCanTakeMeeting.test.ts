@@ -50,4 +50,40 @@ describe('userCanTakeMeeting', () => {
 
     expect(userCanTakeMeeting(tripleMeetings, meeting, 3)).toBe(false);
   });
+
+  test('should allow if less than 100 meetings', () => {
+    const meetings: Meeting[] = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < 99; i++) {
+      meetings.push({
+        startDateTime: dayjs(`2022-08-01 ${i % 20}:00:00`, dateFormat).toDate(),
+        endDateTime: dayjs(`2022-08-01 ${i % 20}:00:00`, dateFormat).toDate(),
+      } as Meeting);
+    }
+
+    const meeting: Meeting = {
+      startDateTime: dayjs('2022-08-01 15:00:00', dateFormat).toDate(),
+      endDateTime: dayjs('2022-08-01 16:00:00', dateFormat).toDate(),
+    } as Meeting;
+
+    expect(userCanTakeMeeting(meetings, meeting, 20)).toBe(true);
+  });
+
+  test(`shouldn't allow if more than 100 meetings`, () => {
+    const meetings: Meeting[] = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < 100; i++) {
+      meetings.push({
+        startDateTime: dayjs(`2022-08-01 ${i % 20}:00:00`, dateFormat).toDate(),
+        endDateTime: dayjs(`2022-08-01 ${i % 20}:00:00`, dateFormat).toDate(),
+      } as Meeting);
+    }
+
+    const meeting: Meeting = {
+      startDateTime: dayjs('2022-08-01 15:00:00', dateFormat).toDate(),
+      endDateTime: dayjs('2022-08-01 16:00:00', dateFormat).toDate(),
+    } as Meeting;
+
+    expect(userCanTakeMeeting(meetings, meeting, 20)).toBe(false);
+  });
 });
