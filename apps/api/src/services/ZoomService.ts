@@ -114,11 +114,32 @@ export default class ZoomService {
   }
 
   static async getEventRecordings(event: Event) {
-    const recordings = await Promise.all(
-      event.meetings.map((meeting) => ZoomService.getRecording(meeting))
-    );
+    const meetingChunks = splitArrayToChunks(event.meetings, 20);
+    const recordings: RecordingFile[] = [];
 
-    return recordings;
+    try {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const chunk of meetingChunks) {
+        await Promise.all(
+          chunk.map((meeting) => {
+            return ZoomService.getRecording(meeting).then((recording) => {
+              if (recording) {
+                recordings.push(recording);
+              }
+            });
+          })
+        );
+
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+
+      return recordings.filter((recording) => recording !== null);
+    } catch (error) {
+      Logger.error(`Unable to get recordings`);
+      Logger.error(error);
+      throw new ApiError(error, 2000, 'Error getting recordings');
+    }
   }
 
   static async scheduleMeeting(meeting: Meeting, userEmail: string) {
