@@ -254,5 +254,17 @@ describe('UpdateMeeting testing', () => {
 
     expect(startTime).toBe('31/12/2022 1800');
     expect(endTime).toBe('01/01/2023 0200');
+
+    // Edge case for testing end time set to 2400
+    [startTime, endTime] = formatDateAndTimeMeeting(
+      '31/12/2022',
+      '1800',
+      '2400'
+    );
+    startTime = dayjs(startTime).format('DD/MM/YYYY HHmm');
+    endTime = dayjs(endTime).format('DD/MM/YYYY HHmm');
+
+    expect(startTime).toBe('31/12/2022 1800');
+    expect(endTime).toBe('01/01/2023 0000');
   });
 });
