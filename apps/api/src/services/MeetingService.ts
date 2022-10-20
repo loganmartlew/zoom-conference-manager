@@ -66,6 +66,29 @@ export default class MeetingService {
     }
   }
 
+  static async update(id: string, meetingData: MeetingDTO) {
+    const meeting = await this.getOne(id);
+
+    meeting.name = meetingData.name;
+    meeting.startDateTime = dayjs(
+      meetingData.startDateTime,
+      formats.dateTime
+    ).toDate();
+    meeting.endDateTime = dayjs(
+      meetingData.endDateTime,
+      formats.dateTime
+    ).toDate();
+
+    await ZoomService.updateMeeting(meeting);
+
+    try {
+      const updatedMeeting = await meeting.save();
+      return updatedMeeting;
+    } catch (error) {
+      throw new ApiError(error, 3006, 'Unable to update Meetings');
+    }
+  }
+
   static async delete(id: string) {
     const meeting = await this.getOne(id);
 

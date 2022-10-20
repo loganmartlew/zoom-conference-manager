@@ -64,7 +64,7 @@ export default class ZoomService {
     }
 
     Logger.info(`Assigned meetings`);
-    Logger.info(JSON.stringify(userMeetings, null, 2));
+    // Logger.info(JSON.stringify(userMeetings, null, 2));
 
     const flatMeetings = flattenMeetings(userMeetings);
     const meetingChunks = splitArrayToChunks(flatMeetings, 20);
@@ -223,5 +223,58 @@ export default class ZoomService {
     }
 
     return {} as RecordingFile;
+  }
+
+  static async updateMeeting(meeting: Meeting) {
+    if (!meeting.zoomId) {
+      Logger.error(`No need to update meeting ${meeting.name} on Zoom`);
+      return;
+    }
+
+    const meetingData = {
+      topic: meeting.name,
+      start_time: meeting.startDateTime.toISOString(),
+      duration: Math.abs(
+        dayjs(meeting.startDateTime).diff(dayjs(meeting.endDateTime), 'minute')
+      ),
+    };
+
+    try {
+      await axios.patch(`/meetings/${meeting.zoomId}`, meetingData);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore error
+      if (error.response?.data) {
+        const zoomResponse: { code: number; message: string } =
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore error
+          error.response.data;
+
+        switch (zoomResponse.code) {
+          case 400: {
+            throw new ApiError(error, 2004, null);
+          }
+          case 401: {
+            throw new ApiError(error, 2002, null);
+          }
+          case 403: {
+            throw new ApiError(error, 2003, null);
+          }
+          case 404: {
+            throw new ApiError(error, 2005, null);
+          }
+          case 429: {
+            throw new ApiError(error, 2001, null);
+          }
+          default: {
+            throw new ApiError(error, 2000, null);
+          }
+        }
+      }
+    }
   }
 }
