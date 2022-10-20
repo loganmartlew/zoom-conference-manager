@@ -15,7 +15,7 @@ axios.interceptors.response.use(
   (error: AxiosError<ApiResponse<never>>) => {
     if (error.response?.data.error) {
       const e = error.response.data.error as ApiError;
-      return Promise.reject(e);
+      return Promise.reject(new ApiError(e, e.errorCode, e.message));
     }
 
     return Promise.reject(new ApiError(error, 1000, null));

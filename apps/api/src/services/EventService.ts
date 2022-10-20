@@ -8,6 +8,9 @@ import Event from '../entities/Event';
 import ZoomService from './ZoomService';
 import MeetingService from './MeetingService';
 import { MeetingBuilder } from '../util/MeetingBuilder';
+import { MeetingRecording } from '../types/MeetingRecording';
+import WorkbookBuilder from '../util/WorkbookBuilder';
+import { RecordingFile } from '../types/RecordingResponse';
 
 export default class EventService {
   static async getAll(): Promise<Event[]> {
@@ -114,15 +117,15 @@ export default class EventService {
   }
 
   static async publish(id: string): Promise<Event> {
-    const event = await this.getOne(id);
-
-    if (event.status === EventStatus.PUBLISHED) {
-      throw new ApiError(null, 3006, 'Event is already published');
-    }
-
-    await ZoomService.publishEvent(event);
-
     try {
+      const event = await this.getOne(id);
+
+      if (event.status === EventStatus.PUBLISHED) {
+        throw new ApiError(null, 3006, 'Event is already published');
+      }
+
+      await ZoomService.publishEvent(event);
+
       event.status = EventStatus.PUBLISHED;
       const updatedEvent = await event.save();
 
@@ -179,7 +182,6 @@ export default class EventService {
 
       await Promise.all(
         await meetingList.map(async (meetingDto) => {
-          // console.log(meetingDto);
           // eslint-disable-next-line @typescript-eslint/return-await
           return await MeetingService.create(meetingDto);
         })
@@ -191,5 +193,36 @@ export default class EventService {
       fs.unlinkSync(excelFileLocation);
       throw new ApiError(error, 4004, 'Unable to parse excel file');
     }
+  }
+
+  static async getRecordingsSpreadsheet(id: string) {
+    const event = await this.getOne(id);
+
+    const allRecordings = await ZoomService.getEventRecordings(event);
+    const recordings = allRecordings.filter(
+      (recording) => recording != null
+    ) as RecordingFile[];
+
+    const meetingRecordings: MeetingRecording[] = recordings
+      .map((recording) => {
+        const meeting = event.meetings.find(
+          (eventMeeting) => eventMeeting.zoomId === recording.meeting_id
+        );
+
+        if (!meeting) return null;
+
+        return {
+          id: meeting.zoomId,
+          name: meeting.name,
+          recordingSize: recording.file_size,
+          url: recording.download_url,
+        };
+      })
+      .filter((recording) => recording != null) as MeetingRecording[];
+
+    const wbBuilder = new WorkbookBuilder(event.name, meetingRecordings);
+    const workbook = wbBuilder.getWorkbook();
+
+    return workbook;
   }
 }
