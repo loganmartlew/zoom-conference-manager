@@ -1,10 +1,13 @@
 import { FC, useState } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
 import dayjs from 'dayjs';
-import { Paper, Stack, Typography, IconButton } from '@mui/material';
+import { Box, Paper, Stack, Typography, IconButton } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { MeetingData } from './MeetingTypes/UpdateMeetingTypes';
+import UpdateMeeting from './UpdateMeeting';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import { useDeleteMeeting } from './api/deleteMeeting';
+import { updateMeetingData } from './api/updateMeeting';
 
 interface Props {
   meeting: IMeeting;
@@ -12,6 +15,24 @@ interface Props {
 
 const MeetingCard: FC<Props> = ({ meeting }) => {
   const [open, setOpen] = useState<boolean>(false);
+
+  const [showEditMeeting, setEditMeeting] = useState(false);
+  const dateTime = dayjs(meeting.startDateTime);
+
+  // This method converts the IMeeting type to MeetingData type
+  // as required for the below component UpdateMeeting prop inputs.
+  const convertToMeetingType = (currentMeeting: IMeeting): MeetingData => {
+    const tempDate = dayjs(dateTime).format('DD/MM/YYYY');
+    const tempTime = dayjs(dateTime).format('HHmm');
+    const date = `${tempDate} ${tempTime}`;
+    const convertedMeeting: MeetingData = {
+      id: currentMeeting.id,
+      name: currentMeeting.name,
+      startDateTime: date,
+      endDateTime: dayjs(meeting.endDateTime.toString()).format('HHmm'),
+    };
+    return convertedMeeting;
+  };
 
   const onDeleteSuccess = () => {
     setOpen(false);
@@ -40,9 +61,30 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             {meeting.name}
           </Typography>
 
-          <IconButton size='small' color='primary'>
-            <Edit fontSize='small' />
-          </IconButton>
+          {
+            // used to determine icon color for editing meetings
+            showEditMeeting ? (
+              <IconButton
+                onClick={() => {
+                  setEditMeeting(!showEditMeeting);
+                }}
+                size='small'
+                color='secondary'
+              >
+                <Edit fontSize='small' />
+              </IconButton>
+            ) : (
+              <IconButton
+                onClick={() => {
+                  setEditMeeting(!showEditMeeting);
+                }}
+                size='small'
+                color='primary'
+              >
+                <Edit fontSize='small' />
+              </IconButton>
+            )
+          }
 
           <IconButton
             data-testid={`delete-meeting-${meeting.id}`}
@@ -106,6 +148,20 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             </Typography>
           </Stack>
         </Stack>
+        <Box padding='1.5rem'>
+          <Stack alignItems='flex-start' spacing={2}>
+            {showEditMeeting && (
+              <Box>
+                <UpdateMeeting
+                  meetingData={convertToMeetingType(meeting)}
+                  updateMeetingData={updateMeetingData}
+                  meetingId={meeting.id}
+                  editOnRender={false}
+                />
+              </Box>
+            )}
+          </Stack>
+        </Box>
       </Stack>
     </Paper>
   );

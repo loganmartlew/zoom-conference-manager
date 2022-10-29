@@ -14,7 +14,7 @@ export default class Meeting extends BaseEntity implements IMeeting {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   zoomId: string;
 
   @Column()

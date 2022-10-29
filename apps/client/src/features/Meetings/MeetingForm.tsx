@@ -64,12 +64,12 @@ const MeetingForm: FC<Props> = ({ eventId }) => {
     const start = dayjs(startDate)
       .set('hours', startHours)
       .set('minutes', startMinutes);
-    const end = dayjs(startDate)
+    let end = dayjs(startDate)
       .set('hours', endHours)
       .set('minutes', endMinutes);
 
     if (start.isAfter(end)) {
-      end.add(1, 'day');
+      end = end.add(1, 'day');
     }
 
     const meetingData: MeetingDTO = {

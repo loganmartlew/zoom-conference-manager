@@ -10,10 +10,12 @@ import {
   UploadFile,
   MulterRequest,
   ClearEventMeetings,
+  GetEventRecordings,
 } from '@zoom-conference-manager/api-interfaces';
 import { ApiError } from '@zoom-conference-manager/errors';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import XLSX from 'xlsx';
 import EventService from '../services/EventService';
 
 export const createEvent: CreateEvent = async (req: Request) => {
@@ -116,4 +118,33 @@ export const uploadFile: UploadFile = async (req: Request) => {
 
   await EventService.uploadFile(id, file);
   return { status: StatusCodes.OK, message: 'File uploaded' };
+};
+
+export const getEventRecordings: GetEventRecordings = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.params;
+
+  const wb = await EventService.getRecordingsSpreadsheet(id);
+
+  const binary = XLSX.write(wb, { type: 'binary', bookType: 'xlsx' });
+
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename=${wb.Props?.Title}-recordings.xlsx`
+  );
+  res.setHeader(
+    'Content-Type',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  );
+  res.setHeader('Content-Length', binary.length);
+
+  res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+  return {
+    status: StatusCodes.OK,
+    message: 'Recordings spreadsheet',
+    download: Buffer.from(binary, 'binary'),
+  };
 };

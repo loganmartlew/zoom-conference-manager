@@ -1,5 +1,11 @@
 import { FC, useState } from 'react';
-import { CircularProgress, Collapse, Alert, AlertTitle } from '@mui/material';
+import {
+  CircularProgress,
+  Collapse,
+  Alert,
+  AlertTitle,
+  Stack,
+} from '@mui/material';
 import { useAllEvents } from '../Events/api/getEvents';
 import RecordingCard from './RecordingCard';
 
@@ -48,7 +54,7 @@ const EventsList: FC = () => {
   }
 
   return (
-    <>
+    <Stack spacing={3}>
       {events?.map((event) => {
         return (
           <RecordingCard
@@ -59,7 +65,7 @@ const EventsList: FC = () => {
           />
         );
       })}
-    </>
+    </Stack>
   );
 };
 

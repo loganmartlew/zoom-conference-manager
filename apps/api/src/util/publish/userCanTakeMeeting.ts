@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import Meeting from '../../entities/Meeting';
 import { MeetingDuration } from '../../types/MeetingDuration';
 
+const apiLimit = 100;
+
 const getDurationFromMeeting = (meeting: Meeting): MeetingDuration => {
   return {
     meeting,
@@ -51,5 +53,10 @@ export const userCanTakeMeeting = (
     return count;
   }, 0);
 
-  return overlappingMeetings < overlapLimit;
+  const overlapOk = overlappingMeetings < overlapLimit;
+  const lessThanLimit = meetings.length < apiLimit;
+
+  const canTakeMeeting = overlapOk && lessThanLimit;
+
+  return canTakeMeeting;
 };

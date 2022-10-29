@@ -66,6 +66,29 @@ export default class MeetingService {
     }
   }
 
+  static async update(id: string, meetingData: MeetingDTO) {
+    const meeting = await this.getOne(id);
+
+    meeting.name = meetingData.name;
+    meeting.startDateTime = dayjs(
+      meetingData.startDateTime,
+      formats.dateTime
+    ).toDate();
+    meeting.endDateTime = dayjs(
+      meetingData.endDateTime,
+      formats.dateTime
+    ).toDate();
+
+    await ZoomService.updateMeeting(meeting);
+
+    try {
+      const updatedMeeting = await meeting.save();
+      return updatedMeeting;
+    } catch (error) {
+      throw new ApiError(error, 3006, 'Unable to update Meetings');
+    }
+  }
+
   static async delete(id: string) {
     const meeting = await this.getOne(id);
 
@@ -74,5 +97,16 @@ export default class MeetingService {
     const result = await Meeting.delete(id);
     if (!result.affected) return false;
     return result.affected > 0;
+  }
+
+  static async getRecording(id: string) {
+    const meeting = await this.getOne(id);
+    const recording = await ZoomService.getRecording(meeting);
+
+    if (!recording) {
+      throw new ApiError(null, 2005, 'Recording not found');
+    }
+
+    return recording;
   }
 }

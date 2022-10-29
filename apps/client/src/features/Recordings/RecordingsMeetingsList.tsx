@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { IMeeting } from '@zoom-conference-manager/api-interfaces';
-import { Collapse, Alert, AlertTitle } from '@mui/material';
+import { Collapse, Alert, AlertTitle, Stack } from '@mui/material';
 import RecordingsMeetingsCard from './RecordingsMeetingsCard';
 
 interface Props {
@@ -45,11 +45,11 @@ const RecordingsMeetingsList: FC<Props> = ({ meetings }) => {
   }
 
   return (
-    <>
+    <Stack spacing={3}>
       {meetings.map((meeting) => (
         <RecordingsMeetingsCard meeting={meeting} />
       ))}
-    </>
+    </Stack>
   );
 };
 

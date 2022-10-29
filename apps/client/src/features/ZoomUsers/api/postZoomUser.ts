@@ -21,8 +21,8 @@ export const usePostZoomUser = (
     queryKey: () => allZoomUsersKey,
     onSuccess,
     onError,
-    pendingMessage: 'Creating Zoom user...',
-    successMessage: 'Zoom user created!',
-    errorMessage: 'Failed to create Zoom user',
+    pendingMessage: 'Adding Zoom user...',
+    successMessage: 'Zoom user added!',
+    errorMessage: 'Failed to add Zoom user',
   });
 };

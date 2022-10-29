@@ -1,6 +1,8 @@
+import { VideoFile } from '@mui/icons-material';
 import { Typography, Button, Stack } from '@mui/material';
 import { FC } from 'react';
 import { useParams } from 'react-router-dom';
+import { environment } from '../environments/environment';
 import { useEvent } from '../features/Events/api/getEvent';
 import RecordingsDetails from '../features/Recordings/RecordingsDetails';
 
@@ -10,21 +12,14 @@ const RecordingsDetailsPage: FC = () => {
 
   return (
     <>
-      <Stack direction='row' spacing={7}>
-        <Typography
-          variant='h3'
-          sx={{
-            mb: 3,
-          }}
-        >
-          {data?.name || 'Event Details'}
-        </Typography>
+      <Stack direction='row' spacing={3} alignItems='center' sx={{ mb: 3 }}>
+        <Typography variant='h3'>{data?.name || 'Event Details'}</Typography>
         <Button
+          component='a'
+          href={`${environment.apiUrl}/events/${id}/recordings`}
+          target='_blank'
           variant='contained'
-          sx={{
-            width: 'max-content',
-            height: 'max-content',
-          }}
+          startIcon={<VideoFile />}
         >
           Get All Recordings
         </Button>

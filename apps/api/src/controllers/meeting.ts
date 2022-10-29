@@ -3,6 +3,7 @@ import {
   DeleteMeeting,
   GetAllMeetings,
   GetMeeting,
+  GetMeetingRecording,
   UpdateMeeting,
 } from '@zoom-conference-manager/api-interfaces';
 import { ApiError } from '@zoom-conference-manager/errors';
@@ -36,8 +37,16 @@ export const getMeeting: GetMeeting = async (req: Request) => {
   return { status: StatusCodes.OK, message: 'Get Meeting', data: meeting };
 };
 
-export const updateMeeting: UpdateMeeting = async () => {
-  return { status: StatusCodes.OK, message: 'Update Meeting' };
+export const updateMeeting: UpdateMeeting = async (req: Request) => {
+  // ZoomID
+  const { id } = req.params;
+  const meetingData = req.body;
+  const updatedMeeting = await MeetingService.update(id, meetingData);
+  return {
+    status: StatusCodes.OK,
+    message: 'Update Meeting',
+    data: updatedMeeting,
+  };
 };
 
 export const deleteMeeting: DeleteMeeting = async (req: Request) => {
@@ -50,4 +59,16 @@ export const deleteMeeting: DeleteMeeting = async (req: Request) => {
   }
 
   return { status: StatusCodes.OK, message: 'Meeting deleted' };
+};
+
+export const getRecording: GetMeetingRecording = async (req: Request) => {
+  const { id } = req.params;
+
+  const recording = await MeetingService.getRecording(id);
+
+  return {
+    status: StatusCodes.OK,
+    message: 'Retrieved recording',
+    data: recording.download_url,
+  };
 };
