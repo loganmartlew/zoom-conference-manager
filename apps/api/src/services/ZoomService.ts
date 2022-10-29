@@ -153,6 +153,9 @@ export default class ZoomService {
         dayjs(meeting.startDateTime).diff(dayjs(meeting.endDateTime), 'minute')
       ),
       type: SCHEDULED_MEETING,
+      settings: {
+        auto_recording: 'cloud',
+      },
     };
 
     try {
