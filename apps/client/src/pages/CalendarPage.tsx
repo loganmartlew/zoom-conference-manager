@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { MenuItem, Select, SelectChangeEvent, Tab, Tabs } from '@mui/material';
 import { useAllEvents } from '../features/Events/api/getEvents';
-import Calendar from '../features/Calendar/Calendar';
+import Calendar from '../features/calendar/Calendar';
 
 const CalendarPage: FC = () => {
   const [view, setView] = useState<'events' | 'meetings'>('events');
@@ -50,6 +50,7 @@ const CalendarPage: FC = () => {
             title: event.name,
             start: dayjs(event.startDate, 'YYYY-MM-DD').toDate(),
             end: dayjs(event.endDate, 'YYYY-MM-DD').toDate(),
+            // state: state obj,
           }))}
         />
       )}
