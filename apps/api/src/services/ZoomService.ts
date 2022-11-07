@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable import/no-cycle */
 import { ApiError } from '@zoom-conference-manager/errors';
+import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import Event from '../entities/Event';
 import Meeting from '../entities/Meeting';
 import { axios } from '../loaders/axios';
 import { Logger } from '../loaders/logger';
+import delay from '../util/delay';
 import { RecordingFile, RecordingResponse } from '../types/RecordingResponse';
 import { assignMeetings } from '../util/publish/assignMeetings';
 import { flattenMeetings } from '../util/publish/flattenMeetings';
@@ -159,12 +162,14 @@ export default class ZoomService {
     };
 
     try {
-      const res = await axios.post<{ id: number }>(
-        `/users/${userEmail}/meetings`,
-        meetingData
-      );
+      // const res = await axios.post<{ id: number }>(
+      //   `/users/${userEmail}/meetings`,
+      //   meetingData
+      // );
+      await delay(100);
 
-      const zoomId = res.data.id;
+      // const zoomId = res.data.id;
+      const zoomId = Math.floor(Math.random() * 1000000000);
 
       await MeetingService.setZoomId(meeting.id, `${zoomId}`);
     } catch (error) {
@@ -183,7 +188,8 @@ export default class ZoomService {
     }
 
     try {
-      await axios.delete(`/meetings/${meeting.zoomId}`);
+      // await axios.delete(`/meetings/${meeting.zoomId}`);
+      await delay(100);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -199,9 +205,26 @@ export default class ZoomService {
     }
 
     try {
-      const res = await axios.get<RecordingResponse>(
-        `/meetings/${meeting.zoomId}/recordings`
-      );
+      // const res = await axios.get<RecordingResponse>(
+      //   `/meetings/${meeting.zoomId}/recordings`
+      // );
+      await delay(100);
+
+      const res: AxiosResponse<RecordingResponse, any> = {
+        data: {
+          id: +meeting.zoomId,
+          recording_count: 1,
+          recording_files: [
+            {
+              id: '123',
+              download_url: 'https://example.com',
+              file_size: 1000,
+              meeting_id: '123',
+            },
+          ],
+        },
+      } as AxiosResponse<RecordingResponse, any>;
+
       const recordings = res.data.recording_files.sort(
         (a, b) => a.file_size - b.file_size
       );
@@ -243,7 +266,8 @@ export default class ZoomService {
     };
 
     try {
-      await axios.patch(`/meetings/${meeting.zoomId}`, meetingData);
+      // await axios.patch(`/meetings/${meeting.zoomId}`, meetingData);
+      await delay(100);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
