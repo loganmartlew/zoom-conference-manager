@@ -2,7 +2,6 @@ import { useState, FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 import {
-  Home,
   Dashboard,
   Event,
   AddBox,
