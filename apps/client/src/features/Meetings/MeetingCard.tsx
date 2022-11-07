@@ -148,9 +148,10 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
             </Typography>
           </Stack>
         </Stack>
-        <Box padding='1.5rem'>
-          <Stack alignItems='flex-start' spacing={2}>
-            {showEditMeeting && (
+
+        {showEditMeeting && (
+          <Box padding='1.5rem'>
+            <Stack alignItems='flex-start' spacing={2}>
               <Box>
                 <UpdateMeeting
                   meetingData={convertToMeetingType(meeting)}
@@ -159,9 +160,9 @@ const MeetingCard: FC<Props> = ({ meeting }) => {
                   editOnRender={false}
                 />
               </Box>
-            )}
-          </Stack>
-        </Box>
+            </Stack>
+          </Box>
+        )}
       </Stack>
     </Paper>
   );
