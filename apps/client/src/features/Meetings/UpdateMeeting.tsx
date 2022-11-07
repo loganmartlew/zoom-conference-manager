@@ -1,5 +1,6 @@
 import { FC, ChangeEvent, useReducer, useState } from 'react';
 import { MeetingDTO } from '@zoom-conference-manager/api-interfaces';
+import { useQueryClient } from 'react-query';
 import dayjs from 'dayjs';
 import { Stack, Button, Alert } from '@mui/material';
 import UpdateMeetingField from './UpdateMeetingField';
@@ -10,6 +11,7 @@ import {
   UpdateMeetingType,
   UpdateAction,
 } from './MeetingTypes/UpdateMeetingTypes';
+import { eventKey } from '../Events/api/getEvent';
 
 interface Props {
   meetingData: MeetingData;
@@ -122,6 +124,8 @@ export function formatDateAndTimeMeeting(
 const UpdateMeeting: FC<Props> = (props: Props) => {
   const { meetingId, editOnRender, meetingData, updateMeetingData } = props;
 
+  const qc = useQueryClient();
+
   const formatDateTime = () => {
     return meetingData.startDateTime.split(' ');
   };
@@ -152,6 +156,7 @@ const UpdateMeeting: FC<Props> = (props: Props) => {
   ) => {
     try {
       await updateMeetingData(meetingUbid, meetingDataToSend);
+      qc.invalidateQueries(eventKey);
     } catch (e) {
       setUpdateMeetingAlert({
         active: true,
